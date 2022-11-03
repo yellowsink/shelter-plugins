@@ -1,0 +1,42 @@
+name: Build and deploy
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+
+      - name: Deps
+        run: |
+          npm install --global pnpm
+          pnpm i
+
+      - name: Build plugin(s)
+        run: ./build.sh
+
+      - name: Copy additional files
+        run: |
+          cp -r static/* dist || true
+          cp README.md dist/README.md
+          printf -- "---\npermalink: /404.html\n---\n" > dist/404.md
+          printf -- "> **Note:** You accessed a link that returned a 404, probably by clicking one of the plugin links. You're supposed to copy the link address and add it into shelter.\n\n" >> dist/404.md
+          cat README.md >> dist/404.md
+
+        # Documentation: https://github.com/peaceiris/actions-gh-pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          # Makes it so the md files in the previous step get processed by GitHub Pages
+          enable_jekyll: true
