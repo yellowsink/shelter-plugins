@@ -1,10 +1,9 @@
 import {revertNitro, spoofNitro} from "./spoofer";
-import msgProcessor from "./msgProcessor";
+import slateTreeProcessor from "./slateTreeProcessor";
 
 const {
-	flux: {dispatcher, intercept},
+	flux: {dispatcher},
 	plugin: {store},
-	patcher: {before},
 	observeDom
 } = shelter;
 
@@ -28,18 +27,21 @@ function handleTrack(e) {
 	spoofWhile("channel_autocomplete_open", "[class*=autocomplete]");
 }
 
-let mbarUnpatches = [];
+let KILLSWITCH_patchMessagebar = false;
+
 const patchMessagebar = (elem) => {
 	if (elem.dataset.YSINK_FM) return;
 	elem.dataset.YSINK_FM = "1";
 
-	const fiber = elem.__reactFiber$.return;
-	const parent = fiber.return;
+	const fiber = elem.__reactFiber$;
+	const editor = fiber.child.pendingProps.editor;
 
-	// damnit, this doesn't run.
-	mbarUnpatches.push(before("onEnter", fiber.pendingProps, () => {
-		parent.pendingProps.textValue = msgProcessor(parent.pendingProps.textValue)
-	}))
+	elem.onkeydown = (k) => {
+		if (KILLSWITCH_patchMessagebar) return;
+
+		if (k.key === "Enter" && !document.querySelector("[class*=autocomplete]"))
+			editor.children = slateTreeProcessor(editor.children);
+	}
 }
 
 const unObserve = observeDom('[class*="slateContainer-"]', e => {
@@ -51,5 +53,5 @@ dispatcher.subscribe("TRACK", handleTrack);
 export const onUnload = () => {
 	dispatcher.unsubscribe("TRACK", handleTrack);
 	unObserve();
-	unpatchMessagebar?.();
+	KILLSWITCH_patchMessagebar = true;
 }

@@ -8,7 +8,7 @@ for dir in *
 do
   dest="../../dist/$dir"
   cd "$dir" || exit
-  npm exec esbuild -- index.js --global-name=e --bundle --outfile="$dest"/plugin.js
+  npm exec esbuild -- index.js --global-name=e --bundle --minify --outfile="$dest"/plugin.js
   cp plugin.json "$dest"/
 
   # this is super janky - remove `var e=`
