@@ -22,7 +22,7 @@ jobs:
           pnpm i
 
       - name: Build plugin(s)
-        run: ./build.sh
+        run: node build.mjs
 
       - name: Copy additional files
         run: |

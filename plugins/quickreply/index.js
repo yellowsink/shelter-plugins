@@ -1,7 +1,5 @@
 const {
 	plugin: { store },
-	// solid isnt setup with my setup rn anyway
-	//ui: { SwitchItem },
 	flux: {
 		dispatcher,
 		stores: {
@@ -137,3 +135,5 @@ export function onUnload() {
 
 	window.removeEventListener("keydown", keyDown);
 }
+
+export {default as settings} from "./settings"
