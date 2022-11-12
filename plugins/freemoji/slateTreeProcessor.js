@@ -9,9 +9,7 @@ const {
 } = shelter;
 
 const isInDms = () =>
-	document
-		.querySelector('[data-list-item-id="guildsnav___home"]')
-		.classList.contains(selected);
+	!!document.querySelector('[data-list-item-id="guildsnav___home"][class*="selected"]');
 
 const getEmoteSize = () =>
 	Number.isSafeInteger(parseInt(store.size)) ? store.size : 64;
