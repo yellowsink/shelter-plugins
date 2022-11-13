@@ -39,7 +39,7 @@ const patchMessagebar = (elem) => {
 	elem.onkeydown = (k) => {
 		if (KILLSWITCH_patchMessagebar) return;
 
-		if (k.key === "Enter" && !document.querySelector("[class*=autocomplete]"))
+		if (k.key === "Enter" && !document.querySelector("[class*=autocomplete],[class*=attachedBars]"))
 			editor.children = slateTreeProcessor(editor.children);
 	}
 }
