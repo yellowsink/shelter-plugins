@@ -9,12 +9,14 @@ try {
 // this is not done via intercept() so that plugins can still listen for these dispatches
 // as TRACK dispatches are *insanely useful*
 
+const analyticsTest = /client-analytics\.braintreegateway\.com|discord\.com\/api\/v9\/science/;
+
 // ewwww XHR
 export const onUnload = shelter.patcher.instead(
   "send",
   XMLHttpRequest.prototype,
   function (args, orig) {
-    if (this.__sentry_xhr__?.url !== "https://discord.com/api/v9/science")
+    if (!analyticsTest.test(this.__sentry_xhr__?.url))
       return orig.apply(this, args);
   }
 );
