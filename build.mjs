@@ -17,7 +17,7 @@ for (const plug of await readdir("plugins")) {
 		entryPoints: [entryPoint],
 		bundle: true,
 		outfile: outfile,
-		minify: true,
+		minify: false,
 		plugins: [
 			solidPlugin(),
 			{
