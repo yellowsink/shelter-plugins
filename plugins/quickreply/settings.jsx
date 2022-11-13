@@ -11,7 +11,7 @@ export default () => (
 	  <SwitchItem disabled={!store.scroll} value={store.scrollSmooth} onChange={(v) => store.scroll = v}>
 		  Scroll smoothly
 	  </SwitchItem>
-	  <SwitchItem value={store.noPing} onChange={(v) => store.scroll = v}>
+	  <SwitchItem value={store.noPing} onChange={(v) => store.noPing = v}>
 		  Don't ping the original author of your reply by default
 	  </SwitchItem>
   </>
