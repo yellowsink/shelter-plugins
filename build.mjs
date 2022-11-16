@@ -9,9 +9,9 @@ const MD5 = (data) => createHash("md5").update(data).digest("hex").toString();
 if (existsSync("dist"))
 	await rm("dist", {recursive: true});
 
-for (const plug of await readdir("plugins")) {
-	const outfile = `dist/${plug}/plugin.js`;
-	const entryPoint = `plugins/${plug}/index.js`;
+for (const plug of await readdir("plugin")) {
+	const outfile = `dist/plugin.js`;
+	const entryPoint = `plugin/index.js`;
 
 	await build({
 		entryPoints: [entryPoint],
@@ -42,10 +42,10 @@ for (const plug of await readdir("plugins")) {
 		(await readFile(outfile)).toString().replace(/var e\s*=/, "")
 	);
 
-	const manifest = (await readFile(`plugins/${plug}/plugin.json`)).toString();
+	const manifest = (await readFile(`plugin/plugin.json`)).toString();
 
 	await writeFile(
-		`dist/${plug}/plugin.json`,
+		`dist/plugin.json`,
 		manifest.replace(
 			"<HASH_PLACEHOLDER>",
 			MD5((await readFile(outfile)).toString())
