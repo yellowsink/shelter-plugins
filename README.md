@@ -1,4 +1,4 @@
-# Shelter Plugins
+# Shelter Plugin
 
 To install, copy the url into Shelter.
 Don't click it and expect it to install automagically.
