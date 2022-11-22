@@ -5,7 +5,7 @@ const {
 	flux: {dispatcher},
 	plugin: {store},
 	observeDom,
-	utils: {getFiber}
+	util: {getFiber}
 } = shelter;
 
 if (store.size === undefined) store.size = 64;
