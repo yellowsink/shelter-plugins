@@ -4,7 +4,8 @@ import slateTreeProcessor from "./slateTreeProcessor";
 const {
 	flux: {dispatcher},
 	plugin: {store},
-	observeDom
+	observeDom,
+	utils: {getFiber}
 } = shelter;
 
 if (store.size === undefined) store.size = 64;
@@ -33,7 +34,7 @@ const patchMessagebar = (elem) => {
 	if (elem.dataset.YSINK_FM) return;
 	elem.dataset.YSINK_FM = "1";
 
-	const fiber = elem.__reactFiber$;
+	const fiber = getFiber(elem);
 	const editor = fiber.child.pendingProps.editor;
 
 	elem.onkeydown = (k) => {
