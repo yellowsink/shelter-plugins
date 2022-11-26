@@ -8,3 +8,5 @@ QuickReply Reloaded: https://yellowsink.github.io/shelter-plugins/quickreply/
 Freemoji Reloaded: https://yellowsink.github.io/shelter-plugins/freemoji/
 
 Antitrack: https://yellowsink.github.io/shelter-plugins/antitrack/
+
+Show Username Reloaded: https://yellowsink.github.io/shelter-plugins/show-username/
