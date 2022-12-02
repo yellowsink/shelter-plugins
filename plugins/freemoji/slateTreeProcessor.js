@@ -48,7 +48,7 @@ export default (slateTree) => {
 		}
 
 		newSlateTree.push({
-			type: "line",
+			...line,
 			children: newLine
 		});
 	}
