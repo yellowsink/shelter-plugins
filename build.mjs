@@ -11,24 +11,28 @@ if (existsSync("dist"))
 
 for (const plug of await readdir("plugins")) {
 	const outfile = `dist/${plug}/plugin.js`;
-	const entryPoint = `plugins/${plug}/index.js`;
+	let entryPoint = `plugins/${plug}/index.js`;
+
+	// jsx
+	if (!existsSync(entryPoint) && existsSync(entryPoint + "x"))
+		entryPoint += "x";
 
 	await build({
 		entryPoints: [entryPoint],
 		bundle: true,
 		outfile: outfile,
-		minify: true,
+		minify: false,
 		plugins: [
 			solidPlugin(),
 			{
 				name: "solid-shelter-resolver",
 				setup(build) {
-					build.onResolve({filter: /solid-js\/web/}, ({path}) => ({
+					build.onResolve({filter: /solid-js(?:\/web)?/}, ({path}) => ({
 						path,
 						namespace: "shltr-res-ns"
 					}));
-					build.onLoad({filter: /.*/, namespace: "shltr-res-ns"}, () => ({
-						contents: "module.exports = shelter.solidWeb",
+					build.onLoad({filter: /.*/, namespace: "shltr-res-ns"}, ({ path }) => ({
+						contents: `module.exports = shelter.${path === "solid-js/web" ? "solidWeb" : "solid"}`,
 						loader: "js"
 					}));
 				}
