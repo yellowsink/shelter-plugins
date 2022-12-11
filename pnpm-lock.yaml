@@ -14,11 +14,9 @@ importers:
     specifiers:
       '@uwu/monaco-solid': ^1.1.0
       '@uwu/quartz': ^1.0.3
-      monaco-editor: ^0.34.1
     dependencies:
       '@uwu/monaco-solid': 1.1.0
       '@uwu/quartz': 1.0.3
-      monaco-editor: 0.34.1
 
 packages:
 
@@ -766,10 +764,6 @@ packages:
 
   /monaco-editor/0.33.0:
     resolution: {integrity: sha512-VcRWPSLIUEgQJQIE0pVT8FcGBIgFoxz7jtqctE+IiCxWugD0DwgyQBcZBhdSrdMC84eumoqMZsGl2GTreOzwqw==}
-    dev: false
-
-  /monaco-editor/0.34.1:
-    resolution: {integrity: sha512-FKc80TyiMaruhJKKPz5SpJPIjL+dflGvz4CpuThaPMc94AyN7SeC9HQ8hrvaxX7EyHdJcUY5i4D0gNyJj1vSZQ==}
     dev: false
 
   /ms/2.1.2:
