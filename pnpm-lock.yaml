@@ -12,9 +12,11 @@ importers:
 
   plugins/snazzy-shelter:
     specifiers:
+      '@tanstack/solid-virtual': 3.0.0-beta.6
       '@uwu/monaco-solid': ^1.1.0
       fuse.js: ^6.6.2
     dependencies:
+      '@tanstack/solid-virtual': 3.0.0-beta.6
       '@uwu/monaco-solid': 1.1.0
       fuse.js: 6.6.2
 
@@ -396,6 +398,17 @@ packages:
     dependencies:
       monaco-editor: 0.33.0
       state-local: 1.0.7
+    dev: false
+
+  /@reach/observe-rect/1.2.0:
+    resolution: {integrity: sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==}
+    dev: false
+
+  /@tanstack/solid-virtual/3.0.0-beta.6:
+    resolution: {integrity: sha512-/HjeHZb4UZxxFSAkICUEWOozGwHQpKlvtnUoS5uSMSuLOz0XM5vFq6zR6ENwAczKWDtkh8ntddk+zXAhyXOlEw==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@reach/observe-rect': 1.2.0
     dev: false
 
   /@uwu/monaco-solid/1.1.0:
