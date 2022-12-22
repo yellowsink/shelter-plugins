@@ -13,10 +13,10 @@ importers:
   plugins/snazzy-shelter:
     specifiers:
       '@uwu/monaco-solid': ^1.1.0
-      '@uwu/quartz': ^1.0.3
+      fuse.js: ^6.6.2
     dependencies:
       '@uwu/monaco-solid': 1.1.0
-      '@uwu/quartz': 1.0.3
+      fuse.js: 6.6.2
 
 packages:
 
@@ -407,10 +407,6 @@ packages:
       monaco-editor: 0.33.0
     dev: false
 
-  /@uwu/quartz/1.0.3:
-    resolution: {integrity: sha512-0Gp8MhW6f6pJQEWPXyNm37sBAig/azq9z9dzdsHRs7v6RD/PHFrdz5GDRsmVG6VIFNRezzrvr4smRHssePoqNQ==}
-    dev: false
-
   /ansi-styles/3.2.1:
     resolution: {integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==}
     engines: {node: '>=4'}
@@ -726,6 +722,11 @@ packages:
     resolution: {integrity: sha512-vbRorB5FUQWvla16U8R/qgaFIya2qGzwDrNmCZuYKrbdSUMG6I1ZCGQRefkRVhuOkIGVne7BQ35DSfo1qvJqFg==}
     engines: {node: '>=0.8.0'}
     dev: true
+
+  /fuse.js/6.6.2:
+    resolution: {integrity: sha512-cJaJkxCCxC8qIIcPBF9yGxY0W/tVZS3uEISDxhYIdtk8OL93pe+6Zj7LjCqVV4dzbqcriOZ+kQ/NE4RXZHsIGA==}
+    engines: {node: '>=10'}
+    dev: false
 
   /gensync/1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}

@@ -12,4 +12,5 @@ Antitrack: https://yellowsink.github.io/shelter-plugins/antitrack/
 Show Username Reloaded: https://yellowsink.github.io/shelter-plugins/show-username/
 
 Snazzy Shelter: https://yellowsink.github.io/shelter-plugins/snazzy-shelter/
- * Planned to become more advanced but currently just a quickcss I guess.
+ * This plugin continues to operate on the Cumcord theme infrastructure.
+ * A nest import from Cumstain is possible for users of Migration Station.
