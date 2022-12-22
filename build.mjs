@@ -3,6 +3,7 @@ import {readdir, readFile, writeFile, rm} from "fs/promises";
 import {existsSync} from "fs";
 import {build} from "esbuild";
 import {solidPlugin} from "esbuild-plugin-solid";
+import { sassPlugin } from "esbuild-sass-plugin-ysink";
 
 const MD5 = (data) => createHash("md5").update(data).digest("hex").toString();
 
@@ -24,6 +25,7 @@ for (const plug of await readdir("plugins")) {
 		minify: true,
 		plugins: [
 			solidPlugin(),
+			sassPlugin({style: "compressed", sourceMap: false}),
 			{
 				name: "solid-shelter-resolver",
 				setup(build) {
