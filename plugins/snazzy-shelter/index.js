@@ -4,7 +4,7 @@ import restoreThemes from "./src/transients/restoreThemes";
 import exposeApi from "./src/transients/exposeApi";
 import settingsEntry from "./src/transients/settingsEntry";
 
-import { css } from "./styles.sass";
+import css from "./src/styles.sass";
 
 const {
 	plugin: { store },
