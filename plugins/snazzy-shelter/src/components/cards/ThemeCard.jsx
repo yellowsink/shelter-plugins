@@ -56,7 +56,6 @@ export default (props) => (
           class="ysink_stain_iconbtn"
           onClick={() => {
             removeTheme(props.theme);
-            props.deleteHook?.();
           }}
         />
       ) : (

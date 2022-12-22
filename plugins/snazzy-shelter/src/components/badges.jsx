@@ -1,5 +1,5 @@
 const badge = (url, type) => () =>
-	<img src={url} className={`ysink_stain_badge ysink_stain_${type}`} />;
+	<img src={url} class={`ysink_stain_badge ysink_stain_${type}`} />;
 
 export const BDBadge = badge(
 	"https://betterdiscord.app/resources/branding/logo_small.svg",

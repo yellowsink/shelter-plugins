@@ -1,47 +1,56 @@
-import { persist } from "@cumcord/pluginData";
-import { useNest } from "@cumcord/utils";
-import { showToast } from "@cumcord/ui/toasts";
-
-import { ErrorBoundary } from "@cumcord/ui/components";
 import RepoCard from "../cards/RepoCard";
 
-import { Flex, FormSection, TextInput, Button } from "../../WPMODULES";
 import { addRepo } from "../../util/friendlyUtils";
 
-const toast = (str) => showToast({ title: str, duration: 5000 });
+const toast = (str) => console.log("toasted: ", str); //showToast({ title: str, duration: 5000 });
+
+const {
+	solid: {createSignal},
+	plugin: {store},
+	ui: {
+		Button,
+		Divider
+	}
+} = shelter;
 
 export default () => {
-	const [url, setUrl] = React.useState("");
-	useNest(persist);
+	const [url, setUrl] = createSignal("");
 
 	return (
-		<ErrorBoundary>
-			<FormSection>
-				<Flex basis="auto" grow={1} shrink={1} className="ysink_stain_row">
-					<TextInput
+			<div>
+				<div
+					class="ysink_stain_row"
+					style={{
+					display: "flex",
+					// TODO
+				}}>
+					{/*TODO*/}
+					{/*<TextInput*/}
+					<input
 						placeholder="https://example.com/repo"
 						type="text"
-						value={url}
-						onChange={(e) => setUrl(e)}
+						value={url()}
+						onInput={(e) => setUrl(e.target.value)}
 					/>
 					<Button
-						className="ysink_stain_button"
+						class="ysink_stain_button"
 						onClick={async () => {
-							if (await addRepo(url, toast, toast)) setUrl("");
+							if (await addRepo(url(), toast, toast)) setUrl("");
 						}}
 					>
 						Add
 					</Button>
-				</Flex>
-
-				<div className="ysink_stain_divide" />
-
-				<div className="ysink_stain_cardcontainer">
-					{persist.ghost.repos.map((repo) => (
-						<RepoCard repo={repo} />
-					))}
 				</div>
-			</FormSection>
-		</ErrorBoundary>
+
+				{/*<Flex basis="auto" grow={1} shrink={1} class="ysink_stain_row">
+
+				</Flex>*/}
+
+				<div class="ysink_stain_divide" />
+
+				<div class="ysink_stain_cardcontainer">
+					{store.repos.map((repo) => (<RepoCard repo={repo} />))}
+				</div>
+			</div>
 	);
 };

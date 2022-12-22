@@ -8,11 +8,11 @@ const {
 } = shelter.ui;
 
 const Splash = (props) => (
-	<div className="ysink_stain_nosplash">
+	<div class="ysink_stain_nosplash">
 		<Header tag={HeaderTags.H2}>{props.title}</Header>
 		<Text>{props.subtitle}</Text>
 		<Button
-			className="ysink_stain_button"
+			class="ysink_stain_button"
 			color={ButtonColors.GREEN}
 			sizes={ButtonSizes.LARGE}
 			onClick={props.onClick}

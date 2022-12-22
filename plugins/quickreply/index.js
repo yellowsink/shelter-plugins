@@ -30,7 +30,7 @@ function scrollToReplyingMsg() {
 		'[data-list-id="chat-messages"]'
 	);
 	const replyingMsg = Array.from(messageContainer.children).find((elem) =>
-		elem.firstChild?.className?.includes("replying-")
+		elem.firstChild?.class?.includes("replying-")
 	);
 
 	replyingMsg?.scrollIntoView({

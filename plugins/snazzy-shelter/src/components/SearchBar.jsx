@@ -11,7 +11,7 @@ const SearchBar = (props) => (
 
 export default (props) => (
 	<SearchBar
-		className="ysink_stain_searchbar"
+		class="ysink_stain_searchbar"
 		query={props.query}
 		onQueryChange={props.onChange}
 		placeholder="Search themes..."

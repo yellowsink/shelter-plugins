@@ -12,11 +12,11 @@ export default (props: Props) => {
   const [current, goTo] = createSignal(0);
 
   return (
-    <div className="ysink_stain_tabbar_root">
-      <div className="ysink_stain_tabbar">
+    <div class="ysink_stain_tabbar_root">
+      <div class="ysink_stain_tabbar">
         {props.items.map((e, i) => (
           <button
-            className={
+            class={
               "ysink_stain_button" +
               (i === current() ? " ysink_stain_selected" : "")
             }
@@ -27,9 +27,9 @@ export default (props: Props) => {
         ))}
       </div>
 
-      <div className="ysink_stain_divide" />
+      <div class="ysink_stain_divide" />
 
-      <div className="ysink_stain_tabbar_content">
+      <div class="ysink_stain_tabbar_content">
         <Dynamic component={props.items[current()].component} goTo={goTo} />
       </div>
     </div>

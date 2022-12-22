@@ -12,11 +12,11 @@ export default () => {
 	const [urlInput, setUrlInput] = createSignal("");
 
   return (
-    <div className="ysink_stain_row">
+    <div class="ysink_stain_row">
       {/*TODO*/}
       {/*<TextInput*/}
 	    <input
-        className="ysink_stain_input"
+        class="ysink_stain_input"
         placeholder="Theme import URL"
         type="text"
         value={urlInput()}
