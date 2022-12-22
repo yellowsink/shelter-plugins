@@ -32,7 +32,6 @@ export function settings() {
 				otherCfg={{
 					automaticLayout: true
 				}}
-				/*noCDN={monaco}*/
 			/>
 			{/* this sucks but i legitimately just cannot be arsed anymore */}
 			<style>{`[class*="_mroot"] [class*="_modal"]{width:880px}`}</style>
