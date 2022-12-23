@@ -11,8 +11,6 @@ const {
 	ui: { injectCss }
 } = shelter;
 
-window.debug_store = store;
-
 if (!Array.isArray(store.repos)) defaultRepos();
 
 if (!Array.isArray(store.themes)) store.themes = [];
