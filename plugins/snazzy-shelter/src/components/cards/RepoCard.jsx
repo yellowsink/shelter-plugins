@@ -21,7 +21,7 @@ export default (props) => {
 					{officialRepos.includes(props.repo) && (
 						<TextBadge
 							class="ysink_stain_officialbadge"
-							text="official repo"
+							text="official"
 							color="var(--info-positive-foreground)"
 						/>
 					)}

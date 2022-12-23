@@ -17,7 +17,12 @@ export const TextBadge = props => (
 		class={props.class}
 		style={{
 			"border-radius": "9999px",
-			"background-color": props.color
+			"background-color": props.color,
+			color: "white",
+			"font-size": ".8rem",
+			padding: ".1rem .3rem",
+			"text-transform": "uppercase",
+			"font-weight": "bold"
 		}}
 	>{props.text}</div>
 )

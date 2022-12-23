@@ -38,5 +38,5 @@ export default async (url) => {
     })
     .map((t) => t.value);
 
-  return { manifest, themes: themes };
+  return { manifest, themes };
 };

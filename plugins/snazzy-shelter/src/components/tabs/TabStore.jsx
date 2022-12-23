@@ -6,7 +6,6 @@ import fuzzy from "../../util/fuzzy";
 import CompatFilterDropdown from "../CompatFilterDropdown";
 import { NoRepos } from "../splashes";
 import VirtualScroller from "../VirtualScroller";
-//import { scrollBarThin } from "../../WPMODULES";
 
 const {
 	solid: {createSignal, createResource},
@@ -15,7 +14,7 @@ const {
 
 const getRepos = () => Promise.all(store.repos.map(fetchRepo));
 
-const getThemes = () => getRepos().then(rs => rs.flatMap(r => r.themes));
+const getThemes = () => getRepos().then((rs) => rs.flatMap((r) => r.themes));
 
 export default (props) => {
 	const [search, setSearch] = createSignal("");
@@ -36,7 +35,7 @@ export default (props) => {
 				<VirtualScroller
 					/*class={scrollBarThin}*/
 					height="50rem"
-					/*keySel={(t) => t.url}*/
+					keySel={(t) => t.url}
 					items={fuzzy(
 						_.uniqBy(themes() ?? [], (t) => t.url),
 						search()
