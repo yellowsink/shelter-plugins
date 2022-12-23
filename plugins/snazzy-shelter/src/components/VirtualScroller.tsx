@@ -1,9 +1,5 @@
 import { createVirtualizer } from "@tanstack/solid-virtual";
 
-// from @tanstack/virtual-core
-const defaultMeasureElement = (element, instance) =>
-  (element as Element).getBoundingClientRect()[instance.options.horizontal ? 'width' : 'height'];
-
 interface VirtualScrollerProps<TItem, TKey> {
   items: TItem[];
   children: (v: TItem) => any;
@@ -22,15 +18,13 @@ export default <TItem, TKey>(props: VirtualScrollerProps<TItem, TKey>) => {
     },
     getScrollElement: () => parentRef,
     estimateSize: () => 64,
-    getItemKey: (i) => props.keySel(props.items[i]),
-    // add a .5rem equivalent padding
-    measureElement: (e, i) => defaultMeasureElement(e, i) + 8
+    getItemKey: (i) => props.keySel(props.items[i])
   });
 
   return (
     <div
       ref={parentRef}
-      style={{ overflowY: "auto", height: props.height }}
+      style={{ "overflow-y": "auto", height: props.height }}
       class={props.class}
     >
       <div

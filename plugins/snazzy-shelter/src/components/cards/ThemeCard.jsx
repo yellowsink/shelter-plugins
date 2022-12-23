@@ -24,15 +24,15 @@ const themeIsInstalled = (url) =>
 	store.themes.some((t) => t.url === url);
 
 export default (props) => (
-  <div class="ysink_stain_card ysink_stain_tcard" style={{ marginBottom: props.gap }}>
+  <div class="ysink_stain_card ysink_stain_tcard" style={{ "margin-bottom": props.gap }}>
     <div
       class="ysink_stain_tmedia"
       style={{
-        backgroundImage:
+        "background-image":
           props.theme.media &&
           `url(${Array.isArray(props.theme.media) ? props.theme.media[0] : props.theme.media})`,
       }}
-      onClick={() => theme.media && showCarouselModal(theme.media)}
+      onClick={() => props.theme.media && showCarouselModal(props.theme.media)}
     >
       {props.theme.media ? (
         <div class="ysink_stain_tview">VIEW MEDIA</div>

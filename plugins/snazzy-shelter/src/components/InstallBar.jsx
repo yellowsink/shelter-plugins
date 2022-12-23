@@ -2,11 +2,9 @@ import fetchTheme from "../util/fetchTheme";
 import { loadTheme } from "../util/themeLoadUtil";
 
 const {
-  ui: { Button, ButtonSizes },
+  ui: { Button, ButtonSizes, showToast },
 	solid: {createSignal}
 } = shelter;
-
-const showToast = console.log;
 
 export default () => {
 	const [urlInput, setUrlInput] = createSignal("");

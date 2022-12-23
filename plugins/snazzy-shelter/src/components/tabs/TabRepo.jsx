@@ -2,7 +2,9 @@ import RepoCard from "../cards/RepoCard";
 
 import { addRepo } from "../../util/friendlyUtils";
 
-const toast = (str) => console.log("toasted: ", str); //showToast({ title: str, duration: 5000 });
+const {showToast} = shelter.ui;
+
+const toast = (str) => showToast({ title: str, duration: 5000 });
 
 const {
 	solid: {createSignal},
@@ -22,8 +24,7 @@ export default () => {
 				<div
 					class="ysink_stain_row"
 					style={{
-					display: "flex",
-					// TODO
+					display: "flex"
 				}}>
 					{/*TODO*/}
 					{/*<TextInput*/}
@@ -43,10 +44,6 @@ export default () => {
 						Add
 					</Button>
 				</div>
-
-				{/*<Flex basis="auto" grow={1} shrink={1} class="ysink_stain_row">
-
-				</Flex>*/}
 
 				<Divider mt=".5rem" mb=".5rem" />
 

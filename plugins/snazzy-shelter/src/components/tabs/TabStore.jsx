@@ -9,7 +9,8 @@ import VirtualScroller from "../VirtualScroller";
 
 const {
 	solid: {createSignal, createResource},
-	plugin: {store}
+	plugin: {store},
+	ui: {niceScrollbarsClass}
 } = shelter;
 
 const getRepos = () => Promise.all(store.repos.map(fetchRepo));
@@ -33,7 +34,7 @@ export default (props) => {
 				<NoRepos goToRepos={() => props.goTo(2)} />
 			) : (
 				<VirtualScroller
-					/*class={scrollBarThin}*/
+					class={niceScrollbarsClass()}
 					height="50rem"
 					keySel={(t) => t.url}
 					items={fuzzy(
