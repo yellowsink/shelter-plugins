@@ -9,7 +9,8 @@ const {
 	plugin: {store},
 	ui: {
 		Button,
-		Divider
+		Divider,
+		ButtonSizes
 	}
 } = shelter;
 
@@ -34,6 +35,7 @@ export default () => {
 					/>
 					<Button
 						class="ysink_stain_button"
+						size={ButtonSizes.MEDIUM}
 						onClick={async () => {
 							if (await addRepo(url(), toast, toast)) setUrl("");
 						}}
@@ -46,7 +48,7 @@ export default () => {
 
 				</Flex>*/}
 
-				<div class="ysink_stain_divide" />
+				<Divider mt=".5rem" mb=".5rem" />
 
 				<div class="ysink_stain_cardcontainer">
 					{store.repos.map((repo) => (<RepoCard repo={repo} />))}

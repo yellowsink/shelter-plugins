@@ -1,7 +1,7 @@
 const {
   solid: { createSignal },
   solidWeb: { Dynamic },
-  ui: { Text },
+  ui: { Text, Divider },
 } =
   // @ts-expect-error
   shelter;
@@ -27,7 +27,7 @@ export default (props: Props) => {
         ))}
       </div>
 
-      <div class="ysink_stain_divide" />
+      <Divider mt=".5rem" mb=".5rem" />
 
       <div class="ysink_stain_tabbar_content">
         <Dynamic component={props.items[current()].component} goTo={goTo} />

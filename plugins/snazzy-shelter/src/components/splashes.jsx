@@ -14,7 +14,7 @@ const Splash = (props) => (
 		<Button
 			class="ysink_stain_button"
 			color={ButtonColors.GREEN}
-			sizes={ButtonSizes.LARGE}
+			size={ButtonSizes.LARGE}
 			onClick={props.onClick}
 		>
 			{props.btnText}

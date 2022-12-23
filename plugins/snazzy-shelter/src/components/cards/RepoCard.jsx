@@ -33,6 +33,7 @@ export default (props) => {
 			<Button
 				color={ButtonColors.RED}
 				class="ysink_stain_button"
+				grow
 				onClick={() =>
 					(store.repos = store.repos.filter((r) => r !== props.repo))
 				}

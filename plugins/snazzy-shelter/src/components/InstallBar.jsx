@@ -2,7 +2,7 @@ import fetchTheme from "../util/fetchTheme";
 import { loadTheme } from "../util/themeLoadUtil";
 
 const {
-  ui: { Button },
+  ui: { Button, ButtonSizes },
 	solid: {createSignal}
 } = shelter;
 
@@ -25,6 +25,7 @@ export default () => {
 
       <Button
         class="ysink_stain_button"
+        size={ButtonSizes.MEDIUM}
         onClick={() => {
           fetchTheme(urlInput()).then(
             async (t) => {
