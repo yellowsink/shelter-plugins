@@ -2,7 +2,7 @@ import fetchRepo from "../../util/fetchRepo";
 
 import ThemeCard from "../cards/ThemeCard";
 import SearchBar from "../SearchBar";
-import fuzzy from "../../util/fuzzy";
+import {fuzzyThemes} from "../../util/fuzzy";
 import CompatFilterDropdown from "../CompatFilterDropdown";
 import { NoRepos } from "../splashes";
 import VirtualScroller from "../VirtualScroller";
@@ -19,7 +19,7 @@ const getThemes = () => getRepos().then((rs) => rs.flatMap((r) => r.themes));
 
 export default (props) => {
 	const [search, setSearch] = createSignal("");
-	const [filterMode, setFilterMode] = createSignal(0);
+	const [filterMode, setFilterMode] = createSignal("0");
 
 	const [themes] = createResource(() => store.repos, getThemes);
 
@@ -37,15 +37,7 @@ export default (props) => {
 					class={niceScrollbarsClass()}
 					height="50rem"
 					keySel={(t) => t.url}
-					items={fuzzy(
-						_.uniqBy(themes() ?? [], (t) => t.url),
-						search()
-					).filter(
-						(t) =>
-							filterMode() === 0 ||
-							(filterMode() === 1 && !t.compat) ||
-							(filterMode() === 2 && t.compat)
-					)}
+					items={fuzzyThemes(themes(), search(), filterMode())}
 				>
 					{(theme) => <ThemeCard theme={theme} gap=".5rem" />}
 				</VirtualScroller>
