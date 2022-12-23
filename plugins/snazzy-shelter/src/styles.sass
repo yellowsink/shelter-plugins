@@ -1,0 +1,189 @@
+//  ------------------------
+// |   GENERAL COMPONENTS   |
+//  ------------------------
+.ysink_stain_card
+	background: var(--background-secondary-alt)
+	padding: 1rem
+	border: 1px solid var(--background-modifier-accent)
+	border-radius: 0.5rem
+	width: 100% !important
+	color: var(--text-normal)
+
+// Replaces <FormTitle />
+.ysink_stain_title
+	display: flex
+	align-items: center
+	font-size: 1rem
+	color: var(--interactive-active)
+
+.ysink_stain_cardcontainer > *
+	margin-bottom: .5rem
+
+.ysink_stain_row
+	display: flex
+	gap: 1rem
+
+	& > :not(:last-child)
+		flex: 1
+
+.ysink_stain_tabbar
+	padding: .5rem 1rem
+	display: grid
+	grid-auto-flow: column
+	grid-auto-columns: 7rem
+
+	.ysink_stain_button *
+		cursor: pointer
+
+	& > *
+		margin-right: 1rem
+		padding: .2rem
+		border-radius: .3rem
+		min-width: 5rem
+		text-align: center
+
+		background: none
+
+		&.ysink_stain_selected
+			.theme-dark &
+				background: #fff4
+
+			.theme-light &
+				background: #0003
+
+		&:last-child
+			margin-right: 0
+
+.ysink_stain_searchbar
+	margin: .75rem 0
+
+.ysink_stain_search_row
+	display: flex
+	gap: .75rem
+	margin: .75rem 0
+
+	.ysink_stain_dropdown
+		height: 2.25rem
+		flex-basis: 10rem
+		//padding-top: .3rem
+		background: var(--input-background)
+		color: white
+		border: none
+
+	.ysink_stain_searchbar
+		margin: unset
+		flex: 1
+
+//  -------------------------
+// |   SPECIFIC COMPONENTS   |
+//  -------------------------
+// theme card
+.ysink_stain_tcard
+	display: grid
+	grid-template-columns: auto 1fr min-content
+	grid-template-rows: auto 1fr
+	align-items: center
+
+	// small media on left
+	.ysink_stain_tmedia
+		grid-row: 1 / 3
+		height: 4rem
+		width: 7rem
+		margin-right: 1rem
+		background-size: cover
+		// background-image will be added inline
+		*
+			display: flex
+			justify-content: center
+			align-items: center
+			height: 100%
+
+		.ysink_stain_tview
+			z-index: 1
+			transition: opacity 250ms ease
+			backdrop-filter: brightness(.3)
+			cursor: pointer
+
+			&:not(:hover)
+				opacity: 0
+
+	// description
+	.ysink_stain_tdesc
+		grid-area: 2 / 2
+
+	// actions - switch & delete
+	.ysink_stain_tacts
+		grid-column: 3
+		justify-self: right
+
+		&> :last-child
+			margin-left: .25rem
+
+		& > *
+			display: inline-block
+
+	// author & license
+	.ysink_stain_taulic
+		text-align: right
+		min-width: 8rem
+
+// theme card delete button
+.ysink_stain_iconbtn
+	margin-right: .25rem
+	fill: var(--interactive-normal)
+	cursor: pointer
+	height: 22px
+	width: 22px
+
+// BD & CC badges - used in theme card
+.ysink_stain_badge
+	width: 1.5rem
+	height: 1.5rem
+	margin-right: .5rem
+	border-radius: 50%
+
+	&.ysink_stain_bd
+		padding: .25rem
+		background: #040405
+
+	&.ysink_stain_cc
+		padding: .1rem
+		background: #7289DA
+
+// no themes splashes
+.ysink_stain_nosplash
+	display: flex
+	flex-direction: column
+	align-items: center
+	margin-top: 15rem
+	gap: .5rem
+
+	h2
+		margin-bottom: 0
+
+	& > *
+		flex: 0
+
+	.ysink_stain_button
+		margin-top: 2rem
+
+// repo cards (OFFICIAL) pills
+.ysink_stain_officialbadge
+	display: inline
+	margin-left: .5rem
+
+// quick fix
+.ysink_stain_button
+	color: white !important
+
+// makeshift inputs
+.ysink_stain_input, .ysink_stain_searchbar
+	background: var(--input-background)
+	color: white
+	border: none
+
+// allows the virtual scroller to use up plenty of space
+// without this, the whole settings page will scroll
+// unless we leave a phat gap at the bottom (quite annoying!)
+#shsnazzy-tab
+	padding-bottom: 0

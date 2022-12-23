@@ -3,6 +3,8 @@ import {readdir, readFile, writeFile, rm} from "fs/promises";
 import {existsSync} from "fs";
 import {build} from "esbuild";
 import {solidPlugin} from "esbuild-plugin-solid";
+import { sassPlugin } from "esbuild-sass-plugin-ysink";
+import {shelterSolidResolver} from "./shelter-esbuild-plugins.mjs";
 
 const MD5 = (data) => createHash("md5").update(data).digest("hex").toString();
 
@@ -21,22 +23,11 @@ for (const plug of await readdir("plugins")) {
 		entryPoints: [entryPoint],
 		bundle: true,
 		outfile: outfile,
-		minify: true,
+		minify: false,
 		plugins: [
 			solidPlugin(),
-			{
-				name: "solid-shelter-resolver",
-				setup(build) {
-					build.onResolve({filter: /solid-js(?:\/web)?/}, ({path}) => ({
-						path,
-						namespace: "shltr-res-ns"
-					}));
-					build.onLoad({filter: /.*/, namespace: "shltr-res-ns"}, ({ path }) => ({
-						contents: `module.exports = shelter.${path === "solid-js/web" ? "solidWeb" : "solid"}`,
-						loader: "js"
-					}));
-				}
-			}
+			sassPlugin({style: "compressed", sourceMap: false, type: "css-text"}),
+			shelterSolidResolver()
 		],
 		globalName: "e"
 	});
