@@ -1,14 +1,14 @@
 import MonacoSolid from "@uwu/monaco-solid";
 
-const saveCssDebounced = _.debounce((v) => (store.css = v), 250);
+const saveCssDebounced = _.debounce((v) => (store.quickCSS = v), 250);
 
 const {
-	shelter: { createSignal },
+	solid: { createSignal },
 	plugin: {store}
 } = shelter;
 
 export default () => {
-	const [css, setCss] = createSignal(store.css);
+	const [css, setCss] = createSignal(store.quickCSS);
 
   return (
     <div
@@ -21,7 +21,7 @@ export default () => {
       }}
     >
       <MonacoSolid
-        value={css()}
+        value={css() ?? " "}
         valOut={(v) => {
           setCss(v);
           saveCssDebounced(v);

@@ -23,7 +23,7 @@ for (const plug of await readdir("plugins")) {
 		entryPoints: [entryPoint],
 		bundle: true,
 		outfile: outfile,
-		minify: true,
+		minify: false,
 		plugins: [
 			solidPlugin(),
 			sassPlugin({style: "compressed", sourceMap: false, type: "css-text"}),

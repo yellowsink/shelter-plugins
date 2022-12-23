@@ -1,3 +1,5 @@
+import fetchRepo from "./util/fetchRepo";
+
 const {
 	plugin: {store}
 } = shelter;
@@ -18,9 +20,6 @@ export default async () => {
 			continue;
 		}
 
-		store.repos.push(r);
+		store.repos = [...store.repos, r];
 	}
-
-	// raise events
-	// store.repos = store.repos.slice();
 }

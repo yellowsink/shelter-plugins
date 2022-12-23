@@ -1,11 +1,11 @@
 const {
 	solid: {createEffect},
 	plugin: {store},
-	ui: {injectCSS}
+	ui: {injectCss}
 } = shelter;
 
 export default () => {
-	const modify = injectCSS(store.quickCSS || " ");
+	const modify = injectCss(store.quickCSS || " ");
 
 	let cancel;
 

@@ -4,10 +4,12 @@ importers:
 
   .:
     specifiers:
+      '@uwu/shelter-defs': ^1.0.2
       esbuild: ^0.15.13
       esbuild-plugin-solid: ^0.4.2
       esbuild-sass-plugin-ysink: ^2.3.3
     devDependencies:
+      '@uwu/shelter-defs': 1.0.2
       esbuild: 0.15.13
       esbuild-plugin-solid: 0.4.2_esbuild@0.15.13
       esbuild-sass-plugin-ysink: 2.3.3
@@ -431,6 +433,14 @@ packages:
       monaco-editor: 0.33.0
     dev: false
 
+  /@uwu/shelter-defs/1.0.2:
+    resolution: {integrity: sha512-53gqhbI1tPzOUqdYZ0XqvNUVznxICyEdBt8fSWGwtmZzQVoEa/GCRzMzKvZg8BF4bMo4qR470yK3H3Apay8RLg==}
+    dependencies:
+      idb: 7.1.1
+      solid-js: 1.6.6
+      spitroast: 1.4.2
+    dev: true
+
   /ansi-styles/3.2.1:
     resolution: {integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==}
     engines: {node: '>=4'}
@@ -530,6 +540,10 @@ packages:
 
   /convert-source-map/1.9.0:
     resolution: {integrity: sha512-ASFBup0Mz1uyiIjANan1jzLQami9z1PoYSZCiiYW2FczPbenXc45FZdBZLzOT+r6+iciuEModtmCti+hjaAk0A==}
+    dev: true
+
+  /csstype/3.1.1:
+    resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
     dev: true
 
   /debug/4.3.4:
@@ -1056,6 +1070,10 @@ packages:
     resolution: {integrity: sha512-c3Ab/url5ksaT0WyleslpBEthOzWhrjQbg75y7XUsfSzi3Dgzt0l8w5e7DylRn15MTlMMD58dTfzddNS2kcAjQ==}
     dev: true
 
+  /idb/7.1.1:
+    resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
+    dev: true
+
   /immutable/4.2.0:
     resolution: {integrity: sha512-h4ujZ0OZ3kpvdFcwJAHXEdvawH7J8TYTB62e8xI03OSZhuGpuPY9DPXnonMN8s+uQ56gMUqMK71mXU8ob20xfA==}
     dev: true
@@ -1167,9 +1185,19 @@ packages:
     hasBin: true
     dev: true
 
+  /solid-js/1.6.6:
+    resolution: {integrity: sha512-5x33mEbPI8QLuywvFjQP4krjWDr8xiYFgZx9KCBH7b0ZzypQCHaUubob7bK6i+1u6nhaAqhWtvXS587Kb8DShA==}
+    dependencies:
+      csstype: 3.1.1
+    dev: true
+
   /source-map-js/1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
+    dev: true
+
+  /spitroast/1.4.2:
+    resolution: {integrity: sha512-iEBsKg3EXTQj2nikYIMtOE5YSqbI5CtRxVYI+Gh+9HeQxf4u86UWF5yC5eTVAoReZSogbD2M37JYG8TYGBnFTg==}
     dev: true
 
   /state-local/1.0.7:

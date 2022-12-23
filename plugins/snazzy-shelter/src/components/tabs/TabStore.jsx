@@ -21,7 +21,7 @@ export default (props) => {
 	const [search, setSearch] = createSignal("");
 	const [filterMode, setFilterMode] = createSignal(0);
 
-	const themes = createResource(() => store.repos, getThemes);
+	const [themes] = createResource(() => store.repos, getThemes);
 
 	return (
 		<>
@@ -38,7 +38,7 @@ export default (props) => {
 					height="50rem"
 					/*keySel={(t) => t.url}*/
 					items={fuzzy(
-						_.uniqBy(themes ?? [], (t) => t.url),
+						_.uniqBy(themes() ?? [], (t) => t.url),
 						search()
 					).filter(
 						(t) =>

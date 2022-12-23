@@ -1,7 +1,6 @@
 // SOURCE https://github.com/sink-cord-archive/cc-plugins/blob/master/plugins/cumstain/util/friendlyUtils.js
 
 import fetchRepo from "./fetchRepo";
-import { persist } from "@cumcord/pluginData";
 import fetchTheme from "./fetchTheme";
 import { loadTheme } from "./themeLoadUtil";
 
@@ -29,9 +28,7 @@ export async function addRepo(repo, ok, err) {
 		return false;
 	}
 
-	store.repos.push(repo);
-	// correctly raise events
-	//persist.set({ path: ["repos"] });
+	store.repos = [...store.repos, repo];
 	ok("Added repo");
 	return true;
 }

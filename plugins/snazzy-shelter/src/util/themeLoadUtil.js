@@ -1,7 +1,7 @@
 // SOURCE https://github.com/sink-cord-archive/cc-plugins/blob/master/plugins/cumstain/util/themeLoadUtil.js
 
 const {
-  ui: { injectCSS },
+  ui: { injectCss },
   plugin: { store },
 } = shelter;
 
@@ -11,7 +11,7 @@ export async function loadTheme(theme) {
   if (!theme?.url || !(await theme.CSS()))
     throw new Error("theme was missing either id or css.");
 
-  const unpatch = injectCSS(await theme.CSS());
+  const unpatch = injectCss(await theme.CSS());
   unpatchCache.set(theme.url, unpatch);
 
   const themeCacheIndex = store.themes.findIndex(
@@ -22,7 +22,7 @@ export async function loadTheme(theme) {
   delete toPush.CSS;
   toPush.enabled = true;
 
-  if (themeCacheIndex === -1) store.themes.push(toPush);
+  if (themeCacheIndex === -1) store.themes = [...store.themes, toPush];
   else store.themes[themeCacheIndex] = toPush;
 
   // trigger set event
@@ -42,7 +42,7 @@ export function unloadTheme(theme) {
   );
   let toPush = { ...theme };
   toPush.enabled = false;
-  if (themeCacheIndex === -1) store.themes.push(toPush);
+  if (themeCacheIndex === -1) store.themes = [...store.themes, toPush];
   else store.themes[themeCacheIndex] = toPush;
 
   // trigger set event

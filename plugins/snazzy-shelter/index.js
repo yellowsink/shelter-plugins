@@ -11,9 +11,20 @@ const {
 	ui: { injectCss }
 } = shelter;
 
+window.debug_store = store;
+
 if (!Array.isArray(store.repos)) defaultRepos();
 
 if (!Array.isArray(store.themes)) store.themes = [];
+
+// migration from when snazzy-shelter was just a quickcss
+// not a port of cumstain
+if (store.css) {
+	if (!store.quickCSS)
+		store.quickCSS = store.css;
+
+	delete store.css;
+}
 
 // transients: ran at start and live until plugin unloaded
 // in *sink cumcord plugin architecture* terminology, these are patches.

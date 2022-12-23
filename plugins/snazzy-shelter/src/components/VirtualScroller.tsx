@@ -10,6 +10,8 @@ interface VirtualScrollerProps<TItem> {
 
 export default <TItem,>(props: VirtualScrollerProps<TItem>) => {
 
+	debugger;
+
 	let parentRef: HTMLDivElement;
 
 	const rowVirtualiser = createVirtualizer({
