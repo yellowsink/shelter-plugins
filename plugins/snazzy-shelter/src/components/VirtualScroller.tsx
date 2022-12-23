@@ -1,4 +1,4 @@
-import { createVirtualizer } from "@tanstack/solid-virtual";
+//import { createVirtualizer } from "@tanstack/solid-virtual";
 
 interface VirtualScrollerProps<TItem, TKey> {
   items: TItem[];
@@ -8,7 +8,7 @@ interface VirtualScrollerProps<TItem, TKey> {
   class: string;
 }
 
-export default <TItem, TKey>(props: VirtualScrollerProps<TItem, TKey>) => {
+/*const _ = <TItem, TKey>(props: VirtualScrollerProps<TItem, TKey>) => {
   let parentRef: HTMLDivElement;
 
   const virt = createVirtualizer({
@@ -52,4 +52,24 @@ export default <TItem, TKey>(props: VirtualScrollerProps<TItem, TKey>) => {
       </div>
     </div>
   );
-};
+}*/
+
+const {For} = window["shelter"].solid;
+
+export default (props: VirtualScrollerProps<any, any>) => (
+  <div
+    style={{ "overflow-y": "auto", height: props.height }}
+    class={props.class}
+  >
+    <div
+      style={{
+        width: "100%",
+        position: "relative",
+      }}
+    >
+      <For each={props.items}>
+        {(item) => props.children(item)}
+      </For>
+    </div>
+  </div>
+)

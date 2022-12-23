@@ -18,7 +18,7 @@ export const fuzzy = (set, search) =>
         .map((searchResult) => searchResult.item);
 
 export const fuzzyThemes = (themes, search, filterMode) =>
-  fuzzy(_.uniqBy(themes ?? [], (t) => t.url)).filter(
+  fuzzy(_.uniqBy(themes ?? [], (t) => t.url), search).filter(
     (t) =>
       filterMode === "0" ||
       (filterMode === "1" && !t.compat) ||
