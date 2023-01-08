@@ -1,7 +1,7 @@
 const {
 	flux: {
 		dispatcher,
-		stores: { GuildMemberStore, ChannelStore }
+		stores: { GuildMemberStore, ChannelStore, RelationshipStore }
 	},
 	util: {
 		getFiber,
@@ -18,8 +18,9 @@ function addUsernames() {
 		const msg = reactFiberWalker(getFiber(e), "message", true).pendingProps?.message;
 		const authorUsername = msg.author?.username;
 		const authorId = msg?.author?.id;
-		const guildId = ChannelStore.getChannel(msg?.channel_id)?.guild_id;
-		const nick = GuildMemberStore.getNick(guildId, authorId);
+		const { type, guildId } = ChannelStore.getChannel(msg?.channel_id);
+		// type = 0: Guild, 1: DM
+		const nick = type ? RelationshipStore.getNickname(authorId) : GuildMemberStore.getNick(guildId, authorId);
 
 		if (!nick || !authorUsername) continue;
 
