@@ -18,7 +18,7 @@ function addUsernames() {
 		const msg = reactFiberWalker(getFiber(e), "message", true).pendingProps?.message;
 		const authorUsername = msg.author?.username;
 		const authorId = msg?.author?.id;
-		const { type, guildId } = ChannelStore.getChannel(msg?.channel_id);
+		const { type, guild_id: guildId } = ChannelStore.getChannel(msg?.channel_id);
 		// type = 0: Guild, 1: DM
 		const nick = type ? RelationshipStore.getNickname(authorId) : GuildMemberStore.getNick(guildId, authorId);
 
