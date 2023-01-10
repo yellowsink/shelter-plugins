@@ -14,6 +14,12 @@ importers:
       esbuild-plugin-solid: 0.4.2_esbuild@0.15.13
       esbuild-sass-plugin-ysink: 2.3.3
 
+  plugins/codeblocks-plus:
+    specifiers:
+      shiki-es: ^0.2.0
+    dependencies:
+      shiki-es: 0.2.0
+
   plugins/snazzy-shelter:
     specifiers:
       '@tanstack/solid-virtual': 3.0.0-beta.6
@@ -1184,6 +1190,10 @@ packages:
     resolution: {integrity: sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==}
     hasBin: true
     dev: true
+
+  /shiki-es/0.2.0:
+    resolution: {integrity: sha512-RbRMD+IuJJseSZljDdne9ThrUYrwBwJR04FvN4VXpfsU3MNID5VJGHLAD5je/HGThCyEKNgH+nEkSFEWKD7C3Q==}
+    dev: false
 
   /solid-js/1.6.6:
     resolution: {integrity: sha512-5x33mEbPI8QLuywvFjQP4krjWDr8xiYFgZx9KCBH7b0ZzypQCHaUubob7bK6i+1u6nhaAqhWtvXS587Kb8DShA==}
