@@ -27,7 +27,9 @@ export default () => {
 
   return (
     <>
-      <Codeblock lang="js">{preview}</Codeblock>
+      <div style="margin-bottom: .5rem">
+        <Codeblock lang="js">{preview}</Codeblock>
+      </div>
 
       <Header tag={HeaderTags.H4}>Select theme</Header>
       <select

@@ -1,0 +1,28 @@
+$SCROLLBAR_COMPENSATION: 8px
+
+.ys_cbp_wrap
+	border-radius: 0
+	padding: 0 .5rem calc(.5rem - $SCROLLBAR_COMPENSATION)
+
+	pre
+		overflow-x: scroll // intentionally not auto
+
+	button
+		color: var(--text-normal)
+		background: var(--background-secondary)
+		font-size: .9rem
+		padding: .1rem .5rem
+		border-radius: .25rem
+
+.ys_cbp_row
+	border-bottom: 1px solid var(--text-muted)
+	display: flex
+	align-items: center
+	padding: .25rem 0
+	margin-bottom: .25rem
+
+	font-size: .95rem // a tiny change but its enough of a difference
+	font-weight: 500
+
+	&> :first-child
+		flex: 1

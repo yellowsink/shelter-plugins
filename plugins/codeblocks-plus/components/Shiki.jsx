@@ -1,25 +1,37 @@
 import { highlighter } from "../shiki";
-import {currentTheme} from "../themes/themeProcessor";
+import { currentTheme } from "../themes/themeProcessor";
 
 const {
-  solid: { Show },
+  solid: { createMemo },
+  ui: { niceScrollbarsClass },
 } = shelter;
 
-export default (props) => (
-  <Show
-    when={highlighter()}
-    fallback={
-      <pre>
-        <code>{props.children}</code>
-      </pre>
-    }
-  >
-    <div
-      innerHTML={highlighter()?.codeToHtml(
-        props.children,
-        props.lang,
-        currentTheme()
-      )}
-    />
-  </Show>
-);
+export default (props) => {
+  const highlighted = createMemo(() => {
+    const html = highlighter()?.codeToHtml(
+      props.children,
+      props.lang,
+      currentTheme()
+    );
+
+    const n = new DOMParser()
+      .parseFromString(html, "text/html")
+      .getElementsByTagName("pre")[0];
+
+    if (!n) return;
+
+    n.classList.add(niceScrollbarsClass());
+
+    props.bgColOut?.(n.style.backgroundColor);
+
+    return n;
+  });
+
+  return highlighter() ? (
+    highlighted()
+  ) : (
+    <pre>
+      <code>{props.children}</code>
+    </pre>
+  );
+};

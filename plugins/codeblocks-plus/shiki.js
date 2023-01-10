@@ -6,5 +6,3 @@ export const [highlighter] = shelter.solid.createResource(() =>
     langs: BUNDLED_LANGUAGES,
   })
 );
-
-shelter.solid.createEffect(() => shelter.util.log(highlighter()))
