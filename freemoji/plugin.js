@@ -42,14 +42,11 @@
   // plugins/freemoji/slateTreeProcessor.js
   var {
     plugin: { store },
-    flux: {
-      stores: {
-        SelectedGuildStore,
-        EmojiStore
-      }
-    }
+    flux: { stores: { SelectedGuildStore, EmojiStore } }
   } = shelter;
-  var isInDms = () => !!document.querySelector('[data-list-item-id="guildsnav___home"][class*="selected"]');
+  var isInDms = () => !!document.querySelector(
+    '[data-list-item-id="guildsnav___home"][class*="selected"]'
+  );
   var getEmoteSize = () => Number.isSafeInteger(parseInt(store.size)) ? store.size : 64;
   var slateTreeProcessor_default = (slateTree) => {
     const extractedEmojis = [];
@@ -60,7 +57,9 @@
         if (lineItem.emoji) {
           const emoji = EmojiStore.getCustomEmojiById(lineItem.emoji.emojiId);
           if (emoji.guildId !== SelectedGuildStore.getLastSelectedGuildId() || emoji.animated || isInDms()) {
-            extractedEmojis.push(`${emoji.url.split("?")[0]}?size=${getEmoteSize()}`);
+            extractedEmojis.push(
+              `${emoji.url.split("?")[0]}?size=${getEmoteSize()}`
+            );
             continue;
           }
         }

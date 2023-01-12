@@ -79,11 +79,7 @@
     plugin: { store: store2 },
     flux: {
       dispatcher,
-      stores: {
-        ChannelStore,
-        SelectedChannelStore,
-        MessageStore
-      }
+      stores: { ChannelStore, SelectedChannelStore, MessageStore }
     }
   } = shelter;
   var { getChannel } = ChannelStore;

@@ -5170,10 +5170,7 @@ btn.addEventListener("click", () => {
     ui: { injectCss }
   } = shelter;
   store2.nums ??= true;
-  var transients = [
-    injectCss(styles_default),
-    replacer_default()
-  ];
+  var transients = [injectCss(styles_default), replacer_default()];
   var onUnload = () => transients.forEach((p) => p());
   return __toCommonJS(codeblocks_plus_exports);
 })();

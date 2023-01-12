@@ -218,7 +218,9 @@
   var {
     plugin: { store }
   } = shelter;
-  var officialRepos = Object.freeze(["https://cumcordthemes.github.io/Cumsock/"]);
+  var officialRepos = Object.freeze([
+    "https://cumcordthemes.github.io/Cumsock/"
+  ]);
   var defaultRepos_default = async () => {
     if (!Array.isArray(store.repos))
       store.repos = [];
@@ -264,9 +266,7 @@
       throw new Error("theme was missing either id or css.");
     const unpatch = injectCss2(await theme.CSS());
     unpatchCache.set(theme.url, unpatch);
-    const themeCacheIndex = store3.themes.findIndex(
-      (t) => t.url === theme.url
-    );
+    const themeCacheIndex = store3.themes.findIndex((t) => t.url === theme.url);
     let toPush = { ...theme };
     delete toPush.CSS;
     toPush.enabled = true;
@@ -281,9 +281,7 @@
     const unpatch = unpatchCache.get(theme.url);
     unpatch?.();
     unpatchCache.delete(theme.url);
-    const themeCacheIndex = store3.themes.findIndex(
-      (t) => t.url === theme.url
-    );
+    const themeCacheIndex = store3.themes.findIndex((t) => t.url === theme.url);
     let toPush = { ...theme };
     toPush.enabled = false;
     if (themeCacheIndex === -1)
@@ -298,9 +296,7 @@
       if (e.message !== "theme was not loaded.")
         throw e;
     }
-    store3.themes = store3.themes.filter(
-      (t) => t.url !== theme.url
-    );
+    store3.themes = store3.themes.filter((t) => t.url !== theme.url);
   }
   function unloadAll() {
     unpatchCache.forEach((unpatch) => unpatch?.());
@@ -308,7 +304,9 @@
   }
 
   // plugins/snazzy-shelter/src/transients/restoreThemes.js
-  var { plugin: { store: store4 } } = shelter;
+  var {
+    plugin: { store: store4 }
+  } = shelter;
   var restoreThemes_default = () => {
     let cancel = false;
     if (store4.themes)
@@ -1893,7 +1891,10 @@
     keys: ["name", "author", "description"]
   };
   var fuzzy = (set, search2) => !search2 || search2 === "" ? set : new Fuse(set, fuseOptions).search(search2).map((searchResult) => searchResult.item);
-  var fuzzyThemes = (themes, search2, filterMode) => fuzzy(_.uniqBy(themes ?? [], (t) => t.url), search2).filter(
+  var fuzzyThemes = (themes, search2, filterMode) => fuzzy(
+    _.uniqBy(themes ?? [], (t) => t.url),
+    search2
+  ).filter(
     (t) => filterMode === "0" || filterMode === "1" && !t.compat || filterMode === "2" && t.compat
   );
 
@@ -2813,7 +2814,9 @@
   };
 
   // plugins/snazzy-shelter/src/util/friendlyUtils.js
-  var { plugin: { store: store9 } } = shelter;
+  var {
+    plugin: { store: store9 }
+  } = shelter;
   async function verifyRepo(repo) {
     try {
       await fetchRepo_default(repo);
@@ -3089,7 +3092,12 @@
   };
 
   // plugins/snazzy-shelter/src/transients/settingsEntry.js
-  var settingsEntry_default = () => shelter.settings.registerSection("section", "shsnazzy", "Themes", SettingsMain_default);
+  var settingsEntry_default = () => shelter.settings.registerSection(
+    "section",
+    "shsnazzy",
+    "Themes",
+    SettingsMain_default
+  );
 
   // plugins/snazzy-shelter/src/styles.sass
   var styles_default = `
