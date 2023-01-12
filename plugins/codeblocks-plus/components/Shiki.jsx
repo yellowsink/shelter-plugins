@@ -2,7 +2,7 @@ import { highlighter } from "../shiki";
 import { currentTheme } from "../themes/themeProcessor";
 
 const {
-  solid: { createMemo },
+  solid: { createMemo, Show },
   ui: { niceScrollbarsClass },
 } = shelter;
 
@@ -27,11 +27,16 @@ export default (props) => {
     return n;
   });
 
-  return highlighter() ? (
-    highlighted()
-  ) : (
-    <pre>
-      <code>{props.children}</code>
-    </pre>
+  return (
+    <Show
+      when={highlighter()}
+      fallback={
+        <pre class={`shiki ${niceScrollbarsClass()}`}>
+          <code>{props.children}</code>
+        </pre>
+      }
+    >
+      {highlighted()}
+    </Show>
   );
 };

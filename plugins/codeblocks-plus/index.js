@@ -1,4 +1,5 @@
 import css from "./styles.sass";
+import replacer from "./replacer";
 
 const {
   plugin: { store },
@@ -8,7 +9,8 @@ const {
 store.nums ??= true;
 
 const transients = [
-  injectCss(css)
+  injectCss(css),
+  replacer(),
 ]
 
 export const onUnload = () => transients.forEach(p => p())

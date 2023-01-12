@@ -3,9 +3,16 @@ $SCROLLBAR_COMPENSATION: 8px
 .ys_cbp_wrap
 	border-radius: 0
 	padding: 0 .5rem calc(.5rem - $SCROLLBAR_COMPENSATION)
+	color: var(--text-normal)
+	height: 100% // makes it look right in file embeds, does nothing else
 
 	pre
+		background: none !important
 		overflow-x: scroll // intentionally not auto
+
+	code
+		background: none
+		border: none
 
 	button
 		color: var(--text-normal)
