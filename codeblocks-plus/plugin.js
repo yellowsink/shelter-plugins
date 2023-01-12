@@ -42,14 +42,25 @@
 
   // plugins/codeblocks-plus/styles.sass
   var styles_default = `
-.ys_cbp_wrap{border-radius:0;padding:0 .5rem calc(.5rem - 8px)}.ys_cbp_wrap pre{overflow-x:scroll}.ys_cbp_wrap button{color:var(--text-normal);background:var(--background-secondary);font-size:.9rem;padding:.1rem .5rem;border-radius:.25rem}.ys_cbp_row{border-bottom:1px solid var(--text-muted);display:flex;align-items:center;padding:.25rem 0;margin-bottom:.25rem;font-size:.95rem;font-weight:500}.ys_cbp_row>:first-child{flex:1}`;
+.ys_cbp_wrap{border-radius:0;padding:0 .5rem calc(.5rem - 8px);color:var(--text-normal);height:100%}.ys_cbp_wrap pre{background:none !important;overflow-x:scroll}.ys_cbp_wrap code{background:none;border:none}.ys_cbp_wrap button{color:var(--text-normal);background:var(--background-secondary);font-size:.9rem;padding:.1rem .5rem;border-radius:.25rem}.ys_cbp_row{border-bottom:1px solid var(--text-muted);display:flex;align-items:center;padding:.25rem 0;margin-bottom:.25rem;font-size:.95rem;font-weight:500}.ys_cbp_row>:first-child{flex:1}`;
 
-  // plugins/codeblocks-plus/components/settings.jsx
+  // plugins/codeblocks-plus/replacer.jsx
+  var import_web12 = __toESM(require_web());
+
+  // plugins/codeblocks-plus/components/Codeblock.jsx
+  var import_web6 = __toESM(require_web());
+  var import_web7 = __toESM(require_web());
+  var import_web8 = __toESM(require_web());
+  var import_web9 = __toESM(require_web());
   var import_web10 = __toESM(require_web());
   var import_web11 = __toESM(require_web());
-  var import_web12 = __toESM(require_web());
-  var import_web13 = __toESM(require_web());
-  var import_web14 = __toESM(require_web());
+
+  // plugins/codeblocks-plus/components/Shiki.jsx
+  var import_web = __toESM(require_web());
+  var import_web2 = __toESM(require_web());
+  var import_web3 = __toESM(require_web());
+  var import_web4 = __toESM(require_web());
+  var import_web5 = __toESM(require_web());
 
   // node_modules/.pnpm/shiki-es@0.2.0/node_modules/shiki-es/dist/shiki.mjs
   var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof {} !== "undefined" ? {} : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
@@ -4932,26 +4943,6 @@
   var version = "0.2.0";
   setCDN(`https://cdn.jsdelivr.net/npm/shiki-es@${version}/dist/assets/`);
 
-  // plugins/codeblocks-plus/themes/themeProcessor.js
-  var processThemeName = (n) => n.split("-").map((word) => word[0].toUpperCase() + word.slice(1)).join(" ");
-  var processTheme = (t) => ({ name: processThemeName(t), url: t });
-  var includedThemes = themes.map(processTheme);
-  var defaultTheme = processTheme("github-dark");
-  var currentTheme = () => shelter.plugin.store.theme ?? defaultTheme.url;
-
-  // plugins/codeblocks-plus/components/Codeblock.jsx
-  var import_web3 = __toESM(require_web());
-  var import_web4 = __toESM(require_web());
-  var import_web5 = __toESM(require_web());
-  var import_web6 = __toESM(require_web());
-  var import_web7 = __toESM(require_web());
-  var import_web8 = __toESM(require_web());
-  var import_web9 = __toESM(require_web());
-
-  // plugins/codeblocks-plus/components/Shiki.jsx
-  var import_web = __toESM(require_web());
-  var import_web2 = __toESM(require_web());
-
   // plugins/codeblocks-plus/shiki.js
   var [highlighter] = shelter.solid.createResource(
     () => getHighlighter({
@@ -4960,11 +4951,19 @@
     })
   );
 
+  // plugins/codeblocks-plus/themes/themeProcessor.js
+  var processThemeName = (n) => n.split("-").map((word) => word[0].toUpperCase() + word.slice(1)).join(" ");
+  var processTheme = (t) => ({ name: processThemeName(t), url: t });
+  var includedThemes = themes.map(processTheme);
+  var defaultTheme = processTheme("github-dark");
+  var currentTheme = () => shelter.plugin.store.theme ?? defaultTheme.url;
+
   // plugins/codeblocks-plus/components/Shiki.jsx
   var _tmpl$ = /* @__PURE__ */ (0, import_web.template)(`<pre><code></code></pre>`, 4);
   var {
     solid: {
-      createMemo
+      createMemo,
+      Show
     },
     ui: {
       niceScrollbarsClass
@@ -4980,15 +4979,26 @@
       props.bgColOut?.(n.style.backgroundColor);
       return n;
     });
-    return highlighter() ? highlighted() : (() => {
-      const _el$ = _tmpl$.cloneNode(true), _el$2 = _el$.firstChild;
-      (0, import_web2.insert)(_el$2, () => props.children);
-      return _el$;
-    })();
+    return (0, import_web5.createComponent)(Show, {
+      get when() {
+        return highlighter();
+      },
+      get fallback() {
+        return (() => {
+          const _el$ = _tmpl$.cloneNode(true), _el$2 = _el$.firstChild;
+          (0, import_web4.insert)(_el$2, () => props.children);
+          (0, import_web3.effect)(() => (0, import_web2.className)(_el$, `shiki ${niceScrollbarsClass()}`));
+          return _el$;
+        })();
+      },
+      get children() {
+        return highlighted();
+      }
+    });
   };
 
   // plugins/codeblocks-plus/components/Codeblock.jsx
-  var _tmpl$2 = /* @__PURE__ */ (0, import_web3.template)(`<div class="ys_cbp_wrap"><div class="ys_cbp_row"><div></div><button></button></div></div>`, 8);
+  var _tmpl$2 = /* @__PURE__ */ (0, import_web6.template)(`<div class="ys_cbp_wrap"><div class="ys_cbp_row"><div></div><button></button></div></div>`, 8);
   var {
     solid: {
       createSignal
@@ -4997,9 +5007,10 @@
   var Codeblock_default = (props) => {
     const [cooldown, setCooldown] = createSignal(false);
     const [bgCol, setBgCol] = createSignal();
+    const lang = () => !highlighter() || highlighter().getLoadedLanguages().includes(props.lang) ? props.lang : "";
     return (() => {
       const _el$ = _tmpl$2.cloneNode(true), _el$2 = _el$.firstChild, _el$3 = _el$2.firstChild, _el$4 = _el$3.nextSibling;
-      (0, import_web9.insert)(_el$3, () => props.lang?.toUpperCase());
+      (0, import_web11.insert)(_el$3, () => (lang() ?? "").toUpperCase());
       _el$4.$$click = async () => {
         if (window.DiscordNative)
           DiscordNative.clipboard.copy(props.childen);
@@ -5010,12 +5021,18 @@
         setCooldown(true);
         setTimeout(() => setCooldown(false), 2e3);
       };
-      (0, import_web9.insert)(_el$4, () => cooldown() ? "Copied!" : "Copy");
-      (0, import_web9.insert)(_el$, (0, import_web6.createComponent)(Shiki_default, (0, import_web7.mergeProps)(props, {
-        bgColOut: setBgCol
-      })), null);
-      (0, import_web5.effect)((_p$) => {
-        const _v$ = bgCol(), _v$2 = cooldown();
+      (0, import_web11.insert)(_el$4, () => cooldown() ? "Copied!" : "Copy");
+      (0, import_web11.insert)(_el$, (0, import_web9.createComponent)(Shiki_default, {
+        get lang() {
+          return lang();
+        },
+        bgColOut: setBgCol,
+        get children() {
+          return props.children;
+        }
+      }), null);
+      (0, import_web8.effect)((_p$) => {
+        const _v$ = bgCol() ?? "var(--background-tertiary)", _v$2 = cooldown();
         _v$ !== _p$._v$ && _el$.style.setProperty("background-color", _p$._v$ = _v$);
         _v$2 !== _p$._v$2 && (_el$4.disabled = _p$._v$2 = _v$2);
         return _p$;
@@ -5026,12 +5043,62 @@
       return _el$;
     })();
   };
-  (0, import_web4.delegateEvents)(["click"]);
+  (0, import_web7.delegateEvents)(["click"]);
+
+  // plugins/codeblocks-plus/replacer.jsx
+  var {
+    flux: {
+      dispatcher
+    },
+    ui: {
+      ReactiveRoot
+    },
+    observeDom
+  } = shelter;
+  var classRegex = /[a-z]+/;
+  function getLanguage(cb) {
+    for (const className of cb.classList)
+      if (className !== "hljs" && className.match(classRegex)[0] === className)
+        return className;
+  }
+  function injectCodeblocks() {
+    for (const code of document.querySelectorAll("pre:not(.shiki) > code")) {
+      code.parentElement.style.display = "contents";
+      code.parentElement.replaceChildren((0, import_web12.createComponent)(Codeblock_default, {
+        get lang() {
+          return getLanguage(code);
+        },
+        get children() {
+          return code.textContent;
+        }
+      }));
+    }
+  }
+  var TRIGGERS = ["MESSAGE_CREATE", "CHANNEL_SELECT", "LOAD_MESSAGES_SUCCESS", "UPDATE_CHANNEL_DIMENSIONS", "MESSAGE_END_EDIT", "MESSAGE_UPDATE"];
+  function onDispatch() {
+    let once = false;
+    const unObserve = observeDom("pre:not(.shiki) > code", () => {
+      if (once)
+        return;
+      once = true;
+      injectCodeblocks();
+    });
+    setTimeout(unObserve, 500);
+  }
+  var replacer_default = () => {
+    TRIGGERS.forEach((t) => dispatcher.subscribe(t, onDispatch));
+    return () => TRIGGERS.forEach((t) => dispatcher.unsubscribe(t, onDispatch));
+  };
 
   // plugins/codeblocks-plus/components/settings.jsx
-  var _tmpl$3 = /* @__PURE__ */ (0, import_web10.template)(`<div style="margin-bottom: .5rem"></div>`, 2);
-  var _tmpl$22 = /* @__PURE__ */ (0, import_web10.template)(`<select></select>`, 2);
-  var _tmpl$32 = /* @__PURE__ */ (0, import_web10.template)(`<option></option>`, 2);
+  var import_web13 = __toESM(require_web());
+  var import_web14 = __toESM(require_web());
+  var import_web15 = __toESM(require_web());
+  var import_web16 = __toESM(require_web());
+  var import_web17 = __toESM(require_web());
+  var _tmpl$3 = /* @__PURE__ */ (0, import_web13.template)(`<div style="margin-bottom: .5rem"></div>`, 2);
+  var _tmpl$22 = /* @__PURE__ */ (0, import_web13.template)(`<select></select>`, 2);
+  var _tmpl$32 = /* @__PURE__ */ (0, import_web13.template)(`<option></option>`, 2);
   var {
     plugin: {
       store
@@ -5064,12 +5131,12 @@ btn.addEventListener("click", () => {
     }));
     return [(() => {
       const _el$ = _tmpl$3.cloneNode(true);
-      (0, import_web13.insert)(_el$, (0, import_web14.createComponent)(Codeblock_default, {
+      (0, import_web16.insert)(_el$, (0, import_web17.createComponent)(Codeblock_default, {
         lang: "js",
         children: preview
       }));
       return _el$;
-    })(), (0, import_web14.createComponent)(Header, {
+    })(), (0, import_web17.createComponent)(Header, {
       get tag() {
         return HeaderTags.H4;
       },
@@ -5077,15 +5144,15 @@ btn.addEventListener("click", () => {
     }), (() => {
       const _el$2 = _tmpl$22.cloneNode(true);
       _el$2.$$input = (e) => store.theme = e.target.value;
-      (0, import_web13.insert)(_el$2, () => includedThemeOptions.map((opt) => (() => {
+      (0, import_web16.insert)(_el$2, () => includedThemeOptions.map((opt) => (() => {
         const _el$3 = _tmpl$32.cloneNode(true);
-        (0, import_web13.insert)(_el$3, () => opt.label);
-        (0, import_web12.effect)(() => _el$3.value = opt.value);
+        (0, import_web16.insert)(_el$3, () => opt.label);
+        (0, import_web15.effect)(() => _el$3.value = opt.value);
         return _el$3;
       })()));
-      (0, import_web12.effect)(() => _el$2.value = currentTheme());
+      (0, import_web15.effect)(() => _el$2.value = currentTheme());
       return _el$2;
-    })(), (0, import_web14.createComponent)(SwitchItem, {
+    })(), (0, import_web17.createComponent)(SwitchItem, {
       get value() {
         return store.nums;
       },
@@ -5095,7 +5162,7 @@ btn.addEventListener("click", () => {
       children: "Show line numbers [not yet implemented]"
     })];
   };
-  (0, import_web11.delegateEvents)(["input"]);
+  (0, import_web14.delegateEvents)(["input"]);
 
   // plugins/codeblocks-plus/index.js
   var {
@@ -5104,7 +5171,8 @@ btn.addEventListener("click", () => {
   } = shelter;
   store2.nums ??= true;
   var transients = [
-    injectCss(styles_default)
+    injectCss(styles_default),
+    replacer_default()
   ];
   var onUnload = () => transients.forEach((p) => p());
   return __toCommonJS(codeblocks_plus_exports);
