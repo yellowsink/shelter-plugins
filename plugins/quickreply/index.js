@@ -2,12 +2,8 @@ const {
 	plugin: { store },
 	flux: {
 		dispatcher,
-		stores: {
-			ChannelStore,
-			SelectedChannelStore,
-			MessageStore
-		}
-	}
+		stores: { ChannelStore, SelectedChannelStore, MessageStore },
+	},
 } = shelter;
 
 const { getChannel } = ChannelStore;
@@ -27,10 +23,10 @@ function scrollToReplyingMsg() {
 	if (!store.scroll) return;
 
 	const messageContainer = document.querySelector(
-		'[data-list-id="chat-messages"]'
+		'[data-list-id="chat-messages"]',
 	);
 	const replyingMsg = Array.from(messageContainer.children).find((elem) =>
-		elem.firstChild?.class?.includes("replying-")
+		elem.firstChild?.class?.includes("replying-"),
 	);
 
 	replyingMsg?.scrollIntoView({
@@ -43,7 +39,7 @@ function createPendingReply(
 	channel,
 	message,
 	shouldMention,
-	showMentionToggle
+	showMentionToggle,
 ) {
 	if (typeof showMentionToggle === "undefined")
 		showMentionToggle = channel.guild_id !== null; // DM channel showMentionToggle = false
@@ -103,7 +99,7 @@ async function keyDown(event) {
 	createPendingReply(
 		getCurrentChannel(),
 		messages[messageIndex],
-		!dontReplyStore.has(getChannelId())
+		!dontReplyStore.has(getChannelId()),
 	);
 }
 
@@ -124,7 +120,6 @@ export function onLoad() {
 	dispatcher.subscribe("SET_PENDING_REPLY_SHOULD_MENTION", onMentionChange);
 
 	window.addEventListener("keydown", keyDown);
-
 }
 
 export function onUnload() {
@@ -136,4 +131,4 @@ export function onUnload() {
 	window.removeEventListener("keydown", keyDown);
 }
 
-export {default as settings} from "./settings"
+export { default as settings } from "./settings";

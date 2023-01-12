@@ -4,10 +4,10 @@ const SearchBar = (props) => (
 		type="text"
 		class={props.class}
 		value={props.query}
-		onInput={e => props.onQueryChange(e.target.value)}
+		onInput={(e) => props.onQueryChange(e.target.value)}
 		placeholder={props.placeholder}
 	/>
-)
+);
 
 export default (props) => (
 	<SearchBar

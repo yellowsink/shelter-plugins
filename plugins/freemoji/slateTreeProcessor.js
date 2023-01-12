@@ -1,15 +1,12 @@
 const {
-	plugin: {store},
-	flux: {
-		stores: {
-			SelectedGuildStore,
-			EmojiStore
-		}
-	}
+	plugin: { store },
+	flux: { stores: { SelectedGuildStore, EmojiStore } },
 } = shelter;
 
 const isInDms = () =>
-	!!document.querySelector('[data-list-item-id="guildsnav___home"][class*="selected"]');
+	!!document.querySelector(
+		'[data-list-item-id="guildsnav___home"][class*="selected"]',
+	);
 
 const getEmoteSize = () =>
 	Number.isSafeInteger(parseInt(store.size)) ? store.size : 64;
@@ -38,7 +35,9 @@ export default (slateTree) => {
 					isInDms()
 				) {
 					// add to emotes to send
-					extractedEmojis.push(`${emoji.url.split("?")[0]}?size=${(getEmoteSize())}`);
+					extractedEmojis.push(
+						`${emoji.url.split("?")[0]}?size=${getEmoteSize()}`,
+					);
 					// don't add to the line
 					continue;
 				}
@@ -49,15 +48,15 @@ export default (slateTree) => {
 
 		newSlateTree.push({
 			...line,
-			children: newLine
+			children: newLine,
 		});
 	}
 
 	for (const extracted of extractedEmojis)
 		newSlateTree.push({
 			type: "line",
-			children: [{text: extracted}]
-		})
+			children: [{ text: extracted }],
+		});
 
 	return newSlateTree;
 };

@@ -2,15 +2,15 @@ import fetchRepo from "../../util/fetchRepo";
 
 import ThemeCard from "../cards/ThemeCard";
 import SearchBar from "../SearchBar";
-import {fuzzyThemes} from "../../util/fuzzy";
+import { fuzzyThemes } from "../../util/fuzzy";
 import CompatFilterDropdown from "../CompatFilterDropdown";
 import { NoRepos } from "../splashes";
 import VirtualScroller from "../VirtualScroller";
 
 const {
-	solid: {createSignal, createResource},
-	plugin: {store},
-	ui: {niceScrollbarsClass}
+	solid: { createSignal, createResource },
+	plugin: { store },
+	ui: { niceScrollbarsClass },
 } = shelter;
 
 const getRepos = () => Promise.all(store.repos.map(fetchRepo));
@@ -27,7 +27,10 @@ export default (props) => {
 		<>
 			<div class="ysink_stain_search_row">
 				<SearchBar query={search()} onChange={setSearch} />
-				<CompatFilterDropdown filterMode={filterMode()} setFilterMode={setFilterMode} />
+				<CompatFilterDropdown
+					filterMode={filterMode()}
+					setFilterMode={setFilterMode}
+				/>
 			</div>
 
 			{store.repos.length === 0 ? (

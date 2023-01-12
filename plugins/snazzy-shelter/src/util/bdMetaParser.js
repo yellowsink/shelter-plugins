@@ -17,7 +17,7 @@ function parseOldMeta(fileContent) {
 
 	const metaData = meta.substring(
 		meta.lastIndexOf("//META") + 6,
-		meta.lastIndexOf("*//")
+		meta.lastIndexOf("*//"),
 	);
 
 	const parsed = tryJSON(metaData);

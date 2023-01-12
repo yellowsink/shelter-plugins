@@ -1,7 +1,7 @@
 const {
-	solid: {createEffect},
-	plugin: {store},
-	ui: {injectCss}
+	solid: { createEffect },
+	plugin: { store },
+	ui: { injectCss },
 } = shelter;
 
 export default () => {
@@ -10,12 +10,11 @@ export default () => {
 	let cancel;
 
 	createEffect(() => {
-    if (!cancel)
-			modify(store.quickCSS || " ");
-  });
+		if (!cancel) modify(store.quickCSS || " ");
+	});
 
 	return () => {
 		modify();
 		cancel = true;
 	};
-}
+};

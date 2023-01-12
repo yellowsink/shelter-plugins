@@ -8,7 +8,7 @@ import css from "./src/styles.sass";
 
 const {
 	plugin: { store },
-	ui: { injectCss }
+	ui: { injectCss },
 } = shelter;
 
 if (!Array.isArray(store.repos)) defaultRepos();
@@ -18,8 +18,7 @@ if (!Array.isArray(store.themes)) store.themes = [];
 // migration from when snazzy-shelter was just a quickcss
 // not a port of cumstain
 if (store.css) {
-	if (!store.quickCSS)
-		store.quickCSS = store.css;
+	if (!store.quickCSS) store.quickCSS = store.css;
 
 	delete store.css;
 }
@@ -32,7 +31,7 @@ const transients = [
 	restoreThemes(),
 	exposeApi(),
 	settingsEntry(),
-	injectCss(css)
+	injectCss(css),
 ];
 
 export const onUnload = () => _.forEachRight(transients, (p) => p());

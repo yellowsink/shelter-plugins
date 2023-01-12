@@ -1,11 +1,11 @@
-import {revertNitro, spoofNitro} from "./spoofer";
+import { revertNitro, spoofNitro } from "./spoofer";
 import slateTreeProcessor from "./slateTreeProcessor";
 
 const {
-	flux: {dispatcher},
-	plugin: {store},
+	flux: { dispatcher },
+	plugin: { store },
 	observeDom,
-	util: {getFiber}
+	util: { getFiber },
 } = shelter;
 
 if (store.size === undefined) store.size = 64;
@@ -22,7 +22,7 @@ function handleTrack(e) {
 				unObserve();
 			});
 		}
-	}
+	};
 
 	spoofWhile("expression_picker_opened", "#emoji-picker-tab-panel");
 	spoofWhile("channel_autocomplete_open", "[class*=autocomplete]");
@@ -40,12 +40,15 @@ const patchMessagebar = (elem) => {
 	elem.onkeydown = (k) => {
 		if (KILLSWITCH_patchMessagebar) return;
 
-		if (k.key === "Enter" && !document.querySelector("[class*=autocomplete],[class*=attachedBars]"))
+		if (
+			k.key === "Enter" &&
+			!document.querySelector("[class*=autocomplete],[class*=attachedBars]")
+		)
 			editor.children = slateTreeProcessor(editor.children);
-	}
-}
+	};
+};
 
-const unObserve = observeDom('[class*="slateContainer-"]', e => {
+const unObserve = observeDom('[class*="slateContainer-"]', (e) => {
 	patchMessagebar(e);
 });
 
@@ -55,4 +58,4 @@ export const onUnload = () => {
 	dispatcher.unsubscribe("TRACK", handleTrack);
 	unObserve();
 	KILLSWITCH_patchMessagebar = true;
-}
+};

@@ -1,18 +1,19 @@
 import fetchRepo from "./util/fetchRepo";
 
 const {
-	plugin: {store}
+	plugin: { store },
 } = shelter;
 
 // yep, we're still using this infrastructure!
-export const officialRepos = Object.freeze(["https://cumcordthemes.github.io/Cumsock/"]);
+export const officialRepos = Object.freeze([
+	"https://cumcordthemes.github.io/Cumsock/",
+]);
 
 export default async () => {
-	if (!Array.isArray(store.repos))
-		store.repos = [];
+	if (!Array.isArray(store.repos)) store.repos = [];
 
 	for (const r of officialRepos) {
-		if (store.repos.find(r1 => r1.url === r.url)) continue;
+		if (store.repos.find((r1) => r1.url === r.url)) continue;
 
 		try {
 			await fetchRepo(r);
@@ -22,4 +23,4 @@ export default async () => {
 
 		store.repos = [...store.repos, r];
 	}
-}
+};

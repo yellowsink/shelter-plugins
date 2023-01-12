@@ -1,11 +1,5 @@
-const {
-	Header,
-	HeaderTags,
-	Text,
-	Button,
-	ButtonColors,
-	ButtonSizes
-} = shelter.ui;
+const { Header, HeaderTags, Text, Button, ButtonColors, ButtonSizes } =
+	shelter.ui;
 
 const Splash = (props) => (
 	<div class="ysink_stain_nosplash">

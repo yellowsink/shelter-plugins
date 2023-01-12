@@ -1,7 +1,7 @@
 export default () => {
-  window.snazzyShelter = Object.freeze({ TODO: "WIP" });
+	window.snazzyShelter = Object.freeze({ TODO: "WIP" });
 
 	// TODO
 
-  return () => delete window.snazzyShelter;
-}
+	return () => delete window.snazzyShelter;
+};

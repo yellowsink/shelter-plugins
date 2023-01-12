@@ -8,9 +8,9 @@ export const spoofNitro = () => {
 
 	realNitro = user().premiumType;
 	user().premiumType = 2;
-}
+};
 export const revertNitro = () => {
 	if (realNitro === undefined) return;
 	user().premiumType = realNitro;
 	realNitro = undefined;
-}
+};

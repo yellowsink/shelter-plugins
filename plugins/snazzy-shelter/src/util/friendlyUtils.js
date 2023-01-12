@@ -4,7 +4,9 @@ import fetchRepo from "./fetchRepo";
 import fetchTheme from "./fetchTheme";
 import { loadTheme } from "./themeLoadUtil";
 
-const { plugin: {store}} = shelter;
+const {
+	plugin: { store },
+} = shelter;
 
 async function verifyRepo(repo) {
 	try {

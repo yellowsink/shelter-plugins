@@ -6,7 +6,7 @@ import TabDebug from "./tabs/TabDebug";
 
 import TabBar from "./TabBar";
 
-const {Header, HeaderTags} = shelter.ui;
+const { Header, HeaderTags } = shelter.ui;
 
 export default () => {
 	return (

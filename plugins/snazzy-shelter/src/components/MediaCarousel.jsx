@@ -7,7 +7,10 @@ export default (props) => (
 	<div class="ysink_stain_carousel">
 		{props.media ? (
 			<SmallMediaCarousel
-				items={(typeof props.media === "string" ? [props.media] : props.media).map((m) => ({
+				items={(typeof props.media === "string"
+					? [props.media]
+					: props.media
+				).map((m) => ({
 					type: 1,
 					src: m,
 				}))}

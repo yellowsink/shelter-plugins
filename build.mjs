@@ -1,15 +1,14 @@
-import {createHash} from "crypto";
-import {readdir, readFile, writeFile, rm} from "fs/promises";
-import {existsSync} from "fs";
-import {build} from "esbuild";
-import {solidPlugin} from "esbuild-plugin-solid";
+import { createHash } from "crypto";
+import { readdir, readFile, writeFile, rm } from "fs/promises";
+import { existsSync } from "fs";
+import { build } from "esbuild";
+import { solidPlugin } from "esbuild-plugin-solid";
 import { sassPlugin } from "esbuild-sass-plugin-ysink";
-import {shelterSolidResolver} from "./shelter-esbuild-plugins.mjs";
+import { shelterSolidResolver } from "./shelter-esbuild-plugins.mjs";
 
 const MD5 = (data) => createHash("md5").update(data).digest("hex").toString();
 
-if (existsSync("dist"))
-	await rm("dist", {recursive: true});
+if (existsSync("dist")) await rm("dist", { recursive: true });
 
 for (const plug of await readdir("plugins")) {
 	const outfile = `dist/${plug}/plugin.js`;
@@ -26,15 +25,15 @@ for (const plug of await readdir("plugins")) {
 		minify: false,
 		plugins: [
 			solidPlugin(),
-			sassPlugin({style: "compressed", sourceMap: false, type: "css-text"}),
-			shelterSolidResolver()
+			sassPlugin({ style: "compressed", sourceMap: false, type: "css-text" }),
+			shelterSolidResolver(),
 		],
-		globalName: "e"
+		globalName: "e",
 	});
 
 	await writeFile(
 		outfile,
-		(await readFile(outfile)).toString().replace(/var e\s*=/, "")
+		(await readFile(outfile)).toString().replace(/var e\s*=/, ""),
 	);
 
 	const manifest = (await readFile(`plugins/${plug}/plugin.json`)).toString();
@@ -43,7 +42,7 @@ for (const plug of await readdir("plugins")) {
 		`dist/${plug}/plugin.json`,
 		manifest.replace(
 			"<HASH_PLACEHOLDER>",
-			MD5((await readFile(outfile)).toString())
-		)
-	)
+			MD5((await readFile(outfile)).toString()),
+		),
+	);
 }

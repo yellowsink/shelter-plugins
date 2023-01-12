@@ -32,7 +32,7 @@ async function getCcTheme(url, repoUrl) {
 
 	if (status !== 200)
 		throw new Error(
-			`CC manifest existed in cache with non-200 status ${status}`
+			`CC manifest existed in cache with non-200 status ${status}`,
 		);
 
 	return {
@@ -46,7 +46,7 @@ async function getCcTheme(url, repoUrl) {
 
 			if (status !== 200)
 				throw new Error(
-					`CC CSS existed in cache with non-200 status ${status}`
+					`CC CSS existed in cache with non-200 status ${status}`,
 				);
 
 			return css;
@@ -63,7 +63,7 @@ export default async (url, repoUrl) => {
 		} catch (e2) {
 			console.error(e1, e2);
 			let err = new Error(
-				"Failed to fetch theme - both CC and BD either failed to fetch or failed to parse"
+				"Failed to fetch theme - both CC and BD either failed to fetch or failed to parse",
 			);
 			err.e1 = e1;
 			err.e2 = e2;

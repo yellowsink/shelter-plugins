@@ -1,7 +1,9 @@
 import fetchTheme from "../util/fetchTheme";
 import { loadTheme, unloadAll } from "../util/themeLoadUtil";
 
-const { plugin: {store}} = shelter;
+const {
+	plugin: { store },
+} = shelter;
 
 export default () => {
 	let cancel = false;
@@ -11,7 +13,7 @@ export default () => {
 		store.themes
 			.filter((t) => t.enabled)
 			.forEach((t) =>
-				fetchTheme(t.url, t.repoUrl).then((ft) => cancel || loadTheme(ft))
+				fetchTheme(t.url, t.repoUrl).then((ft) => cancel || loadTheme(ft)),
 			);
 
 	return () => {

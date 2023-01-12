@@ -3,16 +3,16 @@ const badge = (url, type) => () =>
 
 export const BDBadge = badge(
 	"https://betterdiscord.app/resources/branding/logo_small.svg",
-	"bd"
+	"bd",
 );
 
 export const CCBadge = badge(
 	"https://raw.githubusercontent.com/Cumcord/assets/main/logo/filled.svg",
-	"cc"
+	"cc",
 );
 
 // discord component remake
-export const TextBadge = props => (
+export const TextBadge = (props) => (
 	<div
 		class={props.class}
 		style={{
@@ -22,7 +22,9 @@ export const TextBadge = props => (
 			"font-size": ".8rem",
 			padding: ".1rem .3rem",
 			"text-transform": "uppercase",
-			"font-weight": "bold"
+			"font-weight": "bold",
 		}}
-	>{props.text}</div>
-)
+	>
+		{props.text}
+	</div>
+);

@@ -1,8 +1,6 @@
 import { clearCache } from "../../util/cachingFetcher";
 
-const {
-	Button, Text
-} = shelter.ui;
+const { Button, Text } = shelter.ui;
 
 export default () => (
 	<>
