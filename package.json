@@ -1,8 +1,13 @@
 {
-  "devDependencies": {
+	"scripts": {
+		"postinstall": "husky install"
+	},
+	"devDependencies": {
     "@uwu/shelter-defs": "^1.0.2",
     "esbuild": "^0.15.13",
     "esbuild-plugin-solid": "^0.4.2",
-    "esbuild-sass-plugin-ysink": "^2.3.3"
+    "esbuild-sass-plugin-ysink": "^2.3.3",
+    "husky": "^8.0.3",
+    "rome": "^11.0.0"
   }
 }
