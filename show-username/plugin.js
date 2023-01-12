@@ -26,34 +26,41 @@
   var {
     flux: {
       dispatcher,
-      stores: { GuildMemberStore, ChannelStore, RelationshipStore }
+      stores: {
+        GuildMemberStore,
+        ChannelStore,
+        SelectedChannelStore,
+        RelationshipStore
+      }
     },
-    util: {
-      getFiber,
-      reactFiberWalker
-    },
+    util: { getFiber, reactFiberWalker },
     observeDom
   } = shelter;
-  function addUsernames() {
-    for (const e of document.querySelectorAll("[id^=message-username-]")) {
-      if (e?.dataset?.YSINK_SU)
-        continue;
-      e.dataset.YSINK_SU = true;
-      const msg = reactFiberWalker(getFiber(e), "message", true).pendingProps?.message;
-      const authorUsername = msg.author?.username;
-      const authorId = msg?.author?.id;
-      const { type, guild_id: guildId } = ChannelStore.getChannel(msg?.channel_id);
-      const nick = type ? RelationshipStore.getNickname(authorId) : GuildMemberStore.getNick(guildId, authorId);
-      if (!nick || !authorUsername)
-        continue;
-      e.firstElementChild.textContent += ` (${authorUsername})`;
-    }
+  function addUsername(e) {
+    if (e?.dataset?.ysink_su)
+      return;
+    e.dataset.ysink_su = true;
+    const msg = reactFiberWalker(getFiber(e), "message", true).pendingProps?.message;
+    const authorUsername = msg.author?.username;
+    const authorId = msg?.author?.id;
+    const { type, guild_id: guildId } = ChannelStore.getChannel(msg?.channel_id);
+    const nick = type ? RelationshipStore.getNickname(authorId) : GuildMemberStore.getNick(guildId, authorId);
+    if (!nick || !authorUsername)
+      return;
+    e.firstElementChild.textContent += ` (${authorUsername})`;
   }
-  var TRIGGERS = ["MESSAGE_CREATE", "CHANNEL_SELECT", "LOAD_MESSAGES_SUCCESS", "UPDATE_CHANNEL_DIMENSIONS"];
-  function onDispatch() {
-    const unObserve = observeDom("[id^=message-username-]", () => {
+  var TRIGGERS = [
+    "MESSAGE_CREATE",
+    "CHANNEL_SELECT",
+    "LOAD_MESSAGES_SUCCESS",
+    "UPDATE_CHANNEL_DIMENSIONS"
+  ];
+  function onDispatch(payload) {
+    if (payload.type === "MESSAGE_CREATE" && payload.channelId !== SelectedChannelStore.getChannelId())
+      return;
+    const unObserve = observeDom("[id^=message-username-]", (element) => {
       unObserve();
-      queueMicrotask(addUsernames);
+      addUsername(element);
     });
     setTimeout(unObserve, 500);
   }
