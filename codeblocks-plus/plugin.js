@@ -5050,38 +5050,40 @@
     flux: {
       dispatcher
     },
-    ui: {
-      ReactiveRoot
+    solid: {
+      createSignal: createSignal2
     },
     observeDom
   } = shelter;
   var classRegex = /[a-z]+/;
   function getLanguage(cb) {
-    for (const className of cb.classList)
-      if (className !== "hljs" && className.match(classRegex)[0] === className)
-        return className;
+    const [sig, setSig] = createSignal2("");
+    setTimeout(() => {
+      for (const className of cb.classList)
+        if (className !== "hljs" && className.match(classRegex)[0] === className)
+          setSig(className);
+    });
+    return sig;
   }
-  function injectCodeblocks() {
-    for (const code of document.querySelectorAll("pre:not(.shiki) > code")) {
-      code.parentElement.style.display = "contents";
-      code.parentElement.replaceChildren((0, import_web12.createComponent)(Codeblock_default, {
-        get lang() {
-          return getLanguage(code);
-        },
-        get children() {
-          return code.textContent;
-        }
-      }));
-    }
+  function injectCodeblock(code) {
+    if (!code.parentElement)
+      return;
+    code.parentElement.style.display = "contents";
+    const langSig = getLanguage(code);
+    code.parentElement.replaceChildren((0, import_web12.createComponent)(Codeblock_default, {
+      get lang() {
+        return langSig();
+      },
+      get children() {
+        return code.textContent;
+      }
+    }));
   }
   var TRIGGERS = ["MESSAGE_CREATE", "CHANNEL_SELECT", "LOAD_MESSAGES_SUCCESS", "UPDATE_CHANNEL_DIMENSIONS", "MESSAGE_END_EDIT", "MESSAGE_UPDATE"];
   function onDispatch() {
-    let once = false;
-    const unObserve = observeDom("pre:not(.shiki) > code", () => {
-      if (once)
-        return;
-      once = true;
-      injectCodeblocks();
+    const unObserve = observeDom("pre:not(.shiki) > code", (elem) => {
+      unObserve();
+      injectCodeblock(elem);
     });
     setTimeout(unObserve, 500);
   }
