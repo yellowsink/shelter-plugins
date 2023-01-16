@@ -2,8 +2,8 @@ const {
 	solid: { createSignal },
 	solidWeb: { Dynamic },
 	ui: { Text, Divider },
-} = // @ts-expect-error
-shelter;
+	// @ts-expect-error
+} = shelter;
 
 type Props = { items: { text: string; component }[] };
 

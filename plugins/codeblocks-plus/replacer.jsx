@@ -2,25 +2,33 @@ import Codeblock from "./components/Codeblock";
 
 const {
 	flux: { dispatcher },
-	ui: { ReactiveRoot },
+	solid: { createSignal },
 	observeDom,
 } = shelter;
 
 const classRegex = /[a-z]+/;
 
 function getLanguage(cb) {
-	for (const className of cb.classList)
-		if (className !== "hljs" && className.match(classRegex)[0] === className)
-			return className;
+	// wrap the fact that we need to get the lang a tick after
+	// in a signal to fix a one-frame flash of non-injection
+	const [sig, setSig] = createSignal("");
+
+	setTimeout(() => {
+		for (const className of cb.classList)
+			if (className !== "hljs" && className.match(classRegex)[0] === className)
+				setSig(className);
+	});
+
+	return sig;
 }
 
-function injectCodeblocks() {
-	for (const code of document.querySelectorAll("pre:not(.shiki) > code")) {
-		code.parentElement.style.display = "contents";
-		code.parentElement.replaceChildren(
-			<Codeblock lang={getLanguage(code)}>{code.textContent}</Codeblock>,
-		);
-	}
+function injectCodeblock(code) {
+	if (!code.parentElement) return;
+	code.parentElement.style.display = "contents";
+	const langSig = getLanguage(code);
+	code.parentElement.replaceChildren(
+		<Codeblock lang={langSig()}>{code.textContent}</Codeblock>,
+	);
 }
 
 const TRIGGERS = [
@@ -33,12 +41,9 @@ const TRIGGERS = [
 ];
 
 function onDispatch() {
-	let once = false;
-
-	const unObserve = observeDom("pre:not(.shiki) > code", () => {
-		if (once) return;
-		once = true;
-		injectCodeblocks();
+	const unObserve = observeDom("pre:not(.shiki) > code", (elem) => {
+		unObserve();
+		injectCodeblock(elem);
 	});
 
 	setTimeout(unObserve, 500);
