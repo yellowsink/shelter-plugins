@@ -45,9 +45,8 @@ export default () => {
 				value={store.nums}
 				onChange={(v) => (store.nums = v)}
 				hideBorder
-				disabled
 			>
-				Show line numbers [not yet implemented]
+				Show line numbers
 			</SwitchItem>
 		</>
 	);
