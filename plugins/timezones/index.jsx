@@ -6,6 +6,23 @@ const {
 	util: { getFiber, reactFiberWalker },
 } = shelter;
 
+const fetchedBios = new Set();
+
+async function forceBioFetch(el, uid) {
+	if (fetchedBios.has(uid)) return;
+
+	const node = reactFiberWalker(
+		getFiber(el),
+		(f) => f.stateNode?.handlePreload,
+		true,
+	)?.stateNode;
+
+	if (!node) return;
+
+	node.handlePreload();
+	fetchedBios.add(uid);
+}
+
 const extractTimezone = (userId, guildId) =>
 	findTimeZone(stores.UserProfileStore.getUserProfile(userId)?.bio) ??
 	findTimeZone(
@@ -13,8 +30,12 @@ const extractTimezone = (userId, guildId) =>
 	) ??
 	findTimeZone(stores.NoteStore.getNote(userId)?.note);
 
-function injectTimestamp(el) {
-	if (el.parentElement.querySelector(".ys_tz")) return;
+// this is stupid
+const injectionMutex = new Set();
+
+async function injectTimestamp(el) {
+	if (el.parentElement.querySelector(".ys_tz") || injectionMutex.has(el))
+		return;
 
 	const msg = reactFiberWalker(getFiber(el), "message", true)?.memoizedProps
 		?.message;
@@ -23,15 +44,22 @@ function injectTimestamp(el) {
 
 	if (!date) return;
 
+	injectionMutex.add(el);
+
+	await forceBioFetch(
+		el.parentElement.parentElement.querySelector("[id^=message-username]")
+			.firstElementChild,
+		msg.author.id,
+	);
+
+	injectionMutex.delete(el);
+
 	const oset = extractTimezone(
 		msg.author.id,
 		stores.ChannelStore.getChannel(msg.channel_id)?.guild_id,
 	);
 
-	// todo: force a bio fetch... somehow...
-
-	// todo: replace with !oset
-	if (oset === undefined) return;
+	if (!oset) return;
 
 	date.utc();
 	date.hours(date.hours() + oset);
