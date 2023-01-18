@@ -1,1 +1,129 @@
-(()=>{var l=Object.defineProperty;var I=Object.getOwnPropertyDescriptor;var x=Object.getOwnPropertyNames;var T=Object.prototype.hasOwnProperty;var _=(e,t)=>{for(var o in t)l(e,o,{get:t[o],enumerable:!0})},y=(e,t,o,r)=>{if(t&&typeof t=="object"||typeof t=="function")for(let s of x(t))!T.call(e,s)&&s!==o&&l(e,s,{get:()=>t[s],enumerable:!(r=I(t,s))||r.enumerable});return e};var j=e=>y(l({},"__esModule",{value:!0}),e);var M={};_(M,{onUnload:()=>L});var u=()=>shelter.flux.stores.UserStore.getCurrentUser(),i,a=()=>{i||(i=u().premiumType,u().premiumType=2)},d=()=>{i!==void 0&&(u().premiumType=i,i=void 0)};var{plugin:{store:p},flux:{stores:{SelectedGuildStore:N,EmojiStore:v}}}=shelter,C=()=>!!document.querySelector('[data-list-item-id="guildsnav___home"][class*="selected"]'),z=()=>Number.isSafeInteger(parseInt(p.size))?p.size:64,f=e=>{let t=[],o=[];for(let r of e){let s=[];for(let n of r.children){if(n.emoji){let c=v.getCustomEmojiById(n.emoji.emojiId);if(c.guildId!==N.getLastSelectedGuildId()||c.animated||C()){t.push(`${c.url.split("?")[0]}?size=${z()}`);continue}}s.push(n)}o.push({...r,children:s})}for(let r of t)o.push({type:"line",children:[{text:r}]});return o};var{flux:{dispatcher:h},plugin:{store:m},observeDom:b,util:{getFiber:k}}=shelter;m.size===void 0&&(m.size=64);function g(e){let t=(o,r)=>{if(e.event===o){a();let s=b(r,n=>{n.isConnected||(setTimeout(()=>d(),5e3),s())})}};t("expression_picker_opened","#emoji-picker-tab-panel"),t("channel_autocomplete_open","[class*=autocomplete]")}var S=!1,E=e=>{if(e.dataset.YSINK_FM)return;e.dataset.YSINK_FM="1";let o=k(e).child.pendingProps.editor;e.onkeydown=r=>{S||r.key==="Enter"&&!document.querySelector("[class*=autocomplete],[class*=attachedBars]")&&(o.children=f(o.children))}},K=b('[class*="slateContainer-"]',e=>{E(e)});h.subscribe("TRACK",g);var L=()=>{h.unsubscribe("TRACK",g),K(),S=!0};return j(M);})();
+ (() => {
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+  // plugins/freemoji/index.js
+  var freemoji_exports = {};
+  __export(freemoji_exports, {
+    onUnload: () => onUnload
+  });
+
+  // plugins/freemoji/spoofer.js
+  var user = () => shelter.flux.stores.UserStore.getCurrentUser();
+  var realNitro;
+  var spoofNitro = () => {
+    if (realNitro)
+      return;
+    realNitro = user().premiumType;
+    user().premiumType = 2;
+  };
+  var revertNitro = () => {
+    if (realNitro === void 0)
+      return;
+    user().premiumType = realNitro;
+    realNitro = void 0;
+  };
+
+  // plugins/freemoji/slateTreeProcessor.js
+  var {
+    plugin: { store },
+    flux: { stores: { SelectedGuildStore, EmojiStore } }
+  } = shelter;
+  var isInDms = () => !!document.querySelector(
+    '[data-list-item-id="guildsnav___home"][class*="selected"]'
+  );
+  var getEmoteSize = () => Number.isSafeInteger(parseInt(store.size)) ? store.size : 64;
+  var slateTreeProcessor_default = (slateTree) => {
+    const extractedEmojis = [];
+    const newSlateTree = [];
+    for (const line of slateTree) {
+      const newLine = [];
+      for (const lineItem of line.children) {
+        if (lineItem.emoji) {
+          const emoji = EmojiStore.getCustomEmojiById(lineItem.emoji.emojiId);
+          if (emoji.guildId !== SelectedGuildStore.getLastSelectedGuildId() || emoji.animated || isInDms()) {
+            extractedEmojis.push(
+              `${emoji.url.split("?")[0]}?size=${getEmoteSize()}`
+            );
+            continue;
+          }
+        }
+        newLine.push(lineItem);
+      }
+      newSlateTree.push({
+        ...line,
+        children: newLine
+      });
+    }
+    for (const extracted of extractedEmojis)
+      newSlateTree.push({
+        type: "line",
+        children: [{ text: extracted }]
+      });
+    return newSlateTree;
+  };
+
+  // plugins/freemoji/index.js
+  var {
+    flux: { dispatcher },
+    plugin: { store: store2 },
+    observeDom,
+    util: { getFiber }
+  } = shelter;
+  if (store2.size === void 0)
+    store2.size = 64;
+  function handleTrack(e) {
+    const spoofWhile = (eventName, selector) => {
+      if (e.event === eventName) {
+        spoofNitro();
+        const unObserve2 = observeDom(selector, (e2) => {
+          if (e2.isConnected)
+            return;
+          setTimeout(() => revertNitro(), 5e3);
+          unObserve2();
+        });
+      }
+    };
+    spoofWhile("expression_picker_opened", "#emoji-picker-tab-panel");
+    spoofWhile("channel_autocomplete_open", "[class*=autocomplete]");
+  }
+  var KILLSWITCH_patchMessagebar = false;
+  var patchMessagebar = (elem) => {
+    if (elem.dataset.YSINK_FM)
+      return;
+    elem.dataset.YSINK_FM = "1";
+    const fiber = getFiber(elem);
+    const editor = fiber.child.pendingProps.editor;
+    elem.onkeydown = (k) => {
+      if (KILLSWITCH_patchMessagebar)
+        return;
+      if (k.key === "Enter" && !document.querySelector("[class*=autocomplete],[class*=attachedBars]"))
+        editor.children = slateTreeProcessor_default(editor.children);
+    };
+  };
+  var unObserve = observeDom('[class*="slateContainer-"]', (e) => {
+    patchMessagebar(e);
+  });
+  dispatcher.subscribe("TRACK", handleTrack);
+  var onUnload = () => {
+    dispatcher.unsubscribe("TRACK", handleTrack);
+    unObserve();
+    KILLSWITCH_patchMessagebar = true;
+  };
+  return __toCommonJS(freemoji_exports);
+})();
