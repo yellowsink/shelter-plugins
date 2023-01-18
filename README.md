@@ -16,3 +16,5 @@ Snazzy Shelter: https://yellowsink.github.io/shelter-plugins/snazzy-shelter/
  * A nest import from Cumstain will be possible for users of Migration Station.
 
 Codeblocks+ Reloaded: https://yellowsink.github.io/shelter-plugins/codeblocks-plus/
+
+Timezones: https://yellowsink.github.io/shelter-plugins/timezones/
