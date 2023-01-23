@@ -1,16 +1,15 @@
 const {
 	plugin: { store },
-	ui: { Header, HeaderTags },
+	ui: { Header, HeaderTags, TextBox },
 } = shelter;
 
 export default () => (
 	<>
 		<Header tag={HeaderTags.H3}>Emoji Size (defaults to 64 if invalid)</Header>
-		<input
-			type="text"
+		<TextBox
 			placeholder="64"
 			value={Number.isSafeInteger(store.size) ? store.size : ""}
-			onInput={(e) => (store.size = parseInt(e.target.value))}
+			onInput={(val) => (store.size = parseInt(val))}
 		/>
 	</>
 );

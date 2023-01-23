@@ -2,7 +2,7 @@ import fetchTheme from "../util/fetchTheme";
 import { loadTheme } from "../util/themeLoadUtil";
 
 const {
-	ui: { Button, ButtonSizes, showToast },
+	ui: { Button, ButtonSizes, showToast, TextBox },
 	solid: { createSignal },
 } = shelter;
 
@@ -11,14 +11,10 @@ export default () => {
 
 	return (
 		<div class="ysink_stain_row">
-			{/*TODO*/}
-			{/*<TextInput*/}
-			<input
-				class="ysink_stain_input"
-				placeholder="Theme import URL"
-				type="text"
+			<TextBox
 				value={urlInput()}
-				onInput={(e) => setUrlInput(e.target.value)}
+				onInput={setUrlInput}
+				placeholder="Theme import URL"
 			/>
 
 			<Button

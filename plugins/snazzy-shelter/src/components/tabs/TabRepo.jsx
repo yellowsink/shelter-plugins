@@ -2,7 +2,7 @@ import RepoCard from "../cards/RepoCard";
 
 import { addRepo } from "../../util/friendlyUtils";
 
-const { showToast } = shelter.ui;
+const { showToast, TextBox } = shelter.ui;
 
 const toast = (str) => showToast({ title: str, duration: 5000 });
 
@@ -23,13 +23,10 @@ export default () => {
 					display: "flex",
 				}}
 			>
-				{/*TODO*/}
-				{/*<TextInput*/}
-				<input
-					placeholder="https://example.com/repo"
-					type="text"
+				<TextBox
 					value={url()}
-					onInput={(e) => setUrl(e.target.value)}
+					onInput={setUrl}
+					placeholder="https://example.com/repo"
 				/>
 				<Button
 					class="ysink_stain_button"
