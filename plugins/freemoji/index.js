@@ -59,3 +59,5 @@ export const onUnload = () => {
 	unObserve();
 	KILLSWITCH_patchMessagebar = true;
 };
+
+export { default as settings } from "./settings";
