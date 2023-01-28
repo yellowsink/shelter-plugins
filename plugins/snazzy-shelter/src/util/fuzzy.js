@@ -1,6 +1,7 @@
 // SOURCE https://github.com/sink-cord-archive/cc-plugins/blob/master/plugins/cumstain/util/fuzzy.js
 
 import Fuse from "fuse.js";
+import { uniqBy } from "lodash-es";
 
 const fuseOptions = {
 	// tune threshold to find the "sweet-spot" between accuracy and fuzziness
@@ -19,7 +20,7 @@ export const fuzzy = (set, search) =>
 
 export const fuzzyThemes = (themes, search, filterMode) =>
 	fuzzy(
-		_.uniqBy(themes ?? [], (t) => t.url),
+		uniqBy(themes ?? [], (t) => t.url),
 		search,
 	).filter(
 		(t) =>

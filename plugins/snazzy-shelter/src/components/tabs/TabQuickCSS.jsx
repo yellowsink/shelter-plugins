@@ -1,6 +1,7 @@
 import MonacoSolid from "@uwu/monaco-solid";
+import { debounce } from "lodash-es";
 
-const saveCssDebounced = _.debounce((v) => (store.quickCSS = v), 250);
+const saveCssDebounced = debounce((v) => (store.quickCSS = v), 250);
 
 const {
 	solid: { createSignal },
