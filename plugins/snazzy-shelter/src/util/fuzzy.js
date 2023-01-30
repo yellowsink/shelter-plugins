@@ -1,7 +1,7 @@
 // SOURCE https://github.com/sink-cord-archive/cc-plugins/blob/master/plugins/cumstain/util/fuzzy.js
 
 import Fuse from "fuse.js";
-import { uniqBy } from "lodash-es";
+import uniqBy from "lodash-es/uniqBy";
 
 const fuseOptions = {
 	// tune threshold to find the "sweet-spot" between accuracy and fuzziness

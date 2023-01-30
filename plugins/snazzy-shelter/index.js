@@ -6,7 +6,7 @@ import settingsEntry from "./src/transients/settingsEntry";
 
 import css from "./src/styles.sass";
 
-import { forEachRight } from "lodash-es";
+import forEachRight from "lodash-es/forEachRight";
 
 const {
 	plugin: { store },

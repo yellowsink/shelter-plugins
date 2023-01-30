@@ -1,5 +1,5 @@
 import MonacoSolid from "@uwu/monaco-solid";
-import { debounce } from "lodash-es";
+import debounce from "lodash-es/debounce";
 
 const saveCssDebounced = debounce((v) => (store.quickCSS = v), 250);
 
