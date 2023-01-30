@@ -1,8 +1,7 @@
 import { findTimeZone } from "./timezones";
 
 const {
-	flux: { dispatcher, stores },
-	observeDom,
+	flux: { stores },
 	util: { getFiber, reactFiberWalker },
 } = shelter;
 
@@ -33,17 +32,10 @@ const extractTimezone = (userId, guildId) =>
 // this is stupid
 const injectionMutex = new Set();
 
-async function injectTimestamp(el) {
-	if (el.parentElement.querySelector(".ys_tz") || injectionMutex.has(el))
-		return;
+export const preflightInjection = (el) =>
+	!el.parentElement.querySelector(".ys_tz") && !injectionMutex.has(el);
 
-	const msg = reactFiberWalker(getFiber(el), "message", true)?.memoizedProps
-		?.message;
-
-	const date = msg?.timestamp?.clone();
-
-	if (!date) return;
-
+export async function injectLocalTime(msg, el, date) {
 	injectionMutex.add(el);
 
 	await forceBioFetch(
@@ -69,34 +61,6 @@ async function injectTimestamp(el) {
 	if (millisecondsPassed > 1000 * 60 * 60 * 24) return;
 
 	el.parentElement.append(
-		<time class="ys_tz">
-			{" "}
-			(Theirs: {date.hours()}:{date.minutes()})
-		</time>,
+		<time class="ys_tz"> (Theirs: {date.format("hh:mm")})</time>,
 	);
 }
-
-function onDispatch() {
-	const unObserve = observeDom("h3 time[id^=message-timestamp]", (el) => {
-		unObserve();
-		injectTimestamp(el);
-	});
-
-	setTimeout(unObserve, 500);
-}
-
-const TRIGGERS = [
-	"MESSAGE_CREATE",
-	"CHANNEL_SELECT",
-	"LOAD_MESSAGES_SUCCESS",
-	"UPDATE_CHANNEL_DIMENSIONS",
-	"MESSAGE_END_EDIT",
-	"MESSAGE_UPDATE",
-	// if we trigger a "USER_PROFILE_FETCH_START", listen for results
-	//"USER_PROFILE_FETCH_SUCCESS"
-];
-
-TRIGGERS.forEach((t) => dispatcher.subscribe(t, onDispatch));
-
-export const onUnload = () =>
-	TRIGGERS.forEach((t) => dispatcher.unsubscribe(t, onDispatch));
