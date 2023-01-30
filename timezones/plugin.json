@@ -1,6 +1,6 @@
 {
-	"name": "Timezones",
-	"description": "Shows other people's local times in chat",
+	"name": "Timestamp Tweaks",
+	"description": "Tweaks to timestamps, including showing other people's local times",
 	"author": "Yellowsink",
-	"hash": "9200cab4c88afab7bda8626d5466a7db"
+	"hash": "145ad4fbee68c8a5071483acf5d40295"
 }
