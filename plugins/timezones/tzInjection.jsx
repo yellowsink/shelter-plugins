@@ -1,6 +1,8 @@
 import { findTimeZone } from "./timezones";
+import { fetchTimezone } from "./tzdb";
 
 const {
+	plugin: { store },
 	flux: { stores },
 	util: { getFiber, reactFiberWalker },
 } = shelter;
@@ -35,8 +37,11 @@ const injectionMutex = new Set();
 export const preflightInjection = (el) =>
 	!el.parentElement.querySelector(".ys_tz") && !injectionMutex.has(el);
 
-export async function injectLocalTime(msg, el, date) {
-	injectionMutex.add(el);
+async function getTimezone(el, msg) {
+	if (store.tzdb) {
+		const fetched = await fetchTimezone(msg.author.id);
+		if (fetched !== undefined) return fetched;
+	}
 
 	await forceBioFetch(
 		el.parentElement.parentElement.querySelector("[id^=message-username]")
@@ -44,12 +49,16 @@ export async function injectLocalTime(msg, el, date) {
 		msg.author.id,
 	);
 
-	injectionMutex.delete(el);
-
-	const oset = extractTimezone(
+	return extractTimezone(
 		msg.author.id,
 		stores.ChannelStore.getChannel(msg.channel_id)?.guild_id,
 	);
+}
+
+export async function injectLocalTime(msg, el, date) {
+	injectionMutex.add(el);
+	const oset = await getTimezone(el, msg);
+	injectionMutex.delete(el);
 
 	if (!oset) return;
 

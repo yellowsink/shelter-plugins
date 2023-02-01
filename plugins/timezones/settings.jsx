@@ -8,12 +8,14 @@ export default () => (
 		<SwitchItem value={store.tz} onChange={(v) => (store.tz = v)}>
 			Show users' local time (parses timezones from bios & notes)
 		</SwitchItem>
+		{/* TODO: uncomment when rushiiMachine/TimezoneDB#3 is merged */}
 		{/*<SwitchItem
 			disabled={!store.tz}
 			value={store.tzdb}
 			onChange={(v) => (store.tzdb = v)}
 		>
-			Prefer to query TZDB
+			Prefer to query
+			<a href="https://timezonedb.catvibers.me/?client_mod=shelter">TZDB</a>
 		</SwitchItem>*/}
 		<SwitchItem value={store.abs} onChange={(v) => (store.abs = v)}>
 			Show times in absolute ISO form (YYYY-MM-DD HH:MM:SS) every time, instead
