@@ -93,15 +93,16 @@ var injectLogo = () => {
 }
 
 // Plugin Stuff
+let inject;
 export function onLoad() {
   addStyle()
   setTimeout(function () {
       getDB()
   }, 3000)
-  setInterval(injectLogo, 0)
+  inject = setInterval(injectLogo, 0)
 }
 export function onUnload() {
   removeStyle()
-  clearInterval(injectLogo)
+  clearInterval(inject)
   log("See ya next time!")
 }
