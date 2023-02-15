@@ -70,6 +70,6 @@ export async function injectLocalTime(msg, el, date) {
 	if (millisecondsPassed > 1000 * 60 * 60 * 24) return;
 
 	el.parentElement.append(
-		<time class="ys_tz"> (Theirs: {date.format("hh:mm")})</time>,
+		<time class="ys_tz"> (Theirs: {date.format("HH:mm")})</time>,
 	);
 }

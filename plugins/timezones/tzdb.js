@@ -1,5 +1,4 @@
 const endpoint = "https://timezonedb.catvibers.me/api/user/bulk";
-const endpoint = "https://timezonedb.catvibers.me/api/user/bulk";
 const UA = "shelter/0.0.0 timestamptools/1.0.0";
 
 let batch = new Map();
@@ -45,7 +44,7 @@ const fetchBatch = () =>
 export const fetchTimezone = (uid) =>
 	new Promise((res) => {
 		// TODO: remove when rushiiMachine/TimezoneDB#3 is merged
-		return undefined;
+		return res(undefined);
 
 		if (cache.has(uid)) return cache.get(uid);
 
