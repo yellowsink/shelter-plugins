@@ -1,1 +1,42 @@
-(()=>{var s=Object.defineProperty;var a=Object.getOwnPropertyDescriptor;var i=Object.getOwnPropertyNames;var r=Object.prototype.hasOwnProperty;var l=(e,t)=>{for(var o in t)s(e,o,{get:t[o],enumerable:!0})},_=(e,t,o,c)=>{if(t&&typeof t=="object"||typeof t=="function")for(let n of i(t))!r.call(e,n)&&n!==o&&s(e,n,{get:()=>t[n],enumerable:!(c=a(t,n))||c.enumerable});return e};var p=e=>_(s({},"__esModule",{value:!0}),e);var d={};l(d,{onUnload:()=>h});try{window.__SENTRY__.hub.getClient().getOptions().enabled=!1,Object.keys(console).forEach(e=>console[e]=console[e].__sentry_original__??console[e])}catch{}var y=/client-analytics\.braintreegateway\.com|discord\.com\/api\/v9\/science/,h=shelter.patcher.instead("send",XMLHttpRequest.prototype,function(e,t){if(!y.test(this.__sentry_xhr__?.url))return t.apply(this,e)});return p(d);})();
+ (() => {
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+  // plugins/antitrack/index.js
+  var antitrack_exports = {};
+  __export(antitrack_exports, {
+    onUnload: () => onUnload
+  });
+  try {
+    window.__SENTRY__.hub.getClient().getOptions().enabled = false;
+    Object.keys(console).forEach(
+      (x) => console[x] = console[x].__sentry_original__ ?? console[x]
+    );
+  } catch {
+  }
+  var analyticsTest = /client-analytics\.braintreegateway\.com|discord\.com\/api\/v9\/science/;
+  var onUnload = shelter.patcher.instead(
+    "send",
+    XMLHttpRequest.prototype,
+    function(args, orig) {
+      if (!analyticsTest.test(this.__sentry_xhr__?.url))
+        return orig.apply(this, args);
+    }
+  );
+  return __toCommonJS(antitrack_exports);
+})();
