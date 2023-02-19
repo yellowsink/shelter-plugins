@@ -21,7 +21,7 @@ const fetchBatch = () =>
 				method: "post",
 				body: ids,
 				headers: {
-					"User-Agent": UA,
+					"X-User-Agent": UA,
 					"Content-Type": "application/json",
 				},
 			}).then((r) => r.json());
