@@ -1,28 +1,11 @@
 import { findTimeZone } from "./timezones";
 import { fetchTimezone } from "./tzdb";
+import { forceBioFetch, forceNotesFetch } from "./fetchers";
 
 const {
 	plugin: { store },
 	flux: { stores },
-	util: { getFiber, reactFiberWalker },
 } = shelter;
-
-const fetchedBios = new Set();
-
-async function forceBioFetch(el, uid) {
-	if (fetchedBios.has(uid)) return;
-
-	const node = reactFiberWalker(
-		getFiber(el),
-		(f) => f.stateNode?.handlePreload,
-		true,
-	)?.stateNode;
-
-	if (!node) return;
-
-	node.handlePreload();
-	fetchedBios.add(uid);
-}
 
 const extractTimezone = (userId, guildId) =>
 	findTimeZone(stores.UserProfileStore.getUserProfile(userId)?.bio) ??
@@ -43,11 +26,18 @@ async function getTimezone(el, msg) {
 		if (fetched !== undefined) return fetched;
 	}
 
-	await forceBioFetch(
-		el.parentElement.parentElement.querySelector("[id^=message-username]")
-			.firstElementChild,
-		msg.author.id,
-	);
+	await Promise.all([
+		forceBioFetch(
+			el.parentElement.parentElement.querySelector("[id^=message-username]")
+				.firstElementChild,
+			msg.author.id,
+		),
+
+		forceNotesFetch(
+			el.parentElement.parentElement.querySelector("[id^=message-username]"),
+			msg.author.id,
+		),
+	]);
 
 	return extractTimezone(
 		msg.author.id,
