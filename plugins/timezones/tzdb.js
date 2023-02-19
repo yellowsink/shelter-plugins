@@ -35,23 +35,26 @@ const fetchBatch = () =>
 				}
 
 			// make sure all promises are resolved
-			for (const func of currentBatch.values()) func();
+			for (const [uid, func] of currentBatch.entries()) {
+				func();
+				cache.set(uid, undefined);
+			}
 		} finally {
 			currentlyQueued = false;
 		}
 	}, BATCH_TIME);
 
 export const fetchTimezone = (uid) =>
-	new Promise((res) => {
-		// TODO: remove when rushiiMachine/TimezoneDB#3 is merged
-		return res(undefined);
+	cache.has(uid)
+		? cache.get(uid)
+		: new Promise((res) => {
+				// dont leave dangling promises
+				setTimeout(res, 3000);
 
-		if (cache.has(uid)) return cache.get(uid);
+				batch.set(uid, res);
 
-		batch.set(uid, res);
-
-		if (!currentlyQueued) {
-			currentlyQueued = true;
-			fetchBatch();
-		}
-	});
+				if (!currentlyQueued) {
+					currentlyQueued = true;
+					fetchBatch();
+				}
+		  });
