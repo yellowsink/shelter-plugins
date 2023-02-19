@@ -13,8 +13,13 @@ export default () => (
 			value={store.tzdb}
 			onChange={(v) => (store.tzdb = v)}
 		>
-			Prefer to query
-			<a href="https://timezonedb.catvibers.me/?client_mod=shelter">TZDB</a>
+			Prefer to query{" "}
+			<a
+				href="https://timezonedb.catvibers.me/?client_mod=shelter"
+				target="_blank"
+			>
+				TZDB
+			</a>
 		</SwitchItem>
 		<SwitchItem value={store.abs} onChange={(v) => (store.abs = v)}>
 			Show times in absolute ISO form (YYYY-MM-DD HH:MM:SS) every time, instead
