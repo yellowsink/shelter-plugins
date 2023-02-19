@@ -56,7 +56,9 @@ const startNotesFetch = (el, uid) =>
 		});
 
 		// dont leave hanging observes
-		setTimeout(unobs, 1000);
+		setTimeout(unobs, 250);
+		// dont hide important things
+		setTimeout(unhide, 250);
 	});
 
 const finishNotesFetch = () =>
