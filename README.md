@@ -18,3 +18,5 @@ Snazzy Shelter: https://yellowsink.github.io/shelter-plugins/snazzy-shelter/
 Codeblocks+ Reloaded: https://yellowsink.github.io/shelter-plugins/codeblocks-plus/
 
 Timestamp tweaks: https://yellowsink.github.io/shelter-plugins/timezones/
+
+Crisp images: https://yellowsink.github.io/shelter-plugins/crisp-img/

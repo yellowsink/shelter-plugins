@@ -1,20 +1,27 @@
-/*
 const {
-	flux: {dispatcher},
-	observeDom
+	flux: { dispatcher },
+	observeDom,
 } = shelter;
 
 // hidpi users / macos users die lol
 const getZoomLevel = () => devicePixelRatio;
 
-const scaledNaturalDimensions = el => [el.naturalWidth / getZoomLevel(), el.naturalHeight / getZoomLevel()];
+const scaledNaturalDimensions = (el) => [
+	el.naturalWidth / getZoomLevel(),
+	el.naturalHeight / getZoomLevel(),
+];
+
+const roundScaledNaturalDimensions = (el) =>
+	scaledNaturalDimensions(el).map(Math.round);
 
 // if the image has not been scaled down by Discord
 function isImgFullSize(elem) {
-	// appears to work for an img i tested at 44px and 90(ish)% zoom :)
-	const thres = (elem.naturalHeight / 100) * 2; // 2%
+	const scaledNH = scaledNaturalDimensions(elem)[1];
 
-	return Math.abs(elem.height - scaledNaturalDimensions(elem)[0]) <= thres;
+	// appears to work for an img i tested at 44px and 90(ish)% zoom :)
+	const thres = (scaledNH / 100) * 2; // 2%
+
+	return Math.abs(elem.height - scaledNH) <= thres;
 }
 
 function crispify(el) {
@@ -23,20 +30,18 @@ function crispify(el) {
 
 	if (!el.parentElement.matches("[class*=imageWrapper][style]")) return;
 
-	// discord has an old electron bleh
-	el.style.imageRendering = "pixelated"; // "crisp-edges";
+	const [nx, ny] = roundScaledNaturalDimensions(el);
+
 	el.style.height = "100%";
 	el.style.width = "100%";
 
-	const peStyle = el.parentElement.style;
-	peStyle.setProperty("--scaler", getZoomLevel())
-	//peStyle.height = `${el.naturalHeight / getZoomLevel()}px`;
-	//peStyle.width = `${el.naturalWidth / getZoomLevel()}px`;
-	const [scaledNX, scaledNY] = scaledNaturalDimensions(el);
-	peStyle.height = `calc(${scaledNY}px / var(--scaler))`
-	peStyle.width = `calc(${scaledNX}px / var(--scaler))`
+	el.src = el.src.replace(
+		/\?width=\d+&height=\d+/,
+		`?width=${nx}&height=${ny}`,
+	);
 
-	console.log(`crispified image of size ${scaledNX}x${scaledNY}`)
+	el.parentElement.style.height = `${ny / getZoomLevel()}px`;
+	el.parentElement.style.width = `${nx / getZoomLevel()}px`;
 }
 
 function handleDispatch() {
@@ -49,10 +54,7 @@ function handleDispatch() {
 	setTimeout(unobs, 250);
 }
 
-export const onLoad = () => dispatcher.subscribe("UPDATE_CHANNEL_DIMENSIONS", handleDispatch);
-export const onUnload = () => dispatcher.unsubscribe("UPDATE_CHANNEL_DIMENSIONS", handleDispatch);*/
-
-// TODO: lmao discord's chromium is too old and this whole charade doesn't crispen the image
-// old chromium renders the image small first THEN upscales it
-// modern ff & chrome will re-render the image niiiice n big (or in this case, just a lil bit big)
-export const onUnload = () => {};
+export const onLoad = () =>
+	dispatcher.subscribe("UPDATE_CHANNEL_DIMENSIONS", handleDispatch);
+export const onUnload = () =>
+	dispatcher.unsubscribe("UPDATE_CHANNEL_DIMENSIONS", handleDispatch);
