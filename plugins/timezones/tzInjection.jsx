@@ -1,13 +1,36 @@
 import { findTimeZone } from "./timezones";
 import { fetchTimezone } from "./tzdb";
-import forceBioFetch from "./forceBioFetch";
 
 const {
 	plugin: { store },
 	flux: { stores },
+	util: { getFiber, reactFiberWalker },
 } = shelter;
 
+const fetchedBios = new Set();
+
+async function forceBioFetch(el, uid) {
+	if (fetchedBios.has(uid)) return;
+
+	const node = reactFiberWalker(
+		getFiber(el),
+		(f) => f.stateNode?.handlePreload,
+		true,
+	)?.stateNode;
+
+	if (!node) return;
+
+	const prom = node.handlePreload();
+	fetchedBios.add(uid);
+	return prom;
+}
+
+const processSavedTz = (saved) =>
+	(isNaN(parseFloat(saved)) ? undefined : parseFloat(saved)) ??
+	findTimeZone(saved);
+
 const extractTimezone = (userId, guildId) =>
+	processSavedTz(store.savedTzs[userId]) ??
 	findTimeZone(stores.UserProfileStore.getUserProfile(userId)?.bio) ??
 	findTimeZone(
 		stores.UserProfileStore.getGuildMemberProfile(userId, guildId)?.bio,
@@ -47,9 +70,9 @@ export async function injectLocalTime(msg, el, date) {
 	date.utc();
 	date.hours(date.hours() + oset);
 
-	// only add our annotation if within a day
+	/*// only add our annotation if within a day
 	const millisecondsPassed = Date.now() - Date.parse(date.toISOString());
-	if (millisecondsPassed > 1000 * 60 * 60 * 24) return;
+	if (millisecondsPassed > 1000 * 60 * 60 * 24) return;*/
 
 	el.parentElement.append(
 		<time class="ys_tz"> (Theirs: {date.format("HH:mm")})</time>,

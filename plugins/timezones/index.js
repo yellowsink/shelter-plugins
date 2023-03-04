@@ -12,6 +12,7 @@ store.tz ??= true;
 store.tzdb ??= true;
 store.abs ??= false;
 store.absUtc ??= false;
+store.savedTzs ??= {};
 
 async function injectTimestamp(el) {
 	const shouldInjectTz = store.tz && preflightInjection(el);
@@ -57,4 +58,4 @@ TRIGGERS.forEach((t) => dispatcher.subscribe(t, onDispatch));
 export const onUnload = () =>
 	TRIGGERS.forEach((t) => dispatcher.unsubscribe(t, onDispatch));
 
-export { default as settings } from "./settings";
+export { default as settings } from "./ui";

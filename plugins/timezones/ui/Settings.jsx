@@ -1,9 +1,9 @@
 const {
 	plugin: { store },
-	ui: { SwitchItem },
+	ui: { SwitchItem, Button },
 } = shelter;
 
-export default () => (
+export default (goTo) => (
 	<>
 		<SwitchItem value={store.tz} onChange={(v) => (store.tz = v)}>
 			Show users' local time (parses timezones from bios & notes)
@@ -32,5 +32,8 @@ export default () => (
 		>
 			Show absolute times in UTC, not local timezone
 		</SwitchItem>
+		<Button onClick={() => goTo(1)} grow>
+			Manage manual user TZs
+		</Button>
 	</>
 );

@@ -37,7 +37,7 @@ export const tzOffsetsByKey = Object.fromEntries(
 );
 
 const tzRegex = new RegExp(
-	`(?<![a-zA-Z0-9])(${tzKeywords.join("|")})(?:([+-]\\d+)(?::(\\d+))?)?\b`,
+	`(?<![a-zA-Z0-9])(${tzKeywords.join("|")})(?:([+-]\\d+)(?::(\\d+))?)?\\b`,
 );
 
 export const findTimeZone = (txt) => {
