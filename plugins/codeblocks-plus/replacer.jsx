@@ -9,15 +9,20 @@ const {
 const classRegex = /[a-z]+/;
 
 function getLanguage(cb) {
-	// wrap the fact that we need to get the lang a tick after
+	// wrap the fact that we need to get the lang a bit later
 	// in a signal to fix a one-frame flash of non-injection
 	const [sig, setSig] = createSignal("");
 
-	setTimeout(() => {
-		for (const className of cb.classList)
-			if (className !== "hljs" && className.match(classRegex)[0] === className)
-				setSig(className);
-	});
+	// message edits can be a giant pain in the ass
+	for (const timeout of [50, 250, 500, 750, 1000])
+		setTimeout(() => {
+			for (const className of cb.classList)
+				if (
+					className !== "hljs" &&
+					className.match(classRegex)[0] === className
+				)
+					setSig(className);
+		}, timeout);
 
 	return sig;
 }
