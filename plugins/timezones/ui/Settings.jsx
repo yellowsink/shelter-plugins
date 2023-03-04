@@ -6,7 +6,7 @@ const {
 export default (goTo) => (
 	<>
 		<SwitchItem value={store.tz} onChange={(v) => (store.tz = v)}>
-			Show users' local time (parses timezones from bios & notes)
+			Show users' local time (parses timezones from bios)
 		</SwitchItem>
 		<SwitchItem
 			disabled={!store.tz}
