@@ -65,7 +65,8 @@ export async function injectLocalTime(msg, el, date) {
 	const oset = await getTimezone(el, msg);
 	injectionMutex.delete(el);
 
-	if (!oset) return;
+	// don't show local time for those in your own TZ
+	if (oset === undefined || oset * 60 === date.utcOffset()) return;
 
 	date.utc();
 	date.hours(date.hours() + oset);
