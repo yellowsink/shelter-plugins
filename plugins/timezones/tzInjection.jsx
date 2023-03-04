@@ -1,6 +1,6 @@
 import { findTimeZone } from "./timezones";
 import { fetchTimezone } from "./tzdb";
-import { forceBioFetch, forceNotesFetch } from "./fetchers";
+import forceBioFetch from "./forceBioFetch";
 
 const {
 	plugin: { store },
@@ -11,8 +11,7 @@ const extractTimezone = (userId, guildId) =>
 	findTimeZone(stores.UserProfileStore.getUserProfile(userId)?.bio) ??
 	findTimeZone(
 		stores.UserProfileStore.getGuildMemberProfile(userId, guildId)?.bio,
-	) ??
-	findTimeZone(stores.NoteStore.getNote(userId)?.note);
+	);
 
 // this is stupid
 const injectionMutex = new Set();
@@ -26,18 +25,11 @@ async function getTimezone(el, msg) {
 		if (fetched !== undefined) return fetched;
 	}
 
-	await Promise.all([
-		forceBioFetch(
-			el.parentElement.parentElement.querySelector("[id^=message-username]")
-				.firstElementChild,
-			msg.author.id,
-		),
-
-		forceNotesFetch(
-			el.parentElement.parentElement.querySelector("[id^=message-username]"),
-			msg.author.id,
-		),
-	]);
+	await forceBioFetch(
+		el.parentElement.parentElement.querySelector("[id^=message-username]")
+			.firstElementChild,
+		msg.author.id,
+	);
 
 	return extractTimezone(
 		msg.author.id,
