@@ -1,4 +1,4 @@
-import { findTimeZone } from "./timezones";
+import { parseTimeZone, formatAsIs, formatInTimeZone } from "./timezones";
 import { fetchTimezone } from "./tzdb";
 
 const {
@@ -25,14 +25,10 @@ async function forceBioFetch(el, uid) {
 	return prom;
 }
 
-const processSavedTz = (saved) =>
-	(isNaN(parseFloat(saved)) ? undefined : parseFloat(saved)) ??
-	findTimeZone(saved);
-
 const extractTimezone = (userId, guildId) =>
-	processSavedTz(store.savedTzs[userId]) ??
-	findTimeZone(stores.UserProfileStore.getUserProfile(userId)?.bio) ??
-	findTimeZone(
+	parseTimeZone(store.savedTzs[userId]) ??
+	parseTimeZone(stores.UserProfileStore.getUserProfile(userId)?.bio) ??
+	parseTimeZone(
 		stores.UserProfileStore.getGuildMemberProfile(userId, guildId)?.bio,
 	);
 
@@ -45,7 +41,7 @@ export const preflightInjection = (el) =>
 async function getTimezone(el, msg) {
 	if (store.tzdb) {
 		const fetched = await fetchTimezone(msg.author.id);
-		if (fetched !== undefined) return fetched;
+		if (fetched !== undefined) return { base: fetched };
 	}
 
 	await forceBioFetch(
@@ -62,20 +58,16 @@ async function getTimezone(el, msg) {
 
 export async function injectLocalTime(msg, el, date) {
 	injectionMutex.add(el);
-	const oset = await getTimezone(el, msg);
+	const timezone = await getTimezone(el, msg);
 	injectionMutex.delete(el);
 
+	if (!timezone) return;
+
+	const origFmt = formatAsIs(date, "%H:%M");
+	const tzFmt = formatInTimeZone(date, timezone, "%H:%M");
+
 	// don't show local time for those in your own TZ
-	if (oset === undefined || oset * 60 === date.utcOffset()) return;
+	if (origFmt === tzFmt) return;
 
-	date.utc();
-	date.hours(date.hours() + oset);
-
-	/*// only add our annotation if within a day
-	const millisecondsPassed = Date.now() - Date.parse(date.toISOString());
-	if (millisecondsPassed > 1000 * 60 * 60 * 24) return;*/
-
-	el.parentElement.append(
-		<time class="ys_tz"> (Theirs: {date.format("HH:mm")})</time>,
-	);
+	el.parentElement.append(<time class="ys_tz"> (Theirs: {tzFmt})</time>);
 }

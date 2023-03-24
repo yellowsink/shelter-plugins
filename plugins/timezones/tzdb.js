@@ -28,16 +28,16 @@ const fetchBatch = () =>
 
 			for (const uid in res)
 				if (currentBatch.has(uid) && res[uid]) {
-					const parsedOset = parseFloat(res[uid].timezone);
+					const tz = res[uid].timezoneId;
 
-					currentBatch.get(uid)?.(parsedOset);
-					cache.set(uid, parsedOset);
+					currentBatch.get(uid)?.(tz);
+					cache.set(uid, tz);
 				}
 
 			// make sure all promises are resolved
 			for (const [uid, func] of currentBatch.entries()) {
 				func();
-				cache.set(uid, undefined);
+				if (!cache.has(uid)) cache.set(uid, undefined);
 			}
 		} finally {
 			currentlyQueued = false;

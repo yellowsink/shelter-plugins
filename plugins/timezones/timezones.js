@@ -1,54 +1,47 @@
-// picked entirely based on what one british kid thought are important time zones
-// i am almost *certainly* wrong about what timezones people use
-// please do not hesitate to open an issue or pr if this list is in any way problematic
-// thanks -- yellowsink
-// no daylight savings time zones as a rule
-export const tzsByOffset = {
-	[-9]: ["AKST"],
-	[-8]: ["PST"],
-	[-7]: ["MST"],
-	[-6]: ["CT", "CST"],
-	[-5]: ["ET", "EST"],
-	[-4]: ["EDT"],
-	[-3]: ["AMST", "ART", "BRT", "SRT", "UYT", "WGT"],
-	[-2]: ["FNT", "PMDT"],
-	[-1]: ["AZOT", "CVT", "EGT"],
-	0: ["UTC", "GMT", "WET"],
-	1: ["CET", "MET", "WAT"],
-	2: ["CAT", "EET", "KALT", "SAST", "WAST"],
-	3: ["AST", "EAT", "FET", "IOT", "MSK", "TRT"],
-	4: ["RET", "AMT"],
-	5: ["MVT", "PKT", "TJT", "TMT", "UZT"],
-	5.5: ["IST"],
-	7: ["THA", "WIB"],
-	8: ["AWST", "CST", "HKT", "MST", "MYT", "SGT", "WST"],
-	9: ["JST", "KST"],
-	9.5: ["ACST"],
-	10: ["AEST", "AET", "VLAT"],
-	12: ["NZST"],
-};
+import tzBuilder from "timezone";
+import tzZones from "timezone/zones";
 
-export const tzKeywords = Object.values(tzsByOffset).flat();
+// type Timezone = { base: string, hours?: number };
 
-export const tzOffsetsByKey = Object.fromEntries(
-	Object.entries(tzsByOffset).flatMap(([oset, tzs]) =>
-		tzs.map((t) => [t, parseFloat(oset)]),
-	),
+const timezone = tzBuilder(tzZones);
+
+const tzData = Object.fromEntries(
+	tzZones
+		.flat()
+		.flatMap((zon) => zon.zones)
+		.filter((e) => e)
+		.flatMap(Object.entries),
 );
+
+export const tzKeywords = Object.keys(tzData);
 
 const tzRegex = new RegExp(
 	`(?<![a-zA-Z0-9])(${tzKeywords.join("|")})(?:([+-]\\d+)(?::(\\d+))?)?\\b`,
 );
 
-export const findTimeZone = (txt) => {
+export const parseTimeZone = (txt) => {
 	if (!txt) return;
 	const match = txt.match(tzRegex);
 	if (!match) return;
-	const [, keyword, hours, minutes] = match;
+	const [, base, hours /*, mins*/] = match;
 
-	return (
-		tzOffsetsByKey[keyword] +
-		parseFloat(hours ?? 0) +
-		parseFloat(minutes ?? 0) / 60
-	);
+	return { base, hours /*, mins*/ };
 };
+
+// hello sir can i interest you in boolean logic today?
+export const emitTimeZone = (tz) =>
+	tz.base + ((tz.hours ?? 0) > 0 ? "+" : "") + (tz.hours ?? "");
+/*(tz.hours || (tz.mins ? "+0" : "")) +
+	(tz.mins ? ":" + tz.mins : "");*/
+
+export const formatInTimeZone = (momentTime, zone, fmt) =>
+	timezone(
+		momentTime,
+		zone.base,
+		"+" + (zone.hours ?? 0) + " hour",
+		//"+" + (zone.mins ?? 0) + " minute",
+		fmt,
+	);
+
+// purely for consistency's sake!
+export const formatAsIs = (momentTime, fmt) => timezone(momentTime, fmt);
