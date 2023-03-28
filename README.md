@@ -20,3 +20,5 @@ Codeblocks+ Reloaded: https://yellowsink.github.io/shelter-plugins/codeblocks-pl
 Timestamp tweaks: https://yellowsink.github.io/shelter-plugins/timezones/
 
 Crisp images: https://yellowsink.github.io/shelter-plugins/crisp-img/
+
+Server clock: https://yellowsink.github.io/shelter-plugins/server-clock/
