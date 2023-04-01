@@ -3,13 +3,10 @@
 		"postinstall": "husky install"
 	},
 	"devDependencies": {
-		"@uwu/lune": "^1.1.4",
+		"@uwu/lune": "^1.2.1",
 		"@uwu/shelter-defs": "^1.1.0",
 		"husky": "^8.0.3",
 		"rome": "^12.0.0"
 	},
-	"type": "module",
-	"resolutions": {
-		"babel-plugin-jsx-dom-expressions": "0.35.23"
-	}
+	"type": "module"
 }
