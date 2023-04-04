@@ -28,8 +28,7 @@ export default (goTo) => {
 	const tryAdd = () => {
 		if (
 			newUid() in store.savedTzs ||
-			newUid().length !== 18 ||
-			newUid().match(/\D/)
+			newUid().match(/\d{17,19}/)?.[0] !== newUid()
 		)
 			return;
 
