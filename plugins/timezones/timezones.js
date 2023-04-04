@@ -44,4 +44,5 @@ export const formatInTimeZone = (momentTime, zone, fmt) =>
 	);
 
 // purely for consistency's sake!
-export const formatAsIs = (momentTime, fmt) => timezone(momentTime, fmt);
+export const formatAsIs = (momentTime, fmt) =>
+	timezone(momentTime, `+${momentTime.utcOffset()} minute`, fmt);
