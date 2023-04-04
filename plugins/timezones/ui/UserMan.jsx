@@ -1,7 +1,7 @@
 import { tzKeywords } from "../timezones";
 
 const {
-	flux: { stores },
+	flux: { storesFlat },
 	plugin: { store },
 	ui: {
 		Button,
@@ -61,7 +61,7 @@ export default (goTo) => {
 
 				{Object.entries(store.savedTzs).map(([id, tz]) => (
 					<>
-						<div>{stores.UserStore.getUser(id)?.tag ?? id}</div>
+						<div>{storesFlat.UserStore.getUser(id)?.tag ?? id}</div>
 						<div>{tz}</div>
 						<Button
 							look={ButtonLooks.OUTLINED}

@@ -3,7 +3,7 @@ import { fetchTimezone } from "./tzdb";
 
 const {
 	plugin: { store },
-	flux: { stores },
+	flux: { storesFlat },
 	util: { getFiber, reactFiberWalker },
 } = shelter;
 
@@ -27,9 +27,9 @@ async function forceBioFetch(el, uid) {
 
 const extractTimezone = (userId, guildId) =>
 	parseTimeZone(store.savedTzs[userId]) ??
-	parseTimeZone(stores.UserProfileStore.getUserProfile(userId)?.bio) ??
+	parseTimeZone(storesFlat.UserProfileStore.getUserProfile(userId)?.bio) ??
 	parseTimeZone(
-		stores.UserProfileStore.getGuildMemberProfile(userId, guildId)?.bio,
+		storesFlat.UserProfileStore.getGuildMemberProfile(userId, guildId)?.bio,
 	);
 
 // this is stupid
@@ -52,7 +52,7 @@ async function getTimezone(el, msg) {
 
 	return extractTimezone(
 		msg.author.id,
-		stores.ChannelStore.getChannel(msg.channel_id)?.guild_id,
+		storesFlat.ChannelStore.getChannel(msg.channel_id)?.guild_id,
 	);
 }
 
