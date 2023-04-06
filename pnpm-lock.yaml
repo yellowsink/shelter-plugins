@@ -41,8 +41,8 @@ importers:
   plugins/timezones:
     dependencies:
       '@uwu/tz-picker':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^1.0.1
+        version: 1.0.1
       timezone:
         specifier: ^1.0.23
         version: 1.0.23
@@ -358,8 +358,8 @@ packages:
       spitroast: 1.4.2
     dev: true
 
-  /@uwu/tz-picker@1.0.0:
-    resolution: {integrity: sha512-YyKU6l8mUApPI2Ikm2UXrkENRgzxqT9dqP1lBvJKafNDz88xZpJpCJZ43PGtmcEFFOIdwYMa+gCP5JdSPiQVzQ==}
+  /@uwu/tz-picker@1.0.1:
+    resolution: {integrity: sha512-JqADtiD9s6m+dHYPIV/FOFjaQan0mW4iZqSPygrwR5U72WOGErWYQby58/t5NwF8EGwUlb24fOeAg/6ajfR0QQ==}
     peerDependencies:
       solid-js: ^1.7.2
     dev: false

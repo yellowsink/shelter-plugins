@@ -27,8 +27,8 @@ const Picker = (props) => (
 	/>
 );
 
-const PickerModal = (choose, cancel) => (props) => {
-	const [choice, setChoice] = createSignal("");
+const PickerModal = (choose, cancel, init) => (props) => {
+	const [choice, setChoice] = createSignal(init);
 
 	const actualClose = () => (cancel?.(), props.close?.());
 
@@ -49,5 +49,5 @@ const PickerModal = (choose, cancel) => (props) => {
 	);
 };
 
-export const showPickerModal = (choose, cancel) =>
-	openModal(PickerModal(choose, cancel));
+export const showPickerModal = (choose, cancel, init) =>
+	openModal(PickerModal(choose, cancel, init));

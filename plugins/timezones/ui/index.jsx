@@ -1,10 +1,41 @@
-import Settings from "./Settings";
 import UserMan from "./UserMan";
 
-const pages = [Settings, UserMan];
+const {
+	plugin: { store },
+	ui: { SwitchItem, Button, openModal },
+} = shelter;
 
-export default () => {
-	const [currentPage, setCurrentPage] = shelter.solid.createSignal(0);
-
-	return shelter.solid.createMemo(() => pages[currentPage()](setCurrentPage));
-};
+export default () => (
+	<>
+		<SwitchItem value={store.tz} onChange={(v) => (store.tz = v)}>
+			Show users' local time (parses timezones from bios)
+		</SwitchItem>
+		<SwitchItem
+			disabled={!store.tz}
+			value={store.tzdb}
+			onChange={(v) => (store.tzdb = v)}
+		>
+			Prefer to query{" "}
+			<a
+				href="https://timezonedb.catvibers.me/?client_mod=shelter"
+				target="_blank"
+			>
+				TZDB
+			</a>
+		</SwitchItem>
+		<SwitchItem value={store.abs} onChange={(v) => (store.abs = v)}>
+			Show times in absolute ISO form (YYYY-MM-DD HH:MM:SS) every time, instead
+			of relative times
+		</SwitchItem>
+		<SwitchItem
+			disabled={!store.abs}
+			value={store.absUtc}
+			onChange={(v) => (store.absUtc = v)}
+		>
+			Show absolute times in UTC, not local timezone
+		</SwitchItem>
+		<Button onClick={() => openModal(UserMan)} grow>
+			Manage manual user TZs
+		</Button>
+	</>
+);

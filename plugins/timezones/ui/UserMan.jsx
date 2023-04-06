@@ -1,4 +1,5 @@
 import { tzKeywords } from "../timezones";
+import { showPickerModal } from "./TzPicker";
 
 const {
 	flux: { storesFlat },
@@ -7,16 +8,21 @@ const {
 		Button,
 		ButtonLooks,
 		ButtonSizes,
+		ButtonColors,
 		Header,
 		HeaderTags,
 		TextBox,
 		Text,
-		Divider,
+		ModalRoot,
+		ModalHeader,
+		ModalSizes,
+		ModalBody,
+		ModalFooter,
 	},
 	solid: { createSignal },
 } = shelter;
 
-export default (goTo) => {
+export default (props) => {
 	const [newUid, setNewUid] = createSignal("");
 	const [newTz, setNewTz] = createSignal("");
 
@@ -25,18 +31,26 @@ export default (goTo) => {
 		store.savedTzs = { ...store.savedTzs };
 	};
 
-	const tryAdd = () => {
-		if (
-			newUid() in store.savedTzs ||
-			newUid().match(/\d{17,19}/)?.[0] !== newUid()
-		)
-			return;
+	const validation = () =>
+		!newUid()
+			? ""
+			: newUid() in store.savedTzs
+			? "This user already has a timezone set"
+			: newUid().match(/\d{17,19}/)?.[0] !== newUid()
+			? "That is not a valid user ID"
+			: !newTz()
+			? "Please enter a time zone"
+			: undefined;
 
-		const parsedTz = tzKeywords.includes(newTz())
+	const tryAdd = () => {
+		if (validation() !== undefined) return;
+
+		const parsedTz = newTz();
+		/* = tzKeywords.includes(newTz())
 			? newTz()
 			: Number.isFinite(parseFloat(newTz()))
-			? parseFloat(newTz())
-			: undefined;
+				? parseFloat(newTz())
+				: undefined;*/
 
 		if (parsedTz === undefined) return;
 
@@ -49,49 +63,86 @@ export default (goTo) => {
 	};
 
 	return (
-		<>
-			<Button onClick={() => goTo(0)} grow>
-				Back to settings
-			</Button>
+		<ModalRoot size={ModalSizes.MEDIUM}>
+			<ModalHeader close={props.close}>User Manager</ModalHeader>
+			<ModalBody>
+				<div style="display: grid; align-items: baseline; grid-template-columns: 1fr 1fr auto auto; row-gap: .15rem">
+					<Header tag={HeaderTags.H4}>User</Header>
+					<Header tag={HeaderTags.H4}>TZ or UTC offset</Header>
+					<div />
+					<div />
 
-			<div style="display: grid; grid-template-columns: 1fr 1fr auto; margin-top: 1rem">
-				<Header tag={HeaderTags.H4}>User</Header>
-				<Header tag={HeaderTags.H4}>TZ or UTC offset</Header>
-				<div />
+					{Object.entries(store.savedTzs).map(([id, tz]) => (
+						<>
+							<div>{storesFlat.UserStore.getUser(id)?.tag ?? id}</div>
+							<div>{tz}</div>
 
-				{Object.entries(store.savedTzs).map(([id, tz]) => (
+							<Button
+								style={{ "margin-right": ".75rem" }}
+								look={ButtonLooks.OUTLINED}
+								size={ButtonSizes.TINY}
+								grow
+								onClick={() =>
+									showPickerModal(
+										(tz) =>
+											(store.savedTzs = {
+												...store.savedTzs,
+												[id]: tz,
+											}),
+										undefined,
+										tz,
+									)
+								}
+							>
+								Edit
+							</Button>
+
+							<Button
+								look={ButtonLooks.OUTLINED}
+								size={ButtonSizes.TINY}
+								color={ButtonColors.RED}
+								grow
+								onClick={() => deleteUser(id)}
+							>
+								Delete
+							</Button>
+						</>
+					))}
+				</div>
+			</ModalBody>
+			<ModalFooter>
+				<div style="display: flex; margin-bottom: .5rem">
+					<TextBox value={newUid()} onInput={setNewUid} placeholder="User ID" />
+					<Button
+						onClick={() => showPickerModal(setNewTz)}
+						grow
+						style={{
+							height: "auto",
+							"flex-basis": "75%",
+							"margin-right": "20px",
+						}}
+					>
+						{newTz() || "Pick a timezone"}
+					</Button>
+					<Button
+						grow
+						style={{ height: "auto" }}
+						onClick={tryAdd}
+						disabled={validation() !== undefined}
+					>
+						Add
+					</Button>
+				</div>
+
+				{!!validation() && (
 					<>
-						<div>{storesFlat.UserStore.getUser(id)?.tag ?? id}</div>
-						<div>{tz}</div>
-						<Button
-							look={ButtonLooks.OUTLINED}
-							size={ButtonSizes.TINY}
-							grow
-							onClick={() => deleteUser(id)}
-						>
-							Delete
-						</Button>
+						<span style="color: var(--text-danger)">{validation()}</span>
+						<br />
 					</>
-				))}
-			</div>
-
-			<Divider mt />
-
-			<div style="display: flex; margin: .5rem 0">
-				<TextBox value={newUid()} onInput={setNewUid} placeholder="User ID" />
-				<TextBox
-					value={newTz()}
-					onInput={setNewTz}
-					placeholder="TZ or offset"
-				/>
-				<Button grow style={{ height: "auto" }} onClick={tryAdd}>
-					Add
-				</Button>
-			</div>
-			<Text>
+				)}
 				You must enter a valid user ID, and either a numeric offset from UTC or
 				a recognised TZ.
-			</Text>
-		</>
+			</ModalFooter>
+		</ModalRoot>
 	);
 };
