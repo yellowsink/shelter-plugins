@@ -24,7 +24,9 @@ const pronouns = {
 	avoid: "Avoid pronouns, use my name",
 };
 
-const pronounsToSearch = Object.values(pronouns).filter((p) => p.includes("/"));
+const pronounsToSearch = Object.values(pronouns)
+	.filter((p) => p.includes("/"))
+	.sort((a, b) => b.length - a.length);
 
 export const fromStore = (id) => {
 	const profile = UserProfileStore.getUserProfile(id);
