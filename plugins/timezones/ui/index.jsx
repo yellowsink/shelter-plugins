@@ -2,7 +2,7 @@ import UserMan from "./UserMan";
 
 const {
 	plugin: { store },
-	ui: { SwitchItem, Button, openModal },
+	ui: { SwitchItem, Button, LinkButton, openModal },
 } = shelter;
 
 export default () => (
@@ -16,12 +16,9 @@ export default () => (
 			onChange={(v) => (store.tzdb = v)}
 		>
 			Prefer to query{" "}
-			<a
-				href="https://timezonedb.catvibers.me/?client_mod=shelter"
-				target="_blank"
-			>
+			<LinkButton href="https://timezonedb.catvibers.me/?client_mod=shelter">
 				TZDB
-			</a>
+			</LinkButton>
 		</SwitchItem>
 		<SwitchItem value={store.abs} onChange={(v) => (store.abs = v)}>
 			Show times in absolute ISO form (YYYY-MM-DD HH:MM:SS) every time, instead

@@ -1,8 +1,7 @@
-import { tzKeywords } from "../timezones";
 import { showPickerModal } from "./TzPicker";
 
 const {
-	flux: { storesFlat },
+	flux: { storesFlat: { UserStore } },
 	plugin: { store },
 	ui: {
 		Button,
@@ -74,10 +73,13 @@ export default (props) => {
 
 					{Object.entries(store.savedTzs).map(([id, tz]) => (
 						<>
-							<div>{storesFlat.UserStore.getUser(id)?.tag ?? id}</div>
+							<div>{UserStore.getUser(id)?.tag ?? id}</div>
 							<div>{tz}</div>
 
 							<Button
+								aria-label={`edit timezone for ${
+									UserStore.getUser(id)?.username
+								}`}
 								style={{ "margin-right": ".75rem" }}
 								look={ButtonLooks.OUTLINED}
 								size={ButtonSizes.TINY}
@@ -98,6 +100,9 @@ export default (props) => {
 							</Button>
 
 							<Button
+								aria-label={`delete timezone for ${
+									UserStore.getUser(id)?.username
+								}`}
 								look={ButtonLooks.OUTLINED}
 								size={ButtonSizes.TINY}
 								color={ButtonColors.RED}
