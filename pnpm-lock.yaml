@@ -16,6 +16,9 @@ importers:
       rome:
         specifier: ^12.0.0
         version: 12.0.0
+      solid-js:
+        specifier: ^1.7.3
+        version: 1.7.3
 
   plugins/codeblocks-plus:
     dependencies:
@@ -30,7 +33,7 @@ importers:
         version: 3.0.0-beta.6
       '@uwu/monaco-solid':
         specifier: ^1.1.0
-        version: 1.1.0(solid-js@1.7.0)
+        version: 1.1.0(solid-js@1.7.3)
       fuse.js:
         specifier: ^6.6.2
         version: 6.6.2
@@ -42,7 +45,7 @@ importers:
     dependencies:
       '@uwu/tz-picker':
         specifier: ^1.0.1
-        version: 1.0.1
+        version: 1.0.1(solid-js@1.7.3)
       timezone:
         specifier: ^1.0.23
         version: 1.0.23
@@ -340,28 +343,30 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@uwu/monaco-solid@1.1.0(solid-js@1.7.0):
+  /@uwu/monaco-solid@1.1.0(solid-js@1.7.3):
     resolution: {integrity: sha512-RfPzOrQFhdbaHF/lAcu5wCHGar0PrBmH5UeuN0fY6kCnNhZSbzN0kpQe8SFqd6po9ozGQxjGGUSMeZ76kkmtJw==}
     peerDependencies:
       solid-js: ^1.4.4
     dependencies:
       '@monaco-editor/loader': 1.3.2(monaco-editor@0.33.0)
       monaco-editor: 0.33.0
-      solid-js: 1.7.0
+      solid-js: 1.7.3
     dev: false
 
   /@uwu/shelter-defs@1.1.0:
     resolution: {integrity: sha512-lbs2volnlOuxZmErU+N4HYth/+gS2fa/RNqGq968L28c/spoIB0PyVzc+dCIcwHRzTUSOtyvcCYmG95r9iAXeA==}
     dependencies:
       idb: 7.1.1
-      solid-js: 1.7.0
+      solid-js: 1.7.3
       spitroast: 1.4.2
     dev: true
 
-  /@uwu/tz-picker@1.0.1:
+  /@uwu/tz-picker@1.0.1(solid-js@1.7.3):
     resolution: {integrity: sha512-JqADtiD9s6m+dHYPIV/FOFjaQan0mW4iZqSPygrwR5U72WOGErWYQby58/t5NwF8EGwUlb24fOeAg/6ajfR0QQ==}
     peerDependencies:
       solid-js: ^1.7.2
+    dependencies:
+      solid-js: 1.7.3
     dev: false
 
   /anymatch@3.1.3:
@@ -925,8 +930,8 @@ packages:
       csstype: 3.1.1
     dev: true
 
-  /solid-js@1.7.0:
-    resolution: {integrity: sha512-tLG68KWlVRgzYeAW003G3E70emZqTcqCKJR9QoGr0rcuiLIuKrlUoezT8jLME1YSl3Wfu35jzgeY10iLEY4YQQ==}
+  /solid-js@1.7.3:
+    resolution: {integrity: sha512-4hwaF/zV/xbNeBBIYDyu3dcReOZBECbO//mrra6GqOrKy4Soyo+fnKjpZSa0nODm6j1aL0iQRh/7ofYowH+jzw==}
     dependencies:
       csstype: 3.1.1
       seroval: 0.5.1

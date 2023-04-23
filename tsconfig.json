@@ -1,0 +1,11 @@
+{
+	"include": ["plugins/**/*.ts", "plugins/**/*.tsx", "node_modules/@uwu/shelter-defs/**/*.d.ts"],
+	"compilerOptions": {
+		"noEmit": true,
+		"target": "ESNext",
+		"lib": ["ESNext", "DOM"],
+		"jsx": "preserve",
+		"jsxImportSource": "solid-js",
+		"moduleResolution": "node"
+	}
+}
