@@ -1,4 +1,8 @@
-const { UserProfileStore } = shelter.flux.stores;
+import type { FluxStore } from "@uwu/shelter-defs";
+
+const UserProfileStore = shelter.flux.stores.UserProfileStore as FluxStore<{
+	getUserProfile(id: string): { bio?: string };
+}>;
 
 const pronouns = {
 	unspecified: "Unspecified",
@@ -31,7 +35,8 @@ const pronounsToSearch = Object.values(pronouns)
 export const fromStore = (id) => {
 	const profile = UserProfileStore.getUserProfile(id);
 	if (typeof profile?.bio !== "string") return;
-	return pronounsToSearch.find((p) => profile.bio.includes(p));
+	const lowerBio = profile.bio.toLowerCase();
+	return pronounsToSearch.find((p) => lowerBio.includes(p));
 };
 
 const endpoint =
