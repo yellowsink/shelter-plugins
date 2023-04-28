@@ -1,3 +1,5 @@
+import styles from "./styles.scss";
+
 const {
     ui: { injectCss }
 } = shelter;
@@ -21,34 +23,6 @@ function log(input, type) {
     }
     console.log(`%cDiscord CSL v${manifestVersion}%c ${input}`, `color: ${color}; padding: 3px; border-radius: 4px; background: ${color}22; border-right: 2px solid ${color}; padding-right: 5px; padding-left: 6px; font-weight: bold`, "font-style: italic;", "");
 }
-
-// Server Logo Styling
-const styles = `
-[csl-server] div.guildIconContainer-3QvE6w {
-    transform: translate(-6%, 6%)
-}
-[csl-server] .${serverName_class} {
-    display: flex;
-    justify-content: center;
-    position: relative;
-}
-
-/* == Shrink server banners to header instead of disappearing == */
-[csl-server] [class*="animatedContainer-"] {
-    opacity: 1 !important;
-    transition: opacity .5s, blur .5s;
-}
-[csl-server] [class*="animatedContainer-"] > [class*="bannerImage-"] {
-    transition: margin .5s;
-}
-[csl-server] :not([class*="bannerVisible-"]) > [class*="animatedContainer-"] {
-    opacity: .35 !important;
-    filter: blur(2px);
-    height: 138px;
-}
-[csl-server] :not([class*="bannerVisible-"]) > [class*="animatedContainer-"] > [class*="bannerImage-"] {
-    margin-top: -12px;
-}`;
 
 // Fetching the database
 let data
@@ -92,7 +66,7 @@ setTimeout(getDB, 3000);
 const inject = setInterval(injectLogo, 0);
 
 export function onUnload() {
-  removeStyle()
-  clearInterval(inject)
-  log("See ya next time!")
+    removeStyle()
+    clearInterval(inject)
+    log("See ya next time!")
 }

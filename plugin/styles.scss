@@ -1,0 +1,28 @@
+[csl-server] {
+    div[class*="guildIconContainer-"] {
+        transform: translate(-6%, 6%)
+    }
+
+    [class*="primaryInfo-"] > [class*="name-"] {
+        display: flex;
+        justify-content: center;
+        position: relative;
+    }
+
+    /* == Shrink server banners to header instead of disappearing == */
+    [class*="animatedContainer-"] {
+        opacity: 1 !important;
+        transition: opacity .5s, blur .5s;
+    }
+    [class*="animatedContainer-"] > [class*="bannerImage-"] {
+        transition: margin .5s;
+    }
+    :not([class*="bannerVisible-"]) > [class*="animatedContainer-"] {
+        opacity: .35 !important;
+        filter: blur(2px);
+        height: 138px;
+    }
+    :not([class*="bannerVisible-"]) > [class*="animatedContainer-"] > [class*="bannerImage-"] {
+        margin-top: -12px;
+    }
+}
