@@ -1,3 +1,7 @@
+const {
+    ui: { injectCss }
+} = shelter;
+
 const serverHeader_class = "container-1NXEtd"
 const serverName_class = "name-3Uvkvr"
 const loadingSplash_class = "container-2RRFHK"
@@ -19,9 +23,7 @@ function log(input, type) {
 }
 
 // Server Logo Styling
-function addStyle() {
-    const style = document.createElement("style")
-    style.textContent = `
+const styles = `
 [csl-server] div.guildIconContainer-3QvE6w {
     transform: translate(-6%, 6%)
 }
@@ -46,15 +48,7 @@ function addStyle() {
 }
 [csl-server] :not([class*="bannerVisible-"]) > [class*="animatedContainer-"] > [class*="bannerImage-"] {
     margin-top: -12px;
-}`
-    style.id = "DiscordCSL-style"
-    document.head.append(style)
-}
-
-function removeStyle() {
-    var removeData = document.getElementById("DiscordCSL-style");
-    removeData.parentNode.removeChild(removeData);
-}
+}`;
 
 // Fetching the database
 let data
@@ -93,14 +87,10 @@ var injectLogo = () => {
 }
 
 // Plugin Stuff
-let inject;
-export function onLoad() {
-  addStyle()
-  setTimeout(function () {
-      getDB()
-  }, 3000)
-  inject = setInterval(injectLogo, 0)
-}
+const removeStyle = injectCss(styles);
+setTimeout(getDB, 3000);
+const inject = setInterval(injectLogo, 0);
+
 export function onUnload() {
   removeStyle()
   clearInterval(inject)
