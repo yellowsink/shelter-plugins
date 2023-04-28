@@ -1,3 +1,5 @@
+import { forceBioFetch } from "./biofetcher";
+
 const {
 	flux: { dispatcher },
 	observeDom,
@@ -19,7 +21,15 @@ async function inject(el) {
 		?.message?.author?.id;
 	if (!authorId) return;
 
-	const pronouns = (await fetchPronouns(authorId)) ?? fromStore(authorId);
+	let pronouns = await fetchPronouns(authorId);
+	if (!pronouns) {
+		await forceBioFetch(
+			el.parentElement.parentElement.querySelector("[id^=message-username]")
+				.firstElementChild,
+			authorId,
+		);
+		pronouns = fromStore(authorId);
+	}
 
 	if (!pronouns) return;
 
