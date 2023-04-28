@@ -1,6 +1,8 @@
 {
   "devDependencies": {
-    "esbuild": "^0.15.13",
-    "esbuild-plugin-solid": "^0.4.2"
-  }
+    "@uwu/lune": "^1.2.1",
+    "@uwu/shelter-defs": "^1.2.0",
+    "solid-js": "1.6.16"
+  },
+  "type": "module"
 }

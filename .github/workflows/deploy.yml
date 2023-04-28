@@ -22,7 +22,7 @@ jobs:
           pnpm i
 
       - name: Build plugin(s)
-        run: node build.mjs
+        run: pnpm lune build plugin
 
       - name: Copy additional files
         run: |
