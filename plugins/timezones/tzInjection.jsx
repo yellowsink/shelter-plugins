@@ -7,10 +7,11 @@ const {
 	util: { getFiber, reactFiberWalker },
 } = shelter;
 
-const fetchedBios = new Set();
+const fetchedBios = new Map();
 
 async function forceBioFetch(el, uid) {
-	if (fetchedBios.has(uid)) return;
+	const fetchedProm = fetchedBios.get(uid);
+	if (fetchedProm) return fetchedProm;
 
 	const node = reactFiberWalker(
 		getFiber(el),
@@ -21,12 +22,11 @@ async function forceBioFetch(el, uid) {
 	if (!node) return;
 
 	const prom = node.handlePreload();
-	fetchedBios.add(uid);
+	fetchedBios.set(uid, prom);
 	return prom;
 }
 
 const extractTimezone = (userId, guildId) =>
-	parseTimeZone(store.savedTzs[userId]) ??
 	parseTimeZone(storesFlat.UserProfileStore.getUserProfile(userId)?.bio) ??
 	parseTimeZone(
 		storesFlat.UserProfileStore.getGuildMemberProfile(userId, guildId)?.bio,
@@ -39,6 +39,9 @@ export const preflightInjection = (el) =>
 	!el.parentElement.querySelector(".ys_tz") && !injectionMutex.has(el);
 
 async function getTimezone(el, msg) {
+	const savedTz = parseTimeZone(store.savedTzs[msg.author.id]);
+	if (savedTz) return savedTz;
+
 	if (store.tzdb) {
 		const fetched = await fetchTimezone(msg.author.id);
 		if (fetched !== undefined) return { base: fetched };
