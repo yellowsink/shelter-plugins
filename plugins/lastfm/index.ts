@@ -6,6 +6,7 @@ import {
 	IGNORED_COVERS,
 	LFM_API_KEY,
 } from "./cfg";
+import { getAsset } from "./assets";
 import { FluxStore } from "@uwu/shelter-defs";
 
 const {
@@ -39,7 +40,7 @@ interface Track {
 	loved: boolean;
 }
 
-const setPresence = (name = "", activity?: Track) => {
+const setPresence = async (name = "", activity?: Track) =>
 	dispatcher.dispatch({
 		type: "LOCAL_ACTIVITY_UPDATE",
 		activity: activity
@@ -54,13 +55,13 @@ const setPresence = (name = "", activity?: Track) => {
 						? { start: ~~(Date.now() / 1000) }
 						: undefined,
 					assets: {
+						large_image: await getAsset(activity.albumArt),
 						large_text: activity.album && `on ${activity.album}`,
 					},
 			  }
 			: null,
 		socketId: "Last.fm@shelter",
 	});
-};
 
 const getScrobble = async () => {
 	const params = new URLSearchParams({
@@ -117,7 +118,7 @@ const updateStatus = async () => {
 	for (const k in lastTrack)
 		appName = appName.replaceAll(`{{${k}}}`, lastTrack[k]);
 
-	setPresence(appName, lastTrack);
+	await setPresence(appName, lastTrack);
 };
 
 let interval;
