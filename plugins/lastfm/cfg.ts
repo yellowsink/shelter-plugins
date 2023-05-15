@@ -1,6 +1,6 @@
 // a module is more minifiable than an object
 
-export const DEFAULT_NAME = "Music";
+export const DEFAULT_NAME = "{{name}}";
 export const DEFAULT_INTERVAL = 5000;
 
 export const DISCORD_APP_ID = "1107251687984472144";

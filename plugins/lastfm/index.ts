@@ -46,7 +46,7 @@ const setPresence = async (name = "", activity?: Track) =>
 		activity: activity
 			? {
 					name,
-					flags: 1,
+					//flags: 1,
 					type: 2,
 					details: activity.name,
 					state: `by ${activity.artist}`,
