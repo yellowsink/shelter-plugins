@@ -115,8 +115,9 @@ const updateStatus = async () => {
 	lastUrl = lastTrack.url;
 
 	let appName = store.appName || DEFAULT_NAME;
-	for (const k in lastTrack)
-		appName = appName.replaceAll(`{{${k}}}`, lastTrack[k]);
+	// screw it theres nothing wrong with eval okay???
+	// obviously im not serious on that but really this is fine -- sink
+	appName = appName.replaceAll(/{{(.+)}}/g, (_, code) => eval(`(c)=>{with(c){${code}}}`)(lastTrack));
 
 	await setPresence(appName, lastTrack);
 };
