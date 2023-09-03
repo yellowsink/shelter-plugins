@@ -6,6 +6,31 @@ const {
 	ui: { ReactiveRoot },
 } = shelter;
 
+const iframeFromAmUrl = (path: string) =>
+	(
+		<iframe
+			allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+			height={path.includes("playlist") ? 450 : path.includes("i=") ? 175 : 450}
+			style="width:100%;max-width:660px;overflow:hidden;border-radius:10px; border:none;"
+			sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+			src={`https://embed.music.apple.com/${path.replace("/_/", "/")}`}
+		/>
+	) as HTMLIFrameElement;
+
+const iframeFromDeezerUrl = (path: string) =>
+	(
+		<iframe
+			title="deezer-widget"
+			src={`https://widget.deezer.com/widget/${
+				(ThemeStore as any).getState().theme
+			}/${path}`}
+			width="100%"
+			height={path.includes("track") ? 150 : 200}
+			style="border:none;max-width:660px"
+			allow="encrypted-media; clipboard-write"
+		/>
+	) as HTMLIFrameElement;
+
 // take links and return iframes!
 // async because song.link
 const matchers: [
@@ -14,61 +39,64 @@ const matchers: [
 ][] = [
 	// Apple Music
 	[
-		/(https?):\/\/(?:geo\.)?music\.apple\.com\/([a-z]+\/(?:album|playlist)\/.*)/,
-		/(https?):\/\/(?:geo\.)?music\.apple\.com\/([a-z]+\/(?:album|playlist)\/.*)/,
-		(protocol, path) =>
-			Promise.resolve(
-				(
-					<iframe
-						allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
-						height={
-							path.includes("playlist") ? 450 : path.includes("i=") ? 175 : 450
-						}
-						style="width:100%;max-width:660px;overflow:hidden;border-radius:10px; border:none;"
-						sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-						src={`${protocol}://embed.music.apple.com/${path.replace(
-							"/_/",
-							"/",
-						)}`}
-					/>
-				) as HTMLIFrameElement,
-			),
+		/https?:\/\/(?:geo\.)?music\.apple\.com\/([a-z]+\/(?:album|playlist)\/.*)/,
+		(_full, path) => Promise.resolve(iframeFromAmUrl(path)),
 	],
 
 	// Deezer track
 	[
-		/(https?):\/\/(?:www\.)?deezer\.com\/[a-z]+\/((?:track|album|playlist)\/\d+)/,
-		(protocol, path) =>
-			Promise.resolve(
-				(
-					<iframe
-						title="deezer-widget"
-						src={`${protocol}://widget.deezer.com/widget/${
-							(ThemeStore as any).getState().theme
-						}/${path}`}
-						width="100%"
-						height={path.includes("track") ? 150 : 200}
-						style="border:none;max-width:660px"
-						allow="encrypted-media; clipboard-write"
-					/>
-				) as HTMLIFrameElement,
-			),
+		/https?:\/\/(?:www\.)?deezer\.com\/[a-z]+\/((?:track|album|playlist)\/\d+)/,
+		(_full, path) => Promise.resolve(iframeFromDeezerUrl(path)),
 	],
 	// song.link
-	//[], // TODO
+	[
+		/https?:\/\/(?:song|album)\.link\/.+/,
+		async (full) => {
+			debugger;
+			try {
+				// yes, this is a proxy I run, it proxies requests from `proxy/url` to `https://api.song.link/v1-alpha.1/links?url=url`
+				// this is because songlink dont serve cors headers
+				// sorry!
+				// yes i *could* use this for analytics in theory, but so could the server this plugin is hosted on
+				// at the end of the day, software usage implies trust, so by using this plugin you trust that this server isnt malware /shrug
+				// no filtering or processing is performed server side in the interests of open source, all the data processing is client side.
+				// if your client mod adds fake access control headers to stuff then you could set this back and itd work.
+				// -- sink 2023-09-03
+
+				//const apiRes = await fetch(`https://api.song.link/v1-alpha.1/links?url=${full}`).then(r => r.json());
+				const apiRes = await fetch(
+					`https://songlinkprox.yellowsink-cf.workers.dev/${full}`,
+				).then((r) => r.json());
+
+				// TODO: other platforms: spotify, bcamp, am, deezer, scloud, ytm
+
+				for (const [platform, fn] of [
+					["appleMusic", iframeFromAmUrl],
+					["deezer", iframeFromDeezerUrl],
+				] as const)
+					if (apiRes.linksByPlatform[platform])
+						return fn(apiRes.linksByPlatform[platform].url.split(".com/")[1]);
+			} catch (e) {
+				console.error(`error fetching data from songlink for ${full}, bailing`);
+				return undefined;
+			}
+		},
+	],
 	// TIDAL, sadly only albums and playlists
 	/*[
-		/(https?):\/\/listen.tidal.com\/(album|playlist)\/([a-z0-9-]+)/,
-		(protocol, type, id) =>
+		/https?:\/\/listen.tidal.com\/(album|playlist)\/([a-z0-9-]+)/,
+		(_full, type, id) =>
 			Promise.resolve(
 				(
 					<iframe
-						src={`${protocol}://embed.tidal.com/${type}s/${id}?coverInitially=true&disableAnalytics=true`}
+						src={`https://embed.tidal.com/${type}s/${id}?coverInitially=true&disableAnalytics=true`}
 						style="width:100%;height:300px;max-width:660px"
 					/>
 				) as HTMLIFrameElement,
 			),
 	],*/
+
+	// TODO: bandcamp
 ];
 
 const TRIGGERS = [
@@ -108,7 +136,7 @@ function handleDispatch(payload: any) {
 					const match = embed.url.match(matcher);
 					if (!match) continue;
 
-					const iframe = await handler(...match.slice(1));
+					const iframe = await handler(...match);
 					if (iframe) {
 						accessory.style.display = "none";
 						accessory.insertAdjacentElement(
