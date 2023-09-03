@@ -6,6 +6,9 @@ const {
 	ui: { ReactiveRoot },
 } = shelter;
 
+// set to "" to disable proxying where it is used
+const CORS_PROXY_PREFIX = "https://shcors.uwu.network/";
+
 const iframeFromAmUrl = (path: string) =>
 	(
 		<iframe
@@ -13,6 +16,7 @@ const iframeFromAmUrl = (path: string) =>
 			height={path.includes("playlist") ? 450 : path.includes("i=") ? 175 : 450}
 			style="width:100%;max-width:660px;overflow:hidden;border-radius:10px; border:none;"
 			sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+			// replace /_/ to deal with geo. links
 			src={`https://embed.music.apple.com/${path.replace("/_/", "/")}`}
 		/>
 	) as HTMLIFrameElement;
@@ -31,41 +35,81 @@ const iframeFromDeezerUrl = (path: string) =>
 		/>
 	) as HTMLIFrameElement;
 
+const iframeFromBandcampInfo = (
+	type: "a" | "t",
+	trackId?: string,
+	albumId?: string,
+) =>
+	(
+		<iframe
+			style={`border: 0; width: 100%; max-width: 600px; height: ${
+				type === "a" ? 250 : 42
+			}px;`}
+			src={`https://bandcamp.com/EmbeddedPlayer/album=${albumId}/size=${
+				type === "a" ? "large" : "small"
+			}/bgcol=${
+				(ThemeStore as any).getState().theme === "dark" ? "000000" : "ffffff"
+			}/linkcol=0687f5/${
+				type === "a" ? "artwork=small" : "track=" + trackId
+			}/transparent=true/`}
+		/>
+	) as HTMLIFrameElement;
+
+async function scrapeBandcamp(
+	url: string,
+): Promise<["a" | "t", string | undefined, string | undefined]> {
+	const docu = await fetch(CORS_PROXY_PREFIX + url)
+		.then((r) => r.text())
+		.then((t) => new DOMParser().parseFromString(t, "text/html"));
+
+	const pageProps = (
+		docu.querySelector("meta[name=bc-page-properties]") as HTMLMetaElement
+	)?.content;
+	if (!pageProps) return;
+	const { item_type, item_id } = JSON.parse(pageProps);
+
+	if (item_type === "a") return ["a", undefined, item_id];
+
+	if (item_type === "t") {
+		// using .href will resolve the url with discord as a base, hell no
+		const albumUrl = docu.getElementById("buyAlbumLink").getAttribute("href");
+		const resolvedUrl = new URL(albumUrl, url).href;
+
+		return ["t", item_id, (await scrapeBandcamp(resolvedUrl))[2]];
+	}
+}
+
+const iframeFromBandcampUrl = async (url: string) =>
+	iframeFromBandcampInfo(...(await scrapeBandcamp(url)));
+
 // take links and return iframes!
 // async because song.link
 const matchers: [
 	RegExp,
-	(...matches: string[]) => Promise<HTMLIFrameElement | undefined>,
+	(
+		...matches: string[]
+	) => Promise<HTMLIFrameElement | undefined> | HTMLIFrameElement | undefined,
 ][] = [
-	// Apple Music
 	[
 		/https?:\/\/(?:geo\.)?music\.apple\.com\/([a-z]+\/(?:album|playlist)\/.*)/,
-		(_full, path) => Promise.resolve(iframeFromAmUrl(path)),
+		(_full, path) => iframeFromAmUrl(path),
 	],
 
-	// Deezer track
 	[
 		/https?:\/\/(?:www\.)?deezer\.com\/[a-z]+\/((?:track|album|playlist)\/\d+)/,
-		(_full, path) => Promise.resolve(iframeFromDeezerUrl(path)),
+		(_full, path) => iframeFromDeezerUrl(path),
 	],
+
+	[/https?:\/\/.+\.bandcamp\.com\/(?:album|track)\/.+/, iframeFromBandcampUrl],
+
 	// song.link
 	[
 		/https?:\/\/(?:song|album)\.link\/.+/,
 		async (full) => {
-			debugger;
 			try {
-				// yes, this is a proxy I run, it proxies requests from `proxy/url` to `https://api.song.link/v1-alpha.1/links?url=url`
-				// this is because songlink dont serve cors headers
-				// sorry!
-				// yes i *could* use this for analytics in theory, but so could the server this plugin is hosted on
-				// at the end of the day, software usage implies trust, so by using this plugin you trust that this server isnt malware /shrug
-				// no filtering or processing is performed server side in the interests of open source, all the data processing is client side.
-				// if your client mod adds fake access control headers to stuff then you could set this back and itd work.
-				// -- sink 2023-09-03
-
-				//const apiRes = await fetch(`https://api.song.link/v1-alpha.1/links?url=${full}`).then(r => r.json());
+				// this needs a cors proxy
 				const apiRes = await fetch(
-					`https://songlinkprox.yellowsink-cf.workers.dev/${full}`,
+					`${CORS_PROXY_PREFIX}https://api.song.link/v1-alpha.1/links?url=url${full}`,
 				).then((r) => r.json());
 
 				// TODO: other platforms: spotify, bcamp, am, deezer, scloud, ytm
@@ -73,6 +117,7 @@ const matchers: [
 				for (const [platform, fn] of [
 					["appleMusic", iframeFromAmUrl],
 					["deezer", iframeFromDeezerUrl],
+					["bandcamp", iframeFromBandcampUrl],
 				] as const)
 					if (apiRes.linksByPlatform[platform])
 						return fn(apiRes.linksByPlatform[platform].url.split(".com/")[1]);
@@ -84,7 +129,7 @@ const matchers: [
 	],
 	// TIDAL, sadly only albums and playlists
 	/*[
-		/https?:\/\/listen.tidal.com\/(album|playlist)\/([a-z0-9-]+)/,
+		/https?:\/\/listen\.tidal\.com\/(album|playlist)\/([a-z0-9-]+)/,
 		(_full, type, id) =>
 			Promise.resolve(
 				(
@@ -95,8 +140,6 @@ const matchers: [
 				) as HTMLIFrameElement,
 			),
 	],*/
-
-	// TODO: bandcamp
 ];
 
 const TRIGGERS = [
@@ -139,10 +182,7 @@ function handleDispatch(payload: any) {
 					const iframe = await handler(...match);
 					if (iframe) {
 						accessory.style.display = "none";
-						accessory.insertAdjacentElement(
-							"afterend",
-							<ReactiveRoot>{iframe}</ReactiveRoot>,
-						);
+						accessory.insertAdjacentElement("afterend", iframe);
 						break;
 					}
 				}
