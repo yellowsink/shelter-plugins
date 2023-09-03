@@ -17,7 +17,9 @@ const iframeFromAmUrl = (path: string) =>
 			style="width:100%;max-width:660px;overflow:hidden;border-radius:10px; border:none;"
 			sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
 			// replace /_/ to deal with geo. links
-			src={`https://embed.music.apple.com/${path.replace("/_/", "/")}`}
+			src={`https://embed.music.apple.com/${path
+				.split(".com/")[1]
+				.replace("/_/", "/")}`}
 		/>
 	) as HTMLIFrameElement;
 
@@ -27,7 +29,7 @@ const iframeFromDeezerUrl = (path: string) =>
 			title="deezer-widget"
 			src={`https://widget.deezer.com/widget/${
 				(ThemeStore as any).getState().theme
-			}/${path}`}
+			}/${path.split(".com/")[1]}`}
 			width="100%"
 			height={path.includes("track") ? 150 : 200}
 			style="border:none;max-width:660px"
@@ -91,13 +93,13 @@ const matchers: [
 	) => Promise<HTMLIFrameElement | undefined> | HTMLIFrameElement | undefined,
 ][] = [
 	[
-		/https?:\/\/(?:geo\.)?music\.apple\.com\/([a-z]+\/(?:album|playlist)\/.*)/,
-		(_full, path) => iframeFromAmUrl(path),
+		/https?:\/\/(?:geo\.)?music\.apple\.com\/[a-z]+\/(?:album|playlist)\/.*/,
+		iframeFromAmUrl,
 	],
 
 	[
-		/https?:\/\/(?:www\.)?deezer\.com\/[a-z]+\/((?:track|album|playlist)\/\d+)/,
-		(_full, path) => iframeFromDeezerUrl(path),
+		/https?:\/\/(?:www\.)?deezer\.com\/[a-z]+\/(?:track|album|playlist)\/\d+/,
+		iframeFromDeezerUrl,
 	],
 
 	[/https?:\/\/.+\.bandcamp\.com\/(?:album|track)\/.+/, iframeFromBandcampUrl],
@@ -109,7 +111,7 @@ const matchers: [
 			try {
 				// this needs a cors proxy
 				const apiRes = await fetch(
-					`${CORS_PROXY_PREFIX}https://api.song.link/v1-alpha.1/links?url=url${full}`,
+					`${CORS_PROXY_PREFIX}https://api.song.link/v1-alpha.1/links?url=${full}`,
 				).then((r) => r.json());
 
 				// TODO: other platforms: spotify, bcamp, am, deezer, scloud, ytm
@@ -120,10 +122,9 @@ const matchers: [
 					["bandcamp", iframeFromBandcampUrl],
 				] as const)
 					if (apiRes.linksByPlatform[platform])
-						return fn(apiRes.linksByPlatform[platform].url.split(".com/")[1]);
+						return fn(apiRes.linksByPlatform[platform].url);
 			} catch (e) {
 				console.error(`error fetching data from songlink for ${full}, bailing`);
-				return undefined;
 			}
 		},
 	],
