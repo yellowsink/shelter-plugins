@@ -117,7 +117,9 @@ const updateStatus = async () => {
 	let appName = store.appName || DEFAULT_NAME;
 	// screw it theres nothing wrong with eval okay???
 	// obviously im not serious on that but really this is fine -- sink
-	appName = appName.replaceAll(/{{(.+)}}/g, (_, code) => eval(`(c)=>{with(c){try{return ${code}}catch(e){return e}}}`)(lastTrack));
+	appName = appName.replaceAll(/{{(.+)}}/g, (_, code) =>
+		eval(`(c)=>{with(c){try{return ${code}}catch(e){return e}}}`)(lastTrack),
+	);
 
 	await setPresence(appName, lastTrack);
 };
