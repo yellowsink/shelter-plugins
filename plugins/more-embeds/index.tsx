@@ -1,7 +1,9 @@
 const {
-	flux: { storesFlat: { ThemeStore } },
+	flux: { storesFlat: { ThemeStore, SelectedChannelStore }, dispatcher },
 	solid: { onCleanup },
-	util: { createSubscription },
+	util: { createSubscription, getFiber, reactFiberWalker },
+	observeDom,
+	ui: { ReactiveRoot },
 } = shelter;
 
 // take links and return iframes!
@@ -12,7 +14,7 @@ const matchers: [
 ][] = [
 	// Apple Music
 	[
-		/(https?):\/\/music.apple.com\/([a-z]+\/album|playlist\/.*)/,
+		/(https?):\/\/music.apple.com\/([a-z]+\/(?:album|playlist)\/.*)/,
 		(protocol, path) =>
 			Promise.resolve(
 				(
@@ -31,34 +33,27 @@ const matchers: [
 
 	// Deezer track
 	[
-		/(https?):\/\/(?:www.)?deezer.com\/[a-z]+\/(track|album|playlist\/\d+)/,
-		(protocol, path) => {
-			onCleanup(() => console.log("yes, solid does clean this up. i checked."));
-
-			// reactively get the discord theme
-			const currentTheme = createSubscription(
-				ThemeStore,
-				(store: any) => store.getState().theme as string,
-			);
-
-			return Promise.resolve(
+		/(https?):\/\/(?:www.)?deezer.com\/[a-z]+\/((?:track|album|playlist)\/\d+)/,
+		(protocol, path) =>
+			Promise.resolve(
 				(
 					<iframe
 						title="deezer-widget"
-						src={`${protocol}://widget.deezer.com/widget/${currentTheme}/${path}`}
+						src={`${protocol}://widget.deezer.com/widget/${
+							(ThemeStore as any).getState().theme
+						}/${path}`}
 						width="100%"
 						height={path.includes("track") ? 150 : 200}
 						style="border:none;max-width:660px"
 						allow="encrypted-media; clipboard-write"
 					/>
 				) as HTMLIFrameElement,
-			);
-		},
+			),
 	],
 	// song.link
 	//[], // TODO
 	// TIDAL, sadly only albums and playlists
-	[
+	/*[
 		/(https?):\/\/listen.tidal.com\/(album|playlist)\/([a-z0-9-]+)/,
 		(protocol, type, id) =>
 			Promise.resolve(
@@ -69,9 +64,63 @@ const matchers: [
 					/>
 				) as HTMLIFrameElement,
 			),
-	],
+	],*/
 ];
 
+const TRIGGERS = [
+	"MESSAGE_CREATE",
+	"MESSAGE_UPDATE",
+	"UPDATE_CHANNEL_DIMENSIONS",
+];
+
+function handleDispatch(payload: any) {
+	if (
+		(payload.type === "MESSAGE_CREATE" || payload.type === "MESSAGE_UPDATE") &&
+		payload.message.channel_id !== (SelectedChannelStore as any).getChannelId()
+	)
+		return;
+
+	const unobs = observeDom(
+		`[id^="chat-messages-"]:not([data-more-embeds])`,
+		async (e) => {
+			// mutex
+			e.dataset.moreEmbeds = "1";
+			unobs();
+
+			const accessories = e.getElementsByTagName(`article`);
+
+			if (accessories[0]) debugger;
+			// @ts-expect-error TS is on drugs, HTMLCollection is iterable
+			for (const accessory of accessories) {
+				const embed = reactFiberWalker(getFiber(accessory), "embed", true)
+					?.memoizedProps.embed;
+				if (embed?.type !== "link" && embed.type !== "article") return;
+
+				debugger;
+
+				for (const [matcher, handler] of matchers) {
+					const match = embed.url.match(matcher);
+					if (!match) continue;
+
+					const iframe = await handler(...match.slice(1));
+					if (iframe) {
+						accessory.style.display = "none";
+						accessory.insertAdjacentElement(
+							"afterend",
+							<ReactiveRoot>{iframe}</ReactiveRoot>,
+						);
+						break;
+					}
+				}
+			}
+		},
+	);
+
+	setTimeout(unobs, 100); // dangling
+}
+
+for (const t of TRIGGERS) dispatcher.subscribe(t, handleDispatch);
+
 export function onUnload() {
-	// required // TODO
+	for (const t of TRIGGERS) dispatcher.unsubscribe(t, handleDispatch);
 }
