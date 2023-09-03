@@ -14,7 +14,8 @@ const matchers: [
 ][] = [
 	// Apple Music
 	[
-		/(https?):\/\/music.apple.com\/([a-z]+\/(?:album|playlist)\/.*)/,
+		/(https?):\/\/(?:geo\.)?music\.apple\.com\/([a-z]+\/(?:album|playlist)\/.*)/,
+		/(https?):\/\/(?:geo\.)?music\.apple\.com\/([a-z]+\/(?:album|playlist)\/.*)/,
 		(protocol, path) =>
 			Promise.resolve(
 				(
@@ -25,7 +26,10 @@ const matchers: [
 						}
 						style="width:100%;max-width:660px;overflow:hidden;border-radius:10px; border:none;"
 						sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-						src={`${protocol}://embed.music.apple.com/${path}`}
+						src={`${protocol}://embed.music.apple.com/${path.replace(
+							"/_/",
+							"/",
+						)}`}
 					/>
 				) as HTMLIFrameElement,
 			),
@@ -33,7 +37,7 @@ const matchers: [
 
 	// Deezer track
 	[
-		/(https?):\/\/(?:www.)?deezer.com\/[a-z]+\/((?:track|album|playlist)\/\d+)/,
+		/(https?):\/\/(?:www\.)?deezer\.com\/[a-z]+\/((?:track|album|playlist)\/\d+)/,
 		(protocol, path) =>
 			Promise.resolve(
 				(
@@ -87,16 +91,18 @@ function handleDispatch(payload: any) {
 			e.dataset.moreEmbeds = "1";
 			unobs();
 
+			// give embeds some time to load (jank)
+			// im sorry, link, i know youd hate this.
+			if (e.getElementsByTagName(`article`).length === 0)
+				await new Promise((res) => setTimeout(res, 1000));
+
 			const accessories = e.getElementsByTagName(`article`);
 
-			if (accessories[0]) debugger;
 			// @ts-expect-error TS is on drugs, HTMLCollection is iterable
 			for (const accessory of accessories) {
 				const embed = reactFiberWalker(getFiber(accessory), "embed", true)
 					?.memoizedProps.embed;
 				if (embed?.type !== "link" && embed.type !== "article") return;
-
-				debugger;
 
 				for (const [matcher, handler] of matchers) {
 					const match = embed.url.match(matcher);
@@ -116,7 +122,7 @@ function handleDispatch(payload: any) {
 		},
 	);
 
-	setTimeout(unobs, 100); // dangling
+	setTimeout(unobs, 1000); // dangling
 }
 
 for (const t of TRIGGERS) dispatcher.subscribe(t, handleDispatch);
