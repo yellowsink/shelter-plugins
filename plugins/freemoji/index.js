@@ -48,7 +48,7 @@ const patchMessagebar = (elem) => {
 	};
 };
 
-const unObserve = observeDom('[class*="slateContainer-"]', (e) => {
+const unObserve = observeDom('[class*="slateContainer"]', (e) => {
 	patchMessagebar(e);
 });
 
