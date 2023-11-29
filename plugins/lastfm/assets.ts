@@ -14,4 +14,4 @@ const mod = api && api.findByProps("getAssetImage");
 export const getAsset = (url: string): Promise<string> =>
 	!mod.fetchAssetIds
 		? undefined
-		: mod.fetchAssetIds(DISCORD_APP_ID, [url, undefined]);.then((v) => v[0]);
+		: mod.fetchAssetIds(DISCORD_APP_ID, [url, undefined]).then((v) => v[0]);
