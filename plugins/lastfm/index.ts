@@ -49,14 +49,14 @@ const setPresence = async (name = "", activity?: Track) =>
 					//flags: 1,
 					type: 2,
 					details: activity.name,
-					state: `by ${activity.artist}`,
+					state: activity.artist,
 					application_id: DISCORD_APP_ID,
 					timestamps: store.stamp
 						? { start: ~~(Date.now() / 1000) }
 						: undefined,
 					assets: {
 						large_image: await getAsset(activity.albumArt),
-						large_text: activity.album && `on ${activity.album}`,
+						large_text: activity.album,
 					},
 			  }
 			: null,
