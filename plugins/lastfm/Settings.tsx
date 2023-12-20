@@ -1,4 +1,5 @@
 import { DEFAULT_INTERVAL, DEFAULT_NAME } from "./cfg";
+import { Component } from "solid-js";
 
 // @ts-expect-error
 const { store } = shelter.plugin;
@@ -11,7 +12,30 @@ const {
 	Text,
 	LinkButton,
 	Space,
+	Button,
+	ButtonColors,
+	ButtonLooks,
+	ButtonSizes,
 } = shelter.ui;
+
+const ServiceButton: Component<{
+	service: string;
+	children: string;
+}> = (props) => (
+	<Button
+		grow
+		onClick={() => (store.service = props.service)}
+		color={
+			store.service === props.service
+				? ButtonColors.BRAND
+				: ButtonColors.SECONDARY
+		}
+		look={ButtonLooks.OUTLINED}
+		size={ButtonSizes.TINY}
+	>
+		{props.children}
+	</Button>
+);
 
 export const settings = () => (
 	<>
@@ -22,7 +46,15 @@ export const settings = () => (
 			onInput={(v) => (store.appName = v)}
 		/>
 
-		<Header tag={HeaderTags.H3}>Last.fm username (required)</Header>
+		<Header tag={HeaderTags.H3}>Service</Header>
+		<div style="display: flex">
+			<ServiceButton service="lfm">Last.fm</ServiceButton>
+			<ServiceButton service="lbz">Listenbrainz</ServiceButton>
+		</div>
+
+		<Header tag={HeaderTags.H3}>
+			{store.service === "lbz" ? "Listenbrainz" : "Last.fm"} username (required)
+		</Header>
 		<TextBox value={store.user ?? ""} onInput={(v) => (store.user = v)} />
 
 		<Header tag={HeaderTags.H3}>Update interval (seconds)</Header>

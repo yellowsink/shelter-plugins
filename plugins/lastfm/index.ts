@@ -17,6 +17,7 @@ const {
 
 store.stamp ??= true;
 store.ignoreSpotify ??= true;
+store.service ??= "lfm";
 
 const UserStore = storesFlat.UserStore as FluxStore<{
 	getCurrentUser(): { id: string };
@@ -35,9 +36,8 @@ interface Track {
 	album: string;
 	albumArt?: string;
 	url: string;
-	date: string;
+	//date: string;
 	nowPlaying: boolean;
-	loved: boolean;
 }
 
 const setPresence = async (name = "", activity?: Track) =>
@@ -55,7 +55,8 @@ const setPresence = async (name = "", activity?: Track) =>
 						? { start: ~~(Date.now() / 1000) }
 						: undefined,
 					assets: {
-						large_image: await getAsset(activity.albumArt),
+						large_image:
+							activity.albumArt && (await getAsset(activity.albumArt)),
 						large_text: activity.album,
 					},
 			  }
@@ -63,7 +64,7 @@ const setPresence = async (name = "", activity?: Track) =>
 		socketId: "Last.fm@shelter",
 	});
 
-const getScrobble = async () => {
+const getScrobbleLastfm = async () => {
 	const params = new URLSearchParams({
 		method: "user.getrecenttracks",
 		user: store.user,
@@ -87,9 +88,46 @@ const getScrobble = async () => {
 		album: lastTrack.album["#text"],
 		albumArt: IGNORED_COVERS.includes(aart) ? undefined : aart,
 		url: lastTrack.url,
-		date: lastTrack.date?.["#text"] ?? "now",
+		//date: lastTrack.date?.["#text"] ?? "now",
 		nowPlaying: !!lastTrack["@attr"]?.nowplaying,
-		loved: lastTrack.loved === "1",
+	} as Track;
+};
+
+const getScrobbleListenbrainz = async () => {
+	// use the shelter proxy to set the user agent as required by musicbrainz
+	const nowPlayingRes = await fetch(
+		`https://shcors.uwu.network/https://api.listenbrainz.org/1/user/${store.user}/playing-now`,
+		{
+			headers: {
+				"X-Shprox-UA":
+					"ShelterLastFm/0.0.0 ( https://github.com/yellowsink/shelter-plugins )",
+			},
+		},
+	).then((r) => r.json());
+
+	if (!nowPlayingRes.payload.count) return;
+
+	const track = nowPlayingRes.payload.listens[0].track_metadata;
+
+	let albumArtUrl = !track.additional_info
+		? undefined
+		: `https://coverartarchive.org/release/${track.additional_info.release_mbid}/front`;
+	if (albumArtUrl) {
+		// test
+		const testRes = await fetch(albumArtUrl);
+		if (!testRes.redirected) albumArtUrl = undefined;
+	}
+
+	return {
+		name: track.track_name,
+		artist: track.artist_name,
+		album: track.release_name,
+		albumArt: albumArtUrl,
+		url:
+			track.additional_info?.recording_mbid &&
+			`https://musicbrainz.org/recording/${track.additional_info.recording_mbid}`,
+		//date: "now", // not returned by api
+		nowPlaying: nowPlayingRes.payload.listens[0].playing_now,
 	} as Track;
 };
 
@@ -108,7 +146,10 @@ const updateStatus = async () => {
 			)
 				return setPresence();
 
-	const lastTrack = await getScrobble();
+	const getFn =
+		store.service === "lbz" ? getScrobbleListenbrainz : getScrobbleLastfm;
+
+	const lastTrack = await getFn();
 	if (!lastTrack?.nowPlaying) return setPresence();
 
 	if (lastTrack.url === lastUrl) return;
