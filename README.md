@@ -34,3 +34,5 @@ More Embeds: https://yellowsink.github.io/shelter-plugins/more-embeds/
    - song.link/album.link/Odesli (songs, albums)
    - Bandcamp (songs, albums)
    - (not) TIDAl (coming soon) (hopefully?)
+
+Text Replacements https://yellowsink.github.io/shelter-plugins/text-replacements/
