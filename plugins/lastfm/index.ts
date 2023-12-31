@@ -109,7 +109,7 @@ const getScrobbleListenbrainz = async () => {
 
 	const track = nowPlayingRes.payload.listens[0].track_metadata;
 
-	let albumArtUrl = !track.additional_info
+	let albumArtUrl = !track.additional_info?.release_mbid
 		? undefined
 		: `https://coverartarchive.org/release/${track.additional_info.release_mbid}/front`;
 	if (albumArtUrl) {
@@ -123,9 +123,9 @@ const getScrobbleListenbrainz = async () => {
 		artist: track.artist_name,
 		album: track.release_name,
 		albumArt: albumArtUrl,
-		url:
-			track.additional_info?.recording_mbid &&
-			`https://musicbrainz.org/recording/${track.additional_info.recording_mbid}`,
+		url: track.additional_info?.recording_mbid
+			? `https://musicbrainz.org/recording/${track.additional_info.recording_mbid}`
+			: `NOURL_${track.track_name}:${track.artist_name}:${track.release_name}`,
 		//date: "now", // not returned by api
 		nowPlaying: nowPlayingRes.payload.listens[0].playing_now,
 	} as Track;
