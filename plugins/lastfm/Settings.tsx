@@ -17,6 +17,7 @@ const {
 	ButtonLooks,
 	ButtonSizes,
 } = shelter.ui;
+const { Show } = shelter.solid;
 
 const ServiceButton: Component<{
 	service: string;
@@ -56,6 +57,16 @@ export const settings = () => (
 			{store.service === "lbz" ? "Listenbrainz" : "Last.fm"} username (required)
 		</Header>
 		<TextBox value={store.user ?? ""} onInput={(v) => (store.user = v)} />
+
+		<Show when={store.service === "lbz"}>
+			<SwitchItem
+				value={store.lbLookup}
+				onChange={(v) => (store.lbLookup = v)}
+				note="Depending on the scrobbler, Listenbrainz may not be able to return a release ID with the current track. If this happens, we can't fetch an album cover. This option will search musicbrainz for a matching release if this happens, to attempt to find a (hopefully correct) cover. If you get incorrect album art, turn this off. If you get missing album art, turn this on."
+			>
+				Search Musicbrainz for missing releases
+			</SwitchItem>
+		</Show>
 
 		<Header tag={HeaderTags.H3}>Update interval (seconds)</Header>
 		<TextBox

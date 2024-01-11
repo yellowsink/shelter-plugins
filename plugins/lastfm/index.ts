@@ -18,6 +18,7 @@ const {
 store.stamp ??= true;
 store.ignoreSpotify ??= true;
 store.service ??= "lfm";
+store.lbLookup ??= true;
 
 const UserStore = storesFlat.UserStore as FluxStore<{
 	getCurrentUser(): { id: string };
@@ -93,6 +94,41 @@ const getScrobbleLastfm = async () => {
 	} as Track;
 };
 
+// finds a MBID and adds it to a track if it doesnt exist
+const listenBrainzLookupAdditional = async (basicTrack) => {
+	// following the behaviour of the webapp, if theres not an MBID, do a search.
+	if (!store.lbLookup) return;
+	if (basicTrack.additional_info?.release_mbid) return;
+
+	try {
+		const metaRes = await fetch(
+			`https://shcors.uwu.network/https://api.listenbrainz.org/1/metadata/lookup/?${new URLSearchParams(
+				{
+					recording_name: basicTrack.track_name,
+					artist_name: basicTrack.artist_name,
+					metadata: "true",
+					inc: "artist tag release",
+				},
+			)}`,
+			{
+				headers: {
+					"X-Shprox-UA":
+						"ShelterLastFm/0.0.0 ( https://github.com/yellowsink/shelter-plugins )",
+				},
+			},
+		).then((r) => r.json());
+
+		basicTrack.additional_info = { ...basicTrack?.additional_info, ...metaRes };
+	} catch (e) {
+		console.error(
+			"SHELTER LASTFM: finding listenbrainz MBID for track",
+			basicTrack,
+			"failed, ",
+			e,
+		);
+	}
+};
+
 const getScrobbleListenbrainz = async () => {
 	// use the shelter proxy to set the user agent as required by musicbrainz
 	const nowPlayingRes = await fetch(
@@ -108,6 +144,8 @@ const getScrobbleListenbrainz = async () => {
 	if (!nowPlayingRes.payload.count) return;
 
 	const track = nowPlayingRes.payload.listens[0].track_metadata;
+
+	await listenBrainzLookupAdditional(track);
 
 	let albumArtUrl = !track.additional_info?.release_mbid
 		? undefined
