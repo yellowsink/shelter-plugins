@@ -6,7 +6,11 @@ const {
 	ui: { Header, HeaderTags, TextBox },
 } = shelter;
 
-store.instance ??= "invidious.slipfox.xyz";
+if (store.instance === "invidious.slipfox.xyz" && !store.sfmigrate) {
+	store.sfmigrate = 1;
+	store.instance = null;
+}
+store.instance ??= "inv.n8pjl.ca"
 
 // taken and improved from more-embeds
 
