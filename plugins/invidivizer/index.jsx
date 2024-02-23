@@ -10,7 +10,7 @@ if (store.instance === "invidious.slipfox.xyz" && !store.sfmigrate) {
 	store.sfmigrate = 1;
 	store.instance = null;
 }
-store.instance ??= "inv.n8pjl.ca"
+store.instance ??= "inv.n8pjl.ca";
 
 // taken and improved from more-embeds
 
@@ -20,6 +20,10 @@ const TRIGGERS = [
 	"UPDATE_CHANNEL_DIMENSIONS",
 ];
 
+// prevent duplicate embeds when sending by mutexing on the payload
+// idk quite why this works but it does!
+const extraMutex = new WeakSet();
+
 function handleDispatch(payload) {
 	if (!store.instance) return;
 	if (
@@ -27,6 +31,9 @@ function handleDispatch(payload) {
 		payload.message.channel_id !== SelectedChannelStore.getChannelId()
 	)
 		return;
+
+	if (extraMutex.has(payload)) return;
+	extraMutex.add(payload);
 
 	const unobs = observeDom(
 		`[id^="chat-messages-"] article:not([data-invidivizer])`,
