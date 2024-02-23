@@ -20,10 +20,6 @@ const TRIGGERS = [
 	"UPDATE_CHANNEL_DIMENSIONS",
 ];
 
-// prevent duplicate embeds when sending by mutexing on the payload
-// idk quite why this works but it does!
-const extraMutex = new WeakSet();
-
 function handleDispatch(payload) {
 	if (!store.instance) return;
 	if (
@@ -32,15 +28,17 @@ function handleDispatch(payload) {
 	)
 		return;
 
-	if (extraMutex.has(payload)) return;
-	extraMutex.add(payload);
-
 	const unobs = observeDom(
 		`[id^="chat-messages-"] article:not([data-invidivizer])`,
 		(e) => {
 			// mutex
 			e.dataset.invidivizer = "1";
 			unobs();
+
+			// fix duplicates lol
+			e.parentElement
+				.querySelector(`iframe[src*="${store.instance}"]`)
+				?.remove();
 
 			const found = reactFiberWalker(getFiber(e), "embed", true)?.memoizedProps
 				?.embed?.url;
