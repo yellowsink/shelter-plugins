@@ -52,13 +52,16 @@ function handleDispatch(payload) {
 
 			const match = found.match(/v=([a-zA-Z0-9-_]+)/);
 			if (!match?.[1]) return;
+			const tsMatch = found.match(/t=(?:\d+|(?:\d+m)?\d+s|\d+m)/);
+
+			const embPath = tsMatch?.[0] ? match[1] + "?" + tsMatch[0] : match[1];
 
 			e.style.display = "none";
 			e.insertAdjacentElement(
 				"afterend",
 				<iframe
 					style="border: 0; width: 100%; max-width: 600px; aspect-ratio: 16/9"
-					src={`https://${store.instance}/embed/${match[1]}`}
+					src={`https://${store.instance}/embed/${embPath}`}
 					allow="fullscreen"
 				/>,
 			);
