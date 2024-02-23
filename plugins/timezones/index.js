@@ -26,8 +26,8 @@ async function injectTimestamp(el) {
 	const date = msg?.timestamp;
 	if (!date) return;
 
-	if (shouldInjectAbs) injectAbsoluteTime(el, date.clone());
-	if (shouldInjectTz) await injectLocalTime(msg, el, date.clone());
+	if (shouldInjectAbs) injectAbsoluteTime(el, new Date(date));
+	if (shouldInjectTz) await injectLocalTime(msg, el, new Date(date));
 }
 
 function onDispatch() {

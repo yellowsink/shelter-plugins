@@ -34,9 +34,9 @@ export const emitTimeZone = (tz) =>
 /*(tz.hours || (tz.mins ? "+0" : "")) +
 	(tz.mins ? ":" + tz.mins : "");*/
 
-export const formatInTimeZone = (momentTime, zone, fmt) =>
+export const formatInTimeZone = (dateTime, zone, fmt) =>
 	timezone(
-		momentTime,
+		dateTime,
 		zone.base,
 		"+" + (zone.hours ?? 0) + " hour",
 		//"+" + (zone.mins ?? 0) + " minute",
@@ -44,5 +44,5 @@ export const formatInTimeZone = (momentTime, zone, fmt) =>
 	);
 
 // purely for consistency's sake!
-export const formatAsIs = (momentTime, fmt) =>
-	timezone(momentTime, `+${momentTime.utcOffset()} minute`, fmt);
+export const formatAsIs = (dateTime, fmt) =>
+	timezone(dateTime, `+${-dateTime.getTimezoneOffset()} minute`, fmt);
