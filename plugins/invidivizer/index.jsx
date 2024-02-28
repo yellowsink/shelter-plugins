@@ -1,7 +1,10 @@
 const {
 	plugin: { store },
 	observeDom,
-	flux: { dispatcher, storesFlat: { SelectedChannelStore } },
+	flux: {
+		dispatcher,
+		storesFlat: { SelectedChannelStore },
+	},
 	util: { reactFiberWalker, getFiber },
 	ui: { Header, HeaderTags, TextBox },
 } = shelter;

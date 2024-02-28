@@ -1,6 +1,8 @@
 const {
 	plugin: { store },
-	flux: { stores: { SelectedGuildStore, EmojiStore } },
+	flux: {
+		stores: { SelectedGuildStore, EmojiStore },
+	},
 } = shelter;
 
 const isInDms = () =>

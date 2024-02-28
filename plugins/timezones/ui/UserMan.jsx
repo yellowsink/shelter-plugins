@@ -1,7 +1,9 @@
 import { showPickerModal } from "./TzPicker";
 
 const {
-	flux: { storesFlat: { UserStore } },
+	flux: {
+		storesFlat: { UserStore },
+	},
 	plugin: { store },
 	ui: {
 		Button,
@@ -34,12 +36,12 @@ export default (props) => {
 		!newUid()
 			? ""
 			: newUid() in store.savedTzs
-			? "This user already has a timezone set"
-			: newUid().match(/\d{17,19}/)?.[0] !== newUid()
-			? "That is not a valid user ID"
-			: !newTz()
-			? "Please enter a time zone"
-			: undefined;
+			  ? "This user already has a timezone set"
+			  : newUid().match(/\d{17,19}/)?.[0] !== newUid()
+				  ? "That is not a valid user ID"
+				  : !newTz()
+					  ? "Please enter a time zone"
+					  : undefined;
 
 	const tryAdd = () => {
 		if (validation() !== undefined) return;
@@ -138,7 +140,6 @@ export default (props) => {
 						Add
 					</Button>
 				</div>
-
 				{!!validation() && (
 					<>
 						<span style="color: var(--text-danger)">{validation()}</span>

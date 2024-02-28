@@ -1,5 +1,8 @@
 const {
-	flux: { storesFlat: { ThemeStore, SelectedChannelStore }, dispatcher },
+	flux: {
+		storesFlat: { ThemeStore, SelectedChannelStore },
+		dispatcher,
+	},
 	solid: { onCleanup },
 	util: { createSubscription, getFiber, reactFiberWalker },
 	observeDom,
