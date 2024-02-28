@@ -3,10 +3,10 @@
 		"postinstall": "husky install"
 	},
 	"devDependencies": {
-		"@uwu/lune": "^1.2.1",
-		"@uwu/shelter-defs": "^1.2.0",
-		"husky": "^8.0.3",
-		"@biomejs/biome": "^1.0.0",
+		"@biomejs/biome": "^1.5.3",
+		"@uwu/lune": "^1.4.0",
+		"@uwu/shelter-defs": "^1.4.0",
+		"husky": "^9.0.11",
 		"solid-js": "1.6.16"
 	},
 	"type": "module"
