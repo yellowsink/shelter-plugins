@@ -38,3 +38,11 @@ More Embeds: https://yellowsink.github.io/shelter-plugins/more-embeds/
 Text Replacements: https://yellowsink.github.io/shelter-plugins/text-replacements/
 
 Indidivizer: https://yellowsink.github.io/shelter-plugins/invidivizer
+
+No Devtools Detection: https://yellowsink.github.io/shelter-plugins/no-devtools-detect
+ - Also useful for people who use vertical tabs extensions.
+   Without, if the difference between the outer and inner width or height is 160px or more,
+   then Discord will think you opened the devtools on web.
+ - Prevents the annoying "Wait" and "Hold Up" logs
+ - Prevents you from being logged out of your session if you reload with the devtools open,
+   or if you use a browser with vertical tabs, being logged out every single session!
