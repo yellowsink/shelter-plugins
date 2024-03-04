@@ -1,1 +1,490 @@
-(()=>{var Z=Object.create;var A=Object.defineProperty;var ee=Object.getOwnPropertyDescriptor;var te=Object.getOwnPropertyNames;var re=Object.getPrototypeOf,ne=Object.prototype.hasOwnProperty;var oe=(t,e)=>()=>(e||t((e={exports:{}}).exports,e),e.exports),se=(t,e)=>{for(var r in e)A(t,r,{get:e[r],enumerable:!0})},L=(t,e,r,o)=>{if(e&&typeof e=="object"||typeof e=="function")for(let i of te(e))!ne.call(t,i)&&i!==r&&A(t,i,{get:()=>e[i],enumerable:!(o=ee(e,i))||o.enumerable});return t};var N=(t,e,r)=>(r=t!=null?Z(re(t)):{},L(e||!t||!t.__esModule?A(r,"default",{value:t,enumerable:!0}):r,t)),ae=t=>L(A({},"__esModule",{value:!0}),t);var g=oe((ot,V)=>{V.exports=shelter.solidWeb});var ve={};se(ve,{onUnload:()=>Te,settings:()=>_e});var D="{{name}}";var b="1107251687984472144",C="311958e99f6ee58518756f83720db787";var R=["2a96cbd8b46e442fc41c2b86b821562f","c6f59c1e5e7240a4c0d427abd71f3dbb"];var x=t=>{if(t??=Object.keys(window).find(r=>r.startsWith("webpackChunk")),!window[t])return;let e;return window[t].push([[Symbol()],{},r=>{e=r}]),window[t].pop(),[e.c??Object.fromEntries(Object.entries(e.m).map(([r])=>[r,{id:r,loaded:!0,exports:e(r)}])),e]};var c=t=>e=>t.every(r=>e[r]!==void 0),d=t=>e=>e.prototype&&t.every(r=>e.prototype[r]!==void 0),u=(t,e=!0)=>r=>(e?r.displayName:r.default?.displayName)===t,f=t=>e=>t.every(r=>Object.keys(e).some(o=>o.toLowerCase().includes(r.toLowerCase()))),m=t=>e=>{let r=new RegExp(`(${t}$)|((\\w+\\()+${t}\\))`);if(r.test(e.displayName))return!0;if(typeof e.$$typeof=="symbol"&&e.Consumer===void 0&&(e.type||e.render)){for(;typeof e.type=="object"||typeof e.render=="object";)e=e.type??e.render;if(r.test(e.type?.displayName)||r.test(e.render?.displayName))return!0}},F=t=>typeof t=="object"||typeof t=="function",y=t=>e=>F(e)&&Object.values(e).some(r=>F(r)&&t.some(o=>r?.[o]!==void 0)),U=(t,e)=>r=>Object.entries(e).filter(([,o])=>o.toString().match(r)).map(([o])=>t[o]?.exports).filter(o=>o);var ce=(t,e)=>{let r=[],o=i=>e.forEach(([n,p],h)=>{p&&!r[h]&&(r[h]=[]),n(i)&&(p?r[h].push(i):r[h]||(r[h]=i))});for(let i in t){let n=t[i].exports;!n||n===window||(n.default&&n.__esModule&&o(n.default),o(n))}return r},de=t=>({find:e=>t.push([e,!1]),findAll:e=>t.push([e,!0]),findByProps:(...e)=>t.push([c(e),!1]),findByPropsAll:(...e)=>t.push([c(e),!0]),findByPrototypes:(...e)=>t.push([d(e),!1]),findByPrototypesAll:(...e)=>t.push([d(e),!0]),findByNestedProps:(...e)=>t.push([y(e),!1]),findByNestedPropsAll:(...e)=>t.push([y(e),!0]),findByDisplayName:(e,r)=>t.push([u(e,r),!1]),findByDisplayNameAll:(e,r)=>t.push([u(e,r),!0]),findByDispNameDeep:e=>t.push([m(e),!1]),findByDispNameDeepAll:e=>t.push([m(e),!0]),findByKeyword:(...e)=>t.push([f(e),!1]),findByKeywordAll:(...e)=>t.push([f(e),!0])}),$=t=>e=>{let r=[],o=de(r);return e(o),ce(t,r)};var j=(t,e=!0)=>r=>{let o=[];for(let i in t){let n=t[i].exports;if(!(!n||n===window)){if(n.default&&n.__esModule&&r(n.default)){if(e)return n.default;o.push(n.default)}if(r(n)){if(e)return n;o.push(n)}}}if(!e)return o},P=([,t,e])=>{let r=j(t),o=j(t,!1),i=e?U(t,e.m):()=>{throw new Error("findByCode does not work with this bundler")};return{batchFind:$(t),find:r,findAll:o,findByProps:(...n)=>r(c(n)),findByPropsAll:(...n)=>o(c(n)),findByPrototypes:(...n)=>r(d(n)),findByPrototypesAll:(...n)=>o(d(n)),findByNestedProps:(...n)=>r(y(n)),findByNestedPropsAll:(...n)=>o(y(n)),findByDisplayName:(n,p)=>r(u(n,p)),findByDisplayNameAll:(n,p)=>o(u(n,p)),findByDispNameDeep:n=>r(m(n)),findByDispNameDeepAll:n=>o(m(n)),findByKeyword:(...n)=>r(f(n)),findByKeywordAll:(...n)=>o(f(n)),findByCodeAll:i,findByCode:n=>i(n)[0]}};var z=x(),K=z&&P([void 0,...z]),M=K&&K.findByProps("getAssetImage"),H=t=>M.fetchAssetIds?M.fetchAssetIds(b,[t,void 0]).then(e=>e[0]):void 0;var G=N(g()),E=N(g()),s=N(g()),J=N(g());var ue=(0,G.template)('<div style="display: flex"></div>',2),{store:a}=shelter.plugin,{TextBox:T,SwitchItem:v,Header:S,HeaderTags:k,Divider:fe,Text:me,LinkButton:ye,Space:Y,Button:he,ButtonColors:q,ButtonLooks:be,ButtonSizes:ge}=shelter.ui,{Show:we}=shelter.solid,W=t=>(0,s.createComponent)(he,{grow:!0,onClick:()=>a.service=t.service,get color(){return a.service===t.service?q.BRAND:q.SECONDARY},get look(){return be.OUTLINED},get size(){return ge.TINY},get children(){return t.children}}),_e=()=>[(0,s.createComponent)(S,{get tag(){return k.H3},children:"Application Name"}),(0,s.createComponent)(T,{placeholder:D,get value(){return a.appName??""},onInput:t=>a.appName=t}),(0,s.createComponent)(S,{get tag(){return k.H3},children:"Service"}),(()=>{let t=ue.cloneNode(!0);return(0,E.insert)(t,(0,s.createComponent)(W,{service:"lfm",children:"Last.fm"}),null),(0,E.insert)(t,(0,s.createComponent)(W,{service:"lbz",children:"Listenbrainz"}),null),t})(),(0,s.createComponent)(S,{get tag(){return k.H3},get children(){return[(0,J.memo)(()=>a.service==="lbz"?"Listenbrainz":"Last.fm")," username (required)"]}}),(0,s.createComponent)(T,{get value(){return a.user??""},onInput:t=>a.user=t}),(0,s.createComponent)(we,{get when(){return a.service==="lbz"},get children(){return(0,s.createComponent)(v,{get value(){return a.lbLookup},onChange:t=>a.lbLookup=t,note:"Depending on the scrobbler, Listenbrainz may not be able to return a release ID with the current track. If this happens, we can't fetch an album cover. This option will search musicbrainz for a matching release if this happens, to attempt to find a (hopefully correct) cover. If you get incorrect album art, turn this off. If you get missing album art, turn this on.",children:"Search Musicbrainz for missing releases"})}}),(0,s.createComponent)(S,{get tag(){return k.H3},children:"Update interval (seconds)"}),(0,s.createComponent)(T,{placeholder:5e3/1e3+"",get value(){return a.interval?a.interval/1e3+"":""},onInput:t=>(!t||!isNaN(parseFloat(t)))&&(a.interval=t?parseFloat(t)*1e3||5e3:void 0)}),(0,s.createComponent)(fe,{mt:!0,mb:!0}),(0,s.createComponent)(v,{get value(){return a.stamp},onChange:t=>a.stamp=t,note:"Show time since song started playing",children:"Show time elapsed"}),(0,s.createComponent)(v,{get value(){return a.ignoreSpotify},onChange:t=>a.ignoreSpotify=t,note:"Hide the status if Spotify is playing",children:"Hide when using Spotify"}),(0,s.createComponent)(me,{get children(){return["Thanks to",(0,s.createComponent)(ye,{href:"https://github.com/amsyarasyiq/letup/blob/main/plugins/Last.fm",get children(){return[(0,s.createComponent)(Y,{}),"Pylix's Vendetta plugin",(0,s.createComponent)(Y,{})]}}),"for useful implementation details and reference."]}})];var{plugin:{store:l},flux:{storesFlat:Q,dispatcher:Ne}}=shelter;l.stamp??=!0;l.ignoreSpotify??=!0;l.service??="lfm";l.lbLookup??=!0;var De=Q.UserStore,xe=Q.PresenceStore,w=async(t="",e)=>Ne.dispatch({type:"LOCAL_ACTIVITY_UPDATE",activity:e?{name:t,type:2,details:e.name,state:e.artist,application_id:b,timestamps:l.stamp?{start:~~(Date.now()/1e3)}:void 0,assets:{large_image:e.albumArt&&await H(e.albumArt),large_text:e.album}}:null,socketId:"Last.fm@shelter"}),Pe=async()=>{let t=new URLSearchParams({method:"user.getrecenttracks",user:l.user,api_key:C,format:"json",limit:"1",extended:"1"}),e=await fetch(`https://ws.audioscrobbler.com/2.0/?${t}`);if(!e.ok)return;let r=(await e.json())?.recenttracks?.track?.[0];if(!r)return;let o=r.image[3]["#text"];return{name:r.name,artist:r.artist.name,album:r.album["#text"],albumArt:R.includes(o)?void 0:o,url:r.url,nowPlaying:!!r["@attr"]?.nowplaying}},Se=async t=>{if(l.lbLookup&&!t.additional_info?.release_mbid)try{let e=await fetch(`https://shcors.uwu.network/https://api.listenbrainz.org/1/metadata/lookup/?${new URLSearchParams({recording_name:t.track_name,artist_name:t.artist_name,metadata:"true",inc:"artist tag release"})}`,{headers:{"X-Shprox-UA":"ShelterLastFm/0.0.0 ( https://github.com/yellowsink/shelter-plugins )"}}).then(r=>r.json());t.additional_info={...t?.additional_info,...e}}catch(e){console.error("SHELTER LASTFM: finding listenbrainz MBID for track",t,"failed, ",e)}},ke=async()=>{let t=await fetch(`https://shcors.uwu.network/https://api.listenbrainz.org/1/user/${l.user}/playing-now`,{headers:{"X-Shprox-UA":"ShelterLastFm/0.0.0 ( https://github.com/yellowsink/shelter-plugins )"}}).then(o=>o.json());if(!t.payload.count)return;let e=t.payload.listens[0].track_metadata;await Se(e);let r=e.additional_info?.release_mbid?`https://coverartarchive.org/release/${e.additional_info.release_mbid}/front`:void 0;return r&&((await fetch(r)).redirected||(r=void 0)),{name:e.track_name,artist:e.artist_name,album:e.release_name,albumArt:r,url:e.additional_info?.recording_mbid?`https://musicbrainz.org/recording/${e.additional_info.recording_mbid}`:`NOURL_${e.track_name}:${e.artist_name}:${e.release_name}`,nowPlaying:t.payload.listens[0].playing_now}},X,Be=async()=>{if(!l.user)return w();if(l.ignoreSpotify){for(let t of xe.getActivities(De.getCurrentUser().id))if(t?.type===2&&t.application_id!==b)return w()}let getFn=l.service==="lbz"?ke:Pe,lastTrack=await getFn();if(!lastTrack?.nowPlaying)return w();if(lastTrack.url===X)return;X=lastTrack.url;let appName=l.appName||D;appName=appName.replaceAll(/{{(.+)}}/g,(_,code)=>eval(`(c)=>{with(c){try{return ${code}}catch(e){return e}}}`)(lastTrack)),await w(appName,lastTrack)},I,Ie=()=>(I&&clearInterval(I),I=setInterval(Be,l.interval||5e3));Ie();var Te=()=>(clearInterval(I),w());return ae(ve);})();
+(() => {
+  var __create = Object.create;
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __getProtoOf = Object.getPrototypeOf;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __commonJS = (cb, mod2) => function __require() {
+    return mod2 || (0, cb[__getOwnPropNames(cb)[0]])((mod2 = { exports: {} }).exports, mod2), mod2.exports;
+  };
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toESM = (mod2, isNodeMode, target) => (target = mod2 != null ? __create(__getProtoOf(mod2)) : {}, __copyProps(
+    // If the importer is in node compatibility mode or this is not an ESM
+    // file that has been converted to a CommonJS file using a Babel-
+    // compatible transform (i.e. "__esModule" has not been set), then set
+    // "default" to the CommonJS "module.exports" for node compatibility.
+    isNodeMode || !mod2 || !mod2.__esModule ? __defProp(target, "default", { value: mod2, enumerable: true }) : target,
+    mod2
+  ));
+  var __toCommonJS = (mod2) => __copyProps(__defProp({}, "__esModule", { value: true }), mod2);
+
+  // shltr-res-ns:solid-js/web
+  var require_web = __commonJS({
+    "shltr-res-ns:solid-js/web"(exports, module) {
+      module.exports = shelter.solidWeb;
+    }
+  });
+
+  // plugins/lastfm/index.ts
+  var lastfm_exports = {};
+  __export(lastfm_exports, {
+    onUnload: () => onUnload,
+    settings: () => settings
+  });
+
+  // plugins/lastfm/cfg.ts
+  var DEFAULT_NAME = "{{name}}";
+  var DEFAULT_INTERVAL = 5e3;
+  var DISCORD_APP_ID = "1107251687984472144";
+  var LFM_API_KEY = "311958e99f6ee58518756f83720db787";
+  var ACTIVITY_TYPE_LISTENING = 2;
+  var IGNORED_COVERS = [
+    "2a96cbd8b46e442fc41c2b86b821562f",
+    "c6f59c1e5e7240a4c0d427abd71f3dbb"
+  ];
+
+  // node_modules/.pnpm/@cumjar+websmack@1.2.0/node_modules/@cumjar/websmack/src/raid/webpackChunk.js
+  var webpackChunk_default = (key) => {
+    key ??= Object.keys(window).find((key2) => key2.startsWith("webpackChunk"));
+    if (!window[key])
+      return;
+    let wpRequire;
+    window[key].push([
+      [Symbol()],
+      {},
+      (e) => {
+        wpRequire = e;
+      }
+    ]);
+    window[key].pop();
+    return [wpRequire.c ?? // wow thats jank lmao
+    Object.fromEntries(
+      Object.entries(wpRequire.m).map(([k]) => [
+        k,
+        { id: k, loaded: true, exports: wpRequire(k) }
+      ])
+    ), wpRequire];
+  };
+
+  // node_modules/.pnpm/@cumjar+websmack@1.2.0/node_modules/@cumjar/websmack/src/api/filters.js
+  var byProps = (props) => (m) => props.every((p) => m[p] !== void 0);
+  var byProtos = (protos) => (m) => m.prototype && protos.every((p) => m.prototype[p] !== void 0);
+  var byDisplayName = (name, defaultExp = true) => (m) => (defaultExp ? m.displayName : m.default?.displayName) === name;
+  var byKeyword = (strs) => (m) => strs.every(
+    (s) => Object.keys(m).some((k) => k.toLowerCase().includes(s.toLowerCase()))
+  );
+  var byDispNameDeep = (name) => (m) => {
+    const regex = new RegExp(`(${name}$)|((\\w+\\()+${name}\\))`);
+    if (regex.test(m.displayName))
+      return true;
+    if (typeof m.$$typeof !== "symbol")
+      return;
+    if (m.Consumer !== void 0)
+      return;
+    if (m.type || m.render) {
+      while (typeof m.type === "object" || typeof m.render === "object")
+        m = m.type ?? m.render;
+      if (regex.test(m.type?.displayName))
+        return true;
+      if (regex.test(m.render?.displayName))
+        return true;
+    }
+  };
+  var isKeyable = (m) => typeof m === "object" || typeof m === "function";
+  var byNestedProps = (props) => (m) => isKeyable(m) && Object.values(m).some(
+    (v) => isKeyable(v) && props.some((p) => v?.[p] !== void 0)
+  );
+  var allByCode = (modules2, loaders) => (code2) => Object.entries(loaders).filter(([, m]) => m.toString().match(code2)).map(([id]) => modules2[id]?.exports).filter((m) => m);
+
+  // node_modules/.pnpm/@cumjar+websmack@1.2.0/node_modules/@cumjar/websmack/src/api/batch.js
+  var batchFilter = (modules2, filterList) => {
+    const found = [];
+    const checkModule = (mod2) => filterList.forEach(([filter2, multi], i) => {
+      if (multi && !found[i])
+        found[i] = [];
+      if (filter2(mod2)) {
+        if (multi)
+          found[i].push(mod2);
+        else if (!found[i])
+          found[i] = mod2;
+      }
+    });
+    for (const mid in modules2) {
+      const module = modules2[mid].exports;
+      if (!module || module === window)
+        continue;
+      if (module.default && module.__esModule)
+        checkModule(module.default);
+      checkModule(module);
+    }
+    return found;
+  };
+  var makeFakeWp = (filterList) => ({
+    find: (f) => filterList.push([f, false]),
+    findAll: (f) => filterList.push([f, true]),
+    findByProps: (...p) => filterList.push([byProps(p), false]),
+    findByPropsAll: (...p) => filterList.push([byProps(p), true]),
+    findByPrototypes: (...p) => filterList.push([byProtos(p), false]),
+    findByPrototypesAll: (...p) => filterList.push([byProtos(p), true]),
+    findByNestedProps: (...p) => filterList.push([byNestedProps(p), false]),
+    findByNestedPropsAll: (...p) => filterList.push([byNestedProps(p), true]),
+    findByDisplayName: (n, d) => filterList.push([byDisplayName(n, d), false]),
+    findByDisplayNameAll: (n, d) => filterList.push([byDisplayName(n, d), true]),
+    findByDispNameDeep: (n) => filterList.push([byDispNameDeep(n), false]),
+    findByDispNameDeepAll: (n) => filterList.push([byDispNameDeep(n), true]),
+    findByKeyword: (...s) => filterList.push([byKeyword(s), false]),
+    findByKeywordAll: (...s) => filterList.push([byKeyword(s), true])
+  });
+  var batch_default = (mods) => (cb) => {
+    const fList = [];
+    const fakeWp = makeFakeWp(fList);
+    cb(fakeWp);
+    return batchFilter(mods, fList);
+  };
+
+  // node_modules/.pnpm/@cumjar+websmack@1.2.0/node_modules/@cumjar/websmack/src/api/index.js
+  var filter = (modules2, single = true) => (filterFunc) => {
+    const found = [];
+    for (const mid in modules2) {
+      const module = modules2[mid].exports;
+      if (!module || module === window)
+        continue;
+      if (module.default && module.__esModule && filterFunc(module.default)) {
+        if (single)
+          return module.default;
+        found.push(module.default);
+      }
+      if (filterFunc(module)) {
+        if (single)
+          return module;
+        found.push(module);
+      }
+    }
+    if (!single)
+      return found;
+  };
+  var api_default = ([, modules2, wpR]) => {
+    const find = filter(modules2);
+    const findAll = filter(modules2, false);
+    const findByCodeAll = wpR ? allByCode(modules2, wpR.m) : () => {
+      throw new Error("findByCode does not work with this bundler");
+    };
+    return {
+      batchFind: batch_default(modules2),
+      find,
+      findAll,
+      findByProps: (...p) => find(byProps(p)),
+      findByPropsAll: (...p) => findAll(byProps(p)),
+      findByPrototypes: (...p) => find(byProtos(p)),
+      findByPrototypesAll: (...p) => findAll(byProtos(p)),
+      findByNestedProps: (...p) => find(byNestedProps(p)),
+      findByNestedPropsAll: (...p) => findAll(byNestedProps(p)),
+      findByDisplayName: (d, p) => find(byDisplayName(d, p)),
+      findByDisplayNameAll: (d, p) => findAll(byDisplayName(d, p)),
+      findByDispNameDeep: (d) => find(byDispNameDeep(d)),
+      findByDispNameDeepAll: (d) => findAll(byDispNameDeep(d)),
+      findByKeyword: (...k) => find(byKeyword(k)),
+      findByKeywordAll: (...k) => findAll(byKeyword(k)),
+      findByCodeAll,
+      findByCode: (c) => findByCodeAll(c)[0]
+    };
+  };
+
+  // plugins/lastfm/assets.ts
+  var modules = webpackChunk_default();
+  var api = modules && api_default([void 0, ...modules]);
+  var mod = api && api.findByProps("getAssetImage");
+  var getAsset = (url) => !mod.fetchAssetIds ? void 0 : mod.fetchAssetIds(DISCORD_APP_ID, [url, void 0]).then((v) => v[0]);
+
+  // plugins/lastfm/Settings.tsx
+  var import_web = __toESM(require_web());
+  var import_web2 = __toESM(require_web());
+  var import_web3 = __toESM(require_web());
+  var import_web4 = __toESM(require_web());
+  var _tmpl$ = /* @__PURE__ */ (0, import_web.template)(`<div style="display: flex"></div>`, 2);
+  var {
+    store
+  } = shelter.plugin;
+  var {
+    TextBox,
+    SwitchItem,
+    Header,
+    HeaderTags,
+    Divider,
+    Text,
+    LinkButton,
+    Space,
+    Button,
+    ButtonColors,
+    ButtonLooks,
+    ButtonSizes
+  } = shelter.ui;
+  var {
+    Show
+  } = shelter.solid;
+  var ServiceButton = (props) => (0, import_web3.createComponent)(Button, {
+    grow: true,
+    onClick: () => store.service = props.service,
+    get color() {
+      return store.service === props.service ? ButtonColors.BRAND : ButtonColors.SECONDARY;
+    },
+    get look() {
+      return ButtonLooks.OUTLINED;
+    },
+    get size() {
+      return ButtonSizes.TINY;
+    },
+    get children() {
+      return props.children;
+    }
+  });
+  var settings = () => [(0, import_web3.createComponent)(Header, {
+    get tag() {
+      return HeaderTags.H3;
+    },
+    children: "Application Name"
+  }), (0, import_web3.createComponent)(TextBox, {
+    placeholder: DEFAULT_NAME,
+    get value() {
+      return store.appName ?? "";
+    },
+    onInput: (v) => store.appName = v
+  }), (0, import_web3.createComponent)(Header, {
+    get tag() {
+      return HeaderTags.H3;
+    },
+    children: "Service"
+  }), (() => {
+    const _el$ = _tmpl$.cloneNode(true);
+    (0, import_web2.insert)(_el$, (0, import_web3.createComponent)(ServiceButton, {
+      service: "lfm",
+      children: "Last.fm"
+    }), null);
+    (0, import_web2.insert)(_el$, (0, import_web3.createComponent)(ServiceButton, {
+      service: "lbz",
+      children: "Listenbrainz"
+    }), null);
+    return _el$;
+  })(), (0, import_web3.createComponent)(Header, {
+    get tag() {
+      return HeaderTags.H3;
+    },
+    get children() {
+      return [(0, import_web4.memo)(() => store.service === "lbz" ? "Listenbrainz" : "Last.fm"), " username (required)"];
+    }
+  }), (0, import_web3.createComponent)(TextBox, {
+    get value() {
+      return store.user ?? "";
+    },
+    onInput: (v) => store.user = v
+  }), (0, import_web3.createComponent)(Show, {
+    get when() {
+      return store.service === "lbz";
+    },
+    get children() {
+      return (0, import_web3.createComponent)(SwitchItem, {
+        get value() {
+          return store.lbLookup;
+        },
+        onChange: (v) => store.lbLookup = v,
+        note: "Depending on the scrobbler, Listenbrainz may not be able to return a release ID with the current track. If this happens, we can't fetch an album cover. This option will search musicbrainz for a matching release if this happens, to attempt to find a (hopefully correct) cover. If you get incorrect album art, turn this off. If you get missing album art, turn this on.",
+        children: "Search Musicbrainz for missing releases"
+      });
+    }
+  }), (0, import_web3.createComponent)(Header, {
+    get tag() {
+      return HeaderTags.H3;
+    },
+    children: "Update interval (seconds)"
+  }), (0, import_web3.createComponent)(TextBox, {
+    placeholder: DEFAULT_INTERVAL / 1e3 + "",
+    get value() {
+      return store.interval ? store.interval / 1e3 + "" : "";
+    },
+    onInput: (v) => (!v || !isNaN(parseFloat(v))) && (store.interval = !v ? void 0 : parseFloat(v) * 1e3 || DEFAULT_INTERVAL)
+  }), (0, import_web3.createComponent)(Divider, {
+    mt: true,
+    mb: true
+  }), (0, import_web3.createComponent)(SwitchItem, {
+    get value() {
+      return store.stamp;
+    },
+    onChange: (v) => store.stamp = v,
+    note: "Show time since song started playing",
+    children: "Show time elapsed"
+  }), (0, import_web3.createComponent)(SwitchItem, {
+    get value() {
+      return store.ignoreSpotify;
+    },
+    onChange: (v) => store.ignoreSpotify = v,
+    note: "Hide the status if Spotify is playing",
+    children: "Hide when using Spotify"
+  }), (0, import_web3.createComponent)(Text, {
+    get children() {
+      return ["Thanks to", (0, import_web3.createComponent)(LinkButton, {
+        href: "https://github.com/amsyarasyiq/letup/blob/main/plugins/Last.fm",
+        get children() {
+          return [(0, import_web3.createComponent)(Space, {}), "Pylix's Vendetta plugin", (0, import_web3.createComponent)(Space, {})];
+        }
+      }), "for useful implementation details and reference."];
+    }
+  })];
+
+  // plugins/lastfm/index.ts
+  var {
+    // @ts-expect-error
+    plugin: { store: store2 },
+    flux: { storesFlat, dispatcher }
+  } = shelter;
+  store2.stamp ??= true;
+  store2.ignoreSpotify ??= true;
+  store2.service ??= "lfm";
+  store2.lbLookup ??= true;
+  var UserStore = storesFlat.UserStore;
+  var PresenceStore = storesFlat.PresenceStore;
+  var setPresence = async (name = "", activity) => dispatcher.dispatch({
+    type: "LOCAL_ACTIVITY_UPDATE",
+    activity: activity ? {
+      name,
+      //flags: 1,
+      type: 2,
+      details: activity.name,
+      state: activity.artist,
+      application_id: DISCORD_APP_ID,
+      timestamps: store2.stamp ? { start: ~~(Date.now() / 1e3) } : void 0,
+      assets: {
+        large_image: activity.albumArt && await getAsset(activity.albumArt),
+        large_text: activity.album
+      }
+    } : null,
+    socketId: "Last.fm@shelter"
+  });
+  var getScrobbleLastfm = async () => {
+    const params = new URLSearchParams({
+      method: "user.getrecenttracks",
+      user: store2.user,
+      api_key: LFM_API_KEY,
+      format: "json",
+      limit: "1",
+      extended: "1"
+    });
+    const res = await fetch(`https://ws.audioscrobbler.com/2.0/?${params}`);
+    if (!res.ok)
+      return;
+    const lastTrack2 = (await res.json())?.recenttracks?.track?.[0];
+    if (!lastTrack2)
+      return;
+    const aart = lastTrack2.image[3]["#text"];
+    return {
+      name: lastTrack2.name,
+      artist: lastTrack2.artist.name,
+      album: lastTrack2.album["#text"],
+      albumArt: IGNORED_COVERS.includes(aart) ? void 0 : aart,
+      url: lastTrack2.url,
+      //date: lastTrack.date?.["#text"] ?? "now",
+      nowPlaying: !!lastTrack2["@attr"]?.nowplaying
+    };
+  };
+  var listenBrainzLookupAdditional = async (basicTrack) => {
+    if (!store2.lbLookup)
+      return;
+    if (basicTrack.additional_info?.release_mbid)
+      return;
+    try {
+      const metaRes = await fetch(
+        `https://shcors.uwu.network/https://api.listenbrainz.org/1/metadata/lookup/?${new URLSearchParams(
+          {
+            recording_name: basicTrack.track_name,
+            artist_name: basicTrack.artist_name,
+            metadata: "true",
+            inc: "artist tag release"
+          }
+        )}`,
+        {
+          headers: {
+            "X-Shprox-UA": "ShelterLastFm/0.0.0 ( https://github.com/yellowsink/shelter-plugins )"
+          }
+        }
+      ).then((r) => r.json());
+      basicTrack.additional_info = { ...basicTrack?.additional_info, ...metaRes };
+    } catch (e) {
+      console.error(
+        "SHELTER LASTFM: finding listenbrainz MBID for track",
+        basicTrack,
+        "failed, ",
+        e
+      );
+    }
+  };
+  var getScrobbleListenbrainz = async () => {
+    const nowPlayingRes = await fetch(
+      `https://shcors.uwu.network/https://api.listenbrainz.org/1/user/${store2.user}/playing-now`,
+      {
+        headers: {
+          "X-Shprox-UA": "ShelterLastFm/0.0.0 ( https://github.com/yellowsink/shelter-plugins )"
+        }
+      }
+    ).then((r) => r.json());
+    if (!nowPlayingRes.payload.count)
+      return;
+    const track = nowPlayingRes.payload.listens[0].track_metadata;
+    await listenBrainzLookupAdditional(track);
+    let albumArtUrl = !track.additional_info?.release_mbid ? void 0 : `https://coverartarchive.org/release/${track.additional_info.release_mbid}/front`;
+    if (albumArtUrl) {
+      const testRes = await fetch(albumArtUrl);
+      if (!testRes.redirected)
+        albumArtUrl = void 0;
+    }
+    return {
+      name: track.track_name,
+      artist: track.artist_name,
+      album: track.release_name,
+      albumArt: albumArtUrl,
+      url: track.additional_info?.recording_mbid ? `https://musicbrainz.org/recording/${track.additional_info.recording_mbid}` : `NOURL_${track.track_name}:${track.artist_name}:${track.release_name}`,
+      //date: "now", // not returned by api
+      nowPlaying: nowPlayingRes.payload.listens[0].playing_now
+    };
+  };
+  var lastUrl;
+  var updateStatus = async () => {
+    if (!store2.user)
+      return setPresence();
+    if (store2.ignoreSpotify) {
+      for (const activity of PresenceStore.getActivities(
+        UserStore.getCurrentUser().id
+      ))
+        if (activity?.type === ACTIVITY_TYPE_LISTENING && activity.application_id !== DISCORD_APP_ID)
+          return setPresence();
+    }
+    const getFn = store2.service === "lbz" ? getScrobbleListenbrainz : getScrobbleLastfm;
+    const lastTrack = await getFn();
+    if (!lastTrack?.nowPlaying)
+      return setPresence();
+    if (lastTrack.url === lastUrl)
+      return;
+    lastUrl = lastTrack.url;
+    let appName = store2.appName || DEFAULT_NAME;
+    appName = appName.replaceAll(
+      /{{(.+)}}/g,
+      (_, code) => eval(`(c)=>{with(c){try{return ${code}}catch(e){return e}}}`)(lastTrack)
+    );
+    await setPresence(appName, lastTrack);
+  };
+  var interval;
+  var restartLoop = () => (interval && clearInterval(interval), interval = setInterval(updateStatus, store2.interval || DEFAULT_INTERVAL));
+  restartLoop();
+  var onUnload = () => (clearInterval(interval), setPresence());
+  return __toCommonJS(lastfm_exports);
+})();

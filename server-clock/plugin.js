@@ -1,1 +1,131 @@
-(()=>{var P=Object.create;var c=Object.defineProperty;var $=Object.getOwnPropertyDescriptor;var _=Object.getOwnPropertyNames;var x=Object.getPrototypeOf,w=Object.prototype.hasOwnProperty;var b=(t,e)=>()=>(e||t((e={exports:{}}).exports,e),e.exports),C=(t,e)=>{for(var r in e)c(t,r,{get:e[r],enumerable:!0})},f=(t,e,r,n)=>{if(e&&typeof e=="object"||typeof e=="function")for(let s of _(e))!w.call(t,s)&&s!==r&&c(t,s,{get:()=>e[s],enumerable:!(n=$(e,s))||n.enumerable});return t};var d=(t,e,r)=>(r=t!=null?P(x(t)):{},f(e||!t||!t.__esModule?c(r,"default",{value:t,enumerable:!0}):r,t)),S=t=>f(c({},"__esModule",{value:!0}),t);var l=b((q,v)=>{v.exports=shelter.solidWeb});var N={};C(N,{onLoad:()=>E,onUnload:()=>H});var p=d(l(),1),y=d(l(),1),i=d(l(),1),h=d(l(),1),k=(0,p.template)("<div></div>",2),T=(0,p.template)("<div><div></div></div>",4),{createSignal:B}=shelter.solid,g=!1,m=t=>(()=>{let e=k.cloneNode(!0);return e.style.setProperty("width","2px"),e.style.setProperty("position","absolute"),e.style.setProperty("left","50%"),e.style.setProperty("bottom","50%"),(0,h.effect)(r=>{let n=t.height,s=t.col??"var(--interactive-normal)",o=`translateX(-1px) translateY(50%) rotate(${360*t.frac}deg) translateY(-50%)`;return n!==r._v$&&e.style.setProperty("height",r._v$=n),s!==r._v$2&&e.style.setProperty("background",r._v$2=s),o!==r._v$3&&e.style.setProperty("transform",r._v$3=o),r},{_v$:void 0,_v$2:void 0,_v$3:void 0}),e})();function D(){let[t,e]=B(new Date);(async()=>{for(;!g;)e(new Date),await new Promise(o=>setTimeout(o,250))})();let r=()=>t().getHours()%12,n=()=>t().getMinutes(),s=()=>t().getSeconds();return(()=>{let o=T.cloneNode(!0),a=o.firstChild;return o.style.setProperty("margin","13px"),o.style.setProperty("display","flex"),o.style.setProperty("position","relative"),a.style.setProperty("border","2px solid var(--interactive-normal)"),a.style.setProperty("border-radius","999999px"),a.style.setProperty("flex","1"),a.style.setProperty("aspect-ratio","1"),(0,y.insert)(o,(0,i.createComponent)(m,{get frac(){return r()/12},height:"9px"}),null),(0,y.insert)(o,(0,i.createComponent)(m,{get frac(){return n()/60},height:"14px"}),null),(0,y.insert)(o,(0,i.createComponent)(m,{get frac(){return s()/60},height:"16px",col:"red"}),null),o})()}var u;async function E(){let t='nav > ul > [class*="scroller-"] > [class*="tutorialContainer-"]:first-child',e;for(;!(e=document.querySelector(t));)await new Promise(r=>setTimeout(r,250));u=(0,i.createComponent)(D,{}),e.parentElement.insertBefore(u,e.nextElementSibling)}function H(){u?.remove(),g=!0}return S(N);})();
+(() => {
+  var __create = Object.create;
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __getProtoOf = Object.getPrototypeOf;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __commonJS = (cb, mod) => function __require() {
+    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  };
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+    // If the importer is in node compatibility mode or this is not an ESM
+    // file that has been converted to a CommonJS file using a Babel-
+    // compatible transform (i.e. "__esModule" has not been set), then set
+    // "default" to the CommonJS "module.exports" for node compatibility.
+    isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+    mod
+  ));
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+  // shltr-res-ns:solid-js/web
+  var require_web = __commonJS({
+    "shltr-res-ns:solid-js/web"(exports, module) {
+      module.exports = shelter.solidWeb;
+    }
+  });
+
+  // plugins/server-clock/index.jsx
+  var server_clock_exports = {};
+  __export(server_clock_exports, {
+    onLoad: () => onLoad,
+    onUnload: () => onUnload
+  });
+  var import_web = __toESM(require_web(), 1);
+  var import_web2 = __toESM(require_web(), 1);
+  var import_web3 = __toESM(require_web(), 1);
+  var import_web4 = __toESM(require_web(), 1);
+  var _tmpl$ = /* @__PURE__ */ (0, import_web.template)(`<div></div>`, 2);
+  var _tmpl$2 = /* @__PURE__ */ (0, import_web.template)(`<div><div></div></div>`, 4);
+  var {
+    createSignal
+  } = shelter.solid;
+  var cancel = false;
+  var Hand = (props) => (() => {
+    const _el$ = _tmpl$.cloneNode(true);
+    _el$.style.setProperty("width", "2px");
+    _el$.style.setProperty("position", "absolute");
+    _el$.style.setProperty("left", "50%");
+    _el$.style.setProperty("bottom", "50%");
+    (0, import_web4.effect)((_p$) => {
+      const _v$ = props.height, _v$2 = props.col ?? "var(--interactive-normal)", _v$3 = `translateX(-1px) translateY(50%) rotate(${360 * props.frac}deg) translateY(-50%)`;
+      _v$ !== _p$._v$ && _el$.style.setProperty("height", _p$._v$ = _v$);
+      _v$2 !== _p$._v$2 && _el$.style.setProperty("background", _p$._v$2 = _v$2);
+      _v$3 !== _p$._v$3 && _el$.style.setProperty("transform", _p$._v$3 = _v$3);
+      return _p$;
+    }, {
+      _v$: void 0,
+      _v$2: void 0,
+      _v$3: void 0
+    });
+    return _el$;
+  })();
+  function Clock() {
+    const [time, setTime] = createSignal(/* @__PURE__ */ new Date());
+    (async () => {
+      while (!cancel) {
+        setTime(/* @__PURE__ */ new Date());
+        await new Promise((res) => setTimeout(res, 250));
+      }
+    })();
+    const hour = () => time().getHours() % 12;
+    const min = () => time().getMinutes();
+    const sec = () => time().getSeconds();
+    return (() => {
+      const _el$2 = _tmpl$2.cloneNode(true), _el$3 = _el$2.firstChild;
+      _el$2.style.setProperty("margin", "13px");
+      _el$2.style.setProperty("display", "flex");
+      _el$2.style.setProperty("position", "relative");
+      _el$3.style.setProperty("border", "2px solid var(--interactive-normal)");
+      _el$3.style.setProperty("border-radius", "999999px");
+      _el$3.style.setProperty("flex", "1");
+      _el$3.style.setProperty("aspect-ratio", "1");
+      (0, import_web2.insert)(_el$2, (0, import_web3.createComponent)(Hand, {
+        get frac() {
+          return hour() / 12;
+        },
+        height: "9px"
+      }), null);
+      (0, import_web2.insert)(_el$2, (0, import_web3.createComponent)(Hand, {
+        get frac() {
+          return min() / 60;
+        },
+        height: "14px"
+      }), null);
+      (0, import_web2.insert)(_el$2, (0, import_web3.createComponent)(Hand, {
+        get frac() {
+          return sec() / 60;
+        },
+        height: "16px",
+        col: "red"
+      }), null);
+      return _el$2;
+    })();
+  }
+  var clock;
+  async function onLoad() {
+    const sel = 'nav > ul > [class*="scroller-"] > [class*="tutorialContainer-"]:first-child';
+    let homeBtn;
+    while (!(homeBtn = document.querySelector(sel)))
+      await new Promise((res) => setTimeout(res, 250));
+    clock = (0, import_web3.createComponent)(Clock, {});
+    homeBtn.parentElement.insertBefore(clock, homeBtn.nextElementSibling);
+  }
+  function onUnload() {
+    clock?.remove();
+    cancel = true;
+  }
+  return __toCommonJS(server_clock_exports);
+})();

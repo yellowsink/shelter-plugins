@@ -1,1 +1,76 @@
-(()=>{var r=Object.defineProperty;var d=Object.getOwnPropertyDescriptor;var E=Object.getOwnPropertyNames;var S=Object.prototype.hasOwnProperty;var l=(e,t)=>{for(var n in t)r(e,n,{get:t[n],enumerable:!0})},h=(e,t,n,o)=>{if(t&&typeof t=="object"||typeof t=="function")for(let s of E(t))!S.call(e,s)&&s!==n&&r(e,s,{get:()=>t[s],enumerable:!(o=d(t,s))||o.enumerable});return e};var f=e=>h(r({},"__esModule",{value:!0}),e);var G={};l(G,{onLoad:()=>k,onUnload:()=>I});var{flux:{dispatcher:i,stores:{GuildMemberStore:m,ChannelStore:C,SelectedChannelStore:g,RelationshipStore:_}},util:{getFiber:b,reactFiberWalker:A},observeDom:p}=shelter;function N(e){if(e?.dataset?.ysink_su)return;e.dataset.ysink_su=!0;let t=A(b(e),"message",!0).pendingProps?.message,n=t.author?.username,o=t?.author?.id,{type:s,guild_id:c}=C.getChannel(t?.channel_id);!(s?_.getNickname(o):m.getNick(c,o))||!n||(e.firstElementChild.textContent+=` (${n})`)}var a=["MESSAGE_CREATE","CHANNEL_SELECT","LOAD_MESSAGES_SUCCESS","UPDATE_CHANNEL_DIMENSIONS"];function u(e){if(e.type==="MESSAGE_CREATE"&&e.channelId!==g.getChannelId())return;let t=p("[id^=message-username-]",n=>{t(),N(n)});setTimeout(t,500)}function k(){for(let e of a)i.subscribe(e,u)}function I(){for(let e of a)i.unsubscribe(e,u)}return f(G);})();
+(() => {
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+  // plugins/show-username/index.js
+  var show_username_exports = {};
+  __export(show_username_exports, {
+    onLoad: () => onLoad,
+    onUnload: () => onUnload
+  });
+  var {
+    flux: {
+      dispatcher,
+      stores: {
+        GuildMemberStore,
+        ChannelStore,
+        SelectedChannelStore,
+        RelationshipStore
+      }
+    },
+    util: { getFiber, reactFiberWalker },
+    observeDom
+  } = shelter;
+  function addUsername(e) {
+    if (e?.dataset?.ysink_su)
+      return;
+    e.dataset.ysink_su = true;
+    const msg = reactFiberWalker(getFiber(e), "message", true).pendingProps?.message;
+    const authorUsername = msg.author?.username;
+    const authorId = msg?.author?.id;
+    const { type, guild_id: guildId } = ChannelStore.getChannel(msg?.channel_id);
+    const nick = type ? RelationshipStore.getNickname(authorId) : GuildMemberStore.getNick(guildId, authorId);
+    if (!nick || !authorUsername)
+      return;
+    e.firstElementChild.textContent += ` (${authorUsername})`;
+  }
+  var TRIGGERS = [
+    "MESSAGE_CREATE",
+    "CHANNEL_SELECT",
+    "LOAD_MESSAGES_SUCCESS",
+    "UPDATE_CHANNEL_DIMENSIONS"
+  ];
+  function onDispatch(payload) {
+    if (payload.type === "MESSAGE_CREATE" && payload.channelId !== SelectedChannelStore.getChannelId())
+      return;
+    const unObserve = observeDom("[id^=message-username-]", (element) => {
+      unObserve();
+      addUsername(element);
+    });
+    setTimeout(unObserve, 500);
+  }
+  function onLoad() {
+    for (const t of TRIGGERS)
+      dispatcher.subscribe(t, onDispatch);
+  }
+  function onUnload() {
+    for (const t of TRIGGERS)
+      dispatcher.unsubscribe(t, onDispatch);
+  }
+  return __toCommonJS(show_username_exports);
+})();

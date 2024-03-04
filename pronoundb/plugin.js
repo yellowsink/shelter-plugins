@@ -1,1 +1,185 @@
-(()=>{var k=Object.create;var i=Object.defineProperty;var v=Object.getOwnPropertyDescriptor;var x=Object.getOwnPropertyNames;var N=Object.getPrototypeOf,F=Object.prototype.hasOwnProperty;var M=(e,t)=>()=>(t||e((t={exports:{}}).exports,t),t.exports),U=(e,t)=>{for(var o in t)i(e,o,{get:t[o],enumerable:!0})},p=(e,t,o,s)=>{if(t&&typeof t=="object"||typeof t=="function")for(let n of x(t))!F.call(e,n)&&n!==o&&i(e,n,{get:()=>t[n],enumerable:!(s=v(t,n))||s.enumerable});return e};var h=(e,t,o)=>(o=e!=null?k(N(e)):{},p(t||!e||!e.__esModule?i(o,"default",{value:e,enumerable:!0}):o,e)),B=e=>p(i({},"__esModule",{value:!0}),e);var c=M((V,m)=>{m.exports=shelter.solidWeb});var J={};U(J,{onUnload:()=>z});var w=h(c(),1),a=h(c(),1),l=h(c(),1);var{reactFiberWalker:$,getFiber:j}=shelter.util,d=new Map;async function g(e,t){let o=d.get(t);if(o)return o;let s=$(j(e),C=>C.stateNode?.handlePreload,!0)?.stateNode;if(!s)return;let n=s.handlePreload();return d.set(t,n),n}var D=shelter.flux.stores.UserProfileStore,y={unspecified:"Unspecified",hh:"he/him",hi:"he/it",hs:"he/she",ht:"he/they",ih:"it/him",ii:"it/its",is:"it/she",it:"it/they",shh:"she/he",sh:"she/her",si:"she/it",st:"she/they",th:"they/he",ti:"they/it",ts:"they/she",tt:"they/them",any:"Any pronouns",other:"Other pronouns",ask:"Ask me my pronouns",avoid:"Avoid pronouns, use my name"},I=Object.values(y).filter(e=>e.includes("/")).sort((e,t)=>t.length-e.length),E=e=>{let t=D.getUserProfile(e);if(typeof t?.bio!="string")return;let o=t.bio.toLowerCase();return I.find(s=>o.includes(s))},G="https://pronoundb.org/api/v1/lookup-bulk?platform=discord&ids=",u=new Map,f=!1,r=new Map,L=150,O=async()=>{let e=u;u=new Map;let t=[...e.keys()].join();try{let o=await fetch(G+t).then(s=>s.json());for(let s in o)if(e.has(s)&&o[s]&&o[s]!=="unspecified"){let n=y[o[s]];e.get(s)?.(n),r.set(s,n)}for(let[s,n]of e.entries())n(void 0),r.has(s)||r.set(s,void 0)}finally{f=!1}},b=e=>r.has(e)?Promise.resolve(r.get(e)):new Promise(t=>{setTimeout(t,3e3),u.set(e,t),f||(f=!0,setTimeout(O,L))});var W=(0,w.template)("<span> \u2022</span>",2),{flux:{dispatcher:A},observeDom:H,util:{getFiber:R,reactFiberWalker:q},ui:{Space:S}}=shelter,P=new WeakSet;async function Q(e){if(P.has(e))return;P.add(e);let t=q(R(e),"message",!0)?.pendingProps?.message?.author?.id;if(!t)return;let o=await b(t);o||(await g(e.parentElement.parentElement.querySelector("[id^=message-username]").firstElementChild,t),o=E(t)),o&&e.insertAdjacentElement("beforebegin",(()=>{let s=W.cloneNode(!0),n=s.firstChild;return(0,a.insert)(s,(0,l.createComponent)(S,{}),n),(0,a.insert)(s,o,n),(0,a.insert)(s,(0,l.createComponent)(S,{}),null),s})())}function _(){let e=H("h3 time[id^=message-timestamp]",t=>{e(),Q(t)});setTimeout(e,500)}var T=["MESSAGE_CREATE","CHANNEL_SELECT","UPDATE_CHANNEL_DIMENSIONS","MESSAGE_UPDATE"];T.forEach(e=>A.subscribe(e,_));var z=()=>T.forEach(e=>A.unsubscribe(e,_));return B(J);})();
+(() => {
+  var __create = Object.create;
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __getProtoOf = Object.getPrototypeOf;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __commonJS = (cb, mod) => function __require() {
+    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  };
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+    // If the importer is in node compatibility mode or this is not an ESM
+    // file that has been converted to a CommonJS file using a Babel-
+    // compatible transform (i.e. "__esModule" has not been set), then set
+    // "default" to the CommonJS "module.exports" for node compatibility.
+    isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+    mod
+  ));
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+  // shltr-res-ns:solid-js/web
+  var require_web = __commonJS({
+    "shltr-res-ns:solid-js/web"(exports, module) {
+      module.exports = shelter.solidWeb;
+    }
+  });
+
+  // plugins/pronoundb/index.tsx
+  var pronoundb_exports = {};
+  __export(pronoundb_exports, {
+    onUnload: () => onUnload
+  });
+  var import_web = __toESM(require_web(), 1);
+  var import_web2 = __toESM(require_web(), 1);
+  var import_web3 = __toESM(require_web(), 1);
+
+  // plugins/pronoundb/biofetcher.ts
+  var { reactFiberWalker, getFiber } = shelter.util;
+  var fetchedBios = /* @__PURE__ */ new Map();
+  async function forceBioFetch(el, uid) {
+    const fetchedProm = fetchedBios.get(uid);
+    if (fetchedProm)
+      return fetchedProm;
+    const node = reactFiberWalker(
+      getFiber(el),
+      (f) => f.stateNode?.handlePreload,
+      true
+    )?.stateNode;
+    if (!node)
+      return;
+    const prom = node.handlePreload();
+    fetchedBios.set(uid, prom);
+    return prom;
+  }
+
+  // plugins/pronoundb/db.ts
+  var UserProfileStore = shelter.flux.stores.UserProfileStore;
+  var pronouns = {
+    unspecified: "Unspecified",
+    hh: "he/him",
+    hi: "he/it",
+    hs: "he/she",
+    ht: "he/they",
+    ih: "it/him",
+    ii: "it/its",
+    is: "it/she",
+    it: "it/they",
+    shh: "she/he",
+    sh: "she/her",
+    si: "she/it",
+    st: "she/they",
+    th: "they/he",
+    ti: "they/it",
+    ts: "they/she",
+    tt: "they/them",
+    any: "Any pronouns",
+    other: "Other pronouns",
+    ask: "Ask me my pronouns",
+    avoid: "Avoid pronouns, use my name"
+  };
+  var pronounsToSearch = Object.values(pronouns).filter((p) => p.includes("/")).sort((a, b) => b.length - a.length);
+  var fromStore = (id) => {
+    const profile = UserProfileStore.getUserProfile(id);
+    if (typeof profile?.bio !== "string")
+      return;
+    const lowerBio = profile.bio.toLowerCase();
+    return pronounsToSearch.find((p) => lowerBio.includes(p));
+  };
+  var endpoint = "https://pronoundb.org/api/v1/lookup-bulk?platform=discord&ids=";
+  var batch = /* @__PURE__ */ new Map();
+  var currentlyQueued = false;
+  var cache = /* @__PURE__ */ new Map();
+  var BATCH_TIME = 150;
+  var fetchBatch = async () => {
+    const currentBatch = batch;
+    batch = /* @__PURE__ */ new Map();
+    const ids = [...currentBatch.keys()].join();
+    try {
+      const res = await fetch(endpoint + ids).then((r) => r.json());
+      for (const uid in res)
+        if (currentBatch.has(uid) && res[uid] && res[uid] !== "unspecified") {
+          const prettyPronouns = pronouns[res[uid]];
+          currentBatch.get(uid)?.(prettyPronouns);
+          cache.set(uid, prettyPronouns);
+        }
+      for (const [uid, func] of currentBatch.entries()) {
+        func(void 0);
+        if (!cache.has(uid))
+          cache.set(uid, void 0);
+      }
+    } finally {
+      currentlyQueued = false;
+    }
+  };
+  var fetchPronouns = (uid) => cache.has(uid) ? Promise.resolve(cache.get(uid)) : new Promise((res) => {
+    setTimeout(res, 3e3);
+    batch.set(uid, res);
+    if (!currentlyQueued) {
+      currentlyQueued = true;
+      setTimeout(fetchBatch, BATCH_TIME);
+    }
+  });
+
+  // plugins/pronoundb/index.tsx
+  var _tmpl$ = /* @__PURE__ */ (0, import_web.template)(`<span> \u2022</span>`, 2);
+  var {
+    flux: {
+      dispatcher
+    },
+    observeDom,
+    util: {
+      getFiber: getFiber2,
+      reactFiberWalker: reactFiberWalker2
+    },
+    ui: {
+      Space
+    }
+  } = shelter;
+  var patchedEls = /* @__PURE__ */ new WeakSet();
+  async function inject(el) {
+    if (patchedEls.has(el))
+      return;
+    patchedEls.add(el);
+    const authorId = reactFiberWalker2(getFiber2(el), "message", true)?.pendingProps?.message?.author?.id;
+    if (!authorId)
+      return;
+    let pronouns2 = await fetchPronouns(authorId);
+    if (!pronouns2) {
+      await forceBioFetch(el.parentElement.parentElement.querySelector("[id^=message-username]").firstElementChild, authorId);
+      pronouns2 = fromStore(authorId);
+    }
+    if (!pronouns2)
+      return;
+    el.insertAdjacentElement("beforebegin", (() => {
+      const _el$ = _tmpl$.cloneNode(true), _el$2 = _el$.firstChild;
+      (0, import_web2.insert)(_el$, (0, import_web3.createComponent)(Space, {}), _el$2);
+      (0, import_web2.insert)(_el$, pronouns2, _el$2);
+      (0, import_web2.insert)(_el$, (0, import_web3.createComponent)(Space, {}), null);
+      return _el$;
+    })());
+  }
+  function onDispatch() {
+    const unObserve = observeDom("h3 time[id^=message-timestamp]", (el) => {
+      unObserve();
+      inject(el);
+    });
+    setTimeout(unObserve, 500);
+  }
+  var TRIGGERS = ["MESSAGE_CREATE", "CHANNEL_SELECT", "UPDATE_CHANNEL_DIMENSIONS", "MESSAGE_UPDATE"];
+  TRIGGERS.forEach((t) => dispatcher.subscribe(t, onDispatch));
+  var onUnload = () => TRIGGERS.forEach((t) => dispatcher.unsubscribe(t, onDispatch));
+  return __toCommonJS(pronoundb_exports);
+})();
