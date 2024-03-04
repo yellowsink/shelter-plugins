@@ -12,8 +12,8 @@ importers:
         specifier: ^1.5.3
         version: 1.5.3
       '@uwu/lune':
-        specifier: ^1.4.0
-        version: 1.4.0
+        specifier: ^1.4.1
+        version: 1.4.1
       '@uwu/shelter-defs':
         specifier: ^1.4.0
         version: 1.4.0
@@ -381,8 +381,8 @@ packages:
       '@reach/observe-rect': 1.2.0
     dev: false
 
-  /@uwu/lune@1.4.0:
-    resolution: {integrity: sha512-aVHYh5i+TlT53kqipTDGTAsxQljH+xEGjo/D/pXQnUD8eL+msEVke+4g5jQBiTAWbKsFtlMrYHv6o99AgMwN4A==}
+  /@uwu/lune@1.4.1:
+    resolution: {integrity: sha512-CETPNeFqOlCmeS7julFW8b9VWDaaqV67vnSOAv92EoDNoC98/faGJuXW047LtsJLkMkcK+Z72GHhJ9o4qp/+5A==}
     hasBin: true
     dependencies:
       chokidar: 3.6.0
