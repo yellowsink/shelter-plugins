@@ -67,7 +67,7 @@ const openEditDialog = (idx?: number) =>
 				<ModalConfirmFooter
 					close={props.close}
 					onConfirm={() => {
-						const newRegex = [name(), regexp(), flags(), replace()]
+						const newRegex = [name(), regexp(), flags(), replace()];
 						if (idx) {
 							store.regexes[idx] = newRegex;
 						} else {
