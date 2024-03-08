@@ -25,9 +25,9 @@ const { createSignal } = shelter.solid;
 // @ts-expect-error
 const { store } = shelter.plugin;
 
-const openEditDialog = (idx: number, isAdd?: boolean) =>
+const openEditDialog = (idx?: number) =>
 	openModal((props) => {
-		const initial = store.regexes[idx];
+		const initial = idx ? store.regexes[idx]: ["", "", "gi", ""];
 		const [name, setName] = createSignal<string>(initial[0]);
 		const [regexp, setRegexp] = createSignal<string>(initial[1]);
 		const [flags, setFlags] = createSignal<string>(initial[2]);
@@ -36,7 +36,7 @@ const openEditDialog = (idx: number, isAdd?: boolean) =>
 		return (
 			<ModalRoot size={ModalSizes.MEDIUM}>
 				<ModalHeader close={props.close}>
-					{isAdd ? "Adding" : "Editing"} "{name()}"
+					{idx ? "Editing" : "Adding"} "{name()}"
 				</ModalHeader>
 				<ModalBody>
 					<Header tag={HeaderTags.H3}>Name</Header>
@@ -66,25 +66,21 @@ const openEditDialog = (idx: number, isAdd?: boolean) =>
 				</ModalBody>
 				<ModalConfirmFooter
 					close={props.close}
-					onCancel={() => {
-						store.regexes.splice(idx, 1);
-						// save!
-						store.regexes = store.regexes;
-					}}
 					onConfirm={() => {
-						store.regexes[idx] = [name(), regexp(), flags(), replace()];
+						const newRegex = [name(), regexp(), flags(), replace()]
+						if (idx) {
+							store.regexes[idx] = newRegex;
+						} else {
+							store.regexes.push(newRegex);
+						}
 						// save!
 						store.regexes = store.regexes;
 					}}
 					confirmText="Save"
-					cancelText="Delete"
 				/>
 			</ModalRoot>
 		);
 	});
-
-const add = () =>
-	openEditDialog(store.regexes.push(["", "", "gi", ""]) - 1, true);
 
 function swap(idx1: number, idx2: number) {
 	const tmp = store.regexes[idx1];
@@ -108,7 +104,7 @@ export const settings: Component = () => (
 				Actions
 			</Header>
 
-			{store.regexes.map(([name, regexp, flags, replace], idx) => (
+			{store.regexes.map(([name], idx) => (
 				<>
 					<div>{name}</div>
 
@@ -177,7 +173,7 @@ export const settings: Component = () => (
 
 		<Divider mt mb />
 
-		<Button grow onClick={add}>
+		<Button grow onClick={() => openEditDialog()}>
 			Add replacement
 		</Button>
 	</>
