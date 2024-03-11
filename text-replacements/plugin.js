@@ -80,8 +80,8 @@
   var {
     store
   } = shelter.plugin;
-  var openEditDialog = (idx, isAdd) => openModal((props) => {
-    const initial = store.regexes[idx];
+  var openEditDialog = (idx) => openModal((props) => {
+    const initial = idx ? store.regexes[idx] : ["", "", "gi", ""];
     const [name, setName] = createSignal(initial[0]);
     const [regexp, setRegexp] = createSignal(initial[1]);
     const [flags, setFlags] = createSignal(initial[2]);
@@ -96,7 +96,7 @@
             return props.close;
           },
           get children() {
-            return [isAdd ? "Adding" : "Editing", ' "', (0, import_web4.memo)(() => name()), '"'];
+            return [idx ? "Editing" : "Adding", ' "', (0, import_web4.memo)(() => name()), '"'];
           }
         }), (0, import_web3.createComponent)(ModalBody, {
           get children() {
@@ -161,21 +161,20 @@
           get close() {
             return props.close;
           },
-          onCancel: () => {
-            store.regexes.splice(idx, 1);
-            store.regexes = store.regexes;
-          },
           onConfirm: () => {
-            store.regexes[idx] = [name(), regexp(), flags(), replace()];
+            const newRegex = [name(), regexp(), flags(), replace()];
+            if (idx) {
+              store.regexes[idx] = newRegex;
+            } else {
+              store.regexes.push(newRegex);
+            }
             store.regexes = store.regexes;
           },
-          confirmText: "Save",
-          cancelText: "Delete"
+          confirmText: "Save"
         })];
       }
     });
   });
-  var add = () => openEditDialog(store.regexes.push(["", "", "gi", ""]) - 1, true);
   function swap(idx1, idx2) {
     const tmp = store.regexes[idx1];
     store.regexes[idx1] = store.regexes[idx2];
@@ -204,7 +203,7 @@
       "class": "ys-ts-span2",
       children: "Actions"
     }), null);
-    (0, import_web2.insert)(_el$, () => store.regexes.map(([name, regexp, flags, replace], idx) => [(() => {
+    (0, import_web2.insert)(_el$, () => store.regexes.map(([name], idx) => [(() => {
       const _el$2 = _tmpl$2.cloneNode(true);
       (0, import_web2.insert)(_el$2, name);
       return _el$2;
@@ -281,7 +280,7 @@
     mb: true
   }), (0, import_web3.createComponent)(Button, {
     grow: true,
-    onClick: add,
+    onClick: () => openEditDialog(),
     children: "Add replacement"
   })];
 
