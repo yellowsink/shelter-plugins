@@ -81,7 +81,8 @@
     store
   } = shelter.plugin;
   var openEditDialog = (idx) => openModal((props) => {
-    const initial = idx ? store.regexes[idx] : ["", "", "gi", ""];
+    const isAdd = isNaN(idx);
+    const initial = isAdd ? ["", "", "gi", ""] : store.regexes[idx];
     const [name, setName] = createSignal(initial[0]);
     const [regexp, setRegexp] = createSignal(initial[1]);
     const [flags, setFlags] = createSignal(initial[2]);
@@ -96,7 +97,7 @@
             return props.close;
           },
           get children() {
-            return [idx ? "Editing" : "Adding", ' "', (0, import_web4.memo)(() => name()), '"'];
+            return [isAdd ? "Adding" : "Editing", ' "', (0, import_web4.memo)(() => name()), '"'];
           }
         }), (0, import_web3.createComponent)(ModalBody, {
           get children() {
@@ -163,10 +164,10 @@
           },
           onConfirm: () => {
             const newRegex = [name(), regexp(), flags(), replace()];
-            if (idx) {
-              store.regexes[idx] = newRegex;
-            } else {
+            if (isAdd) {
               store.regexes.push(newRegex);
+            } else {
+              store.regexes[idx] = newRegex;
             }
             store.regexes = store.regexes;
           },
