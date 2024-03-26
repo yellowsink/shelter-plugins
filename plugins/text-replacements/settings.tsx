@@ -27,7 +27,8 @@ const { store } = shelter.plugin;
 
 const openEditDialog = (idx?: number) =>
 	openModal((props) => {
-		const initial = idx ? store.regexes[idx]: ["", "", "gi", ""];
+		const isAdd = isNaN(idx);
+		const initial = isAdd ? ["", "", "gi", ""] : store.regexes[idx];
 		const [name, setName] = createSignal<string>(initial[0]);
 		const [regexp, setRegexp] = createSignal<string>(initial[1]);
 		const [flags, setFlags] = createSignal<string>(initial[2]);
@@ -36,7 +37,7 @@ const openEditDialog = (idx?: number) =>
 		return (
 			<ModalRoot size={ModalSizes.MEDIUM}>
 				<ModalHeader close={props.close}>
-					{idx ? "Editing" : "Adding"} "{name()}"
+					{isAdd ? "Adding" : "Editing"} "{name()}"
 				</ModalHeader>
 				<ModalBody>
 					<Header tag={HeaderTags.H3}>Name</Header>
@@ -68,10 +69,10 @@ const openEditDialog = (idx?: number) =>
 					close={props.close}
 					onConfirm={() => {
 						const newRegex = [name(), regexp(), flags(), replace()];
-						if (idx) {
-							store.regexes[idx] = newRegex;
-						} else {
+						if (isAdd) {
 							store.regexes.push(newRegex);
+						} else {
+							store.regexes[idx] = newRegex;
 						}
 						// save!
 						store.regexes = store.regexes;
