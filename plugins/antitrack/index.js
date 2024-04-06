@@ -9,8 +9,8 @@ try {
 	);
 } catch {}
 
-// stop TRACK dispatches from causing science requests
-// this is not done via intercept() so that plugins can still listen for these dispatches
+// stop TRACK dispatches from causing science etc requests
+// this is not done via flux.intercept() so that plugins can still listen for these dispatches
 // as TRACK dispatches are *insanely useful*
 
 scoped.http.intercept("POST", /^\/science|^\/error-reporting-proxy/, () => {});
