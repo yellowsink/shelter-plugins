@@ -10,7 +10,6 @@ import { getAsset } from "./assets";
 import { FluxStore } from "@uwu/shelter-defs";
 
 const {
-	// @ts-expect-error
 	plugin: { store },
 	flux: { storesFlat, dispatcher },
 } = shelter;
