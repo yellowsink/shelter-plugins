@@ -30,12 +30,6 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0
 
-  plugins/lastfm:
-    dependencies:
-      '@cumjar/websmack':
-        specifier: ^1.2.0
-        version: 1.2.0
-
   plugins/snazzy-shelter:
     dependencies:
       '@tanstack/solid-virtual':
@@ -149,10 +143,6 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
-
-  /@cumjar/websmack@1.2.0:
-    resolution: {integrity: sha512-CtNQ3/EdeEAEx8bAPi3eKNCC41P88u40ja69TwpVerMZ93l0Kk7NpfvqY+YW50AvBN90FdmfLCRsJYzPIxQ90A==}
-    dev: false
 
   /@esbuild/android-arm64@0.17.19:
     resolution: {integrity: sha512-KBMWvEZooR7+kzY0BtbTQn0OAYY7CsiydT63pVEaPtVYF0hXbUaOyZog37DKxK7NF3XacBJOpYT4adIJh+avxA==}
