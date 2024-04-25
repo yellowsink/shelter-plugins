@@ -64,14 +64,11 @@
     }
     const res = await post({
       url: `/applications/${DISCORD_APP_ID}/external-assets`,
-      body: JSON.stringify({ urls: [url] }),
-      oldFormErrors: false,
-      headers: {
-        "Content-Type": "application/json"
-      }
+      body: { urls: [url] },
+      oldFormErrors: false
     });
     if (res.ok) {
-      const path = JSON.parse(res.body)[0].external_asset_path;
+      const path = "mp:" + res.body[0].external_asset_path;
       cache.set(url, path);
       return path;
     }
@@ -214,7 +211,6 @@
 
   // plugins/lastfm/index.ts
   var {
-    // @ts-expect-error
     plugin: { store: store2 },
     flux: { storesFlat, dispatcher }
   } = shelter;
