@@ -5,8 +5,8 @@
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __commonJS = (cb, mod2) => function __require() {
-    return mod2 || (0, cb[__getOwnPropNames(cb)[0]])((mod2 = { exports: {} }).exports, mod2), mod2.exports;
+  var __commonJS = (cb, mod) => function __require() {
+    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
   var __export = (target, all) => {
     for (var name in all)
@@ -20,15 +20,15 @@
     }
     return to;
   };
-  var __toESM = (mod2, isNodeMode, target) => (target = mod2 != null ? __create(__getProtoOf(mod2)) : {}, __copyProps(
+  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
     // If the importer is in node compatibility mode or this is not an ESM
     // file that has been converted to a CommonJS file using a Babel-
     // compatible transform (i.e. "__esModule" has not been set), then set
     // "default" to the CommonJS "module.exports" for node compatibility.
-    isNodeMode || !mod2 || !mod2.__esModule ? __defProp(target, "default", { value: mod2, enumerable: true }) : target,
-    mod2
+    isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+    mod
   ));
-  var __toCommonJS = (mod2) => __copyProps(__defProp({}, "__esModule", { value: true }), mod2);
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
   // shltr-res-ns:solid-js/web
   var require_web = __commonJS({
@@ -55,164 +55,34 @@
     "c6f59c1e5e7240a4c0d427abd71f3dbb"
   ];
 
-  // node_modules/.pnpm/@cumjar+websmack@1.2.0/node_modules/@cumjar/websmack/src/raid/webpackChunk.js
-  var webpackChunk_default = (key) => {
-    key ??= Object.keys(window).find((key2) => key2.startsWith("webpackChunk"));
-    if (!window[key])
-      return;
-    let wpRequire;
-    window[key].push([
-      [Symbol()],
-      {},
-      (e) => {
-        wpRequire = e;
-      }
-    ]);
-    window[key].pop();
-    return [wpRequire.c ?? // wow thats jank lmao
-    Object.fromEntries(
-      Object.entries(wpRequire.m).map(([k]) => [
-        k,
-        { id: k, loaded: true, exports: wpRequire(k) }
-      ])
-    ), wpRequire];
-  };
-
-  // node_modules/.pnpm/@cumjar+websmack@1.2.0/node_modules/@cumjar/websmack/src/api/filters.js
-  var byProps = (props) => (m) => props.every((p) => m[p] !== void 0);
-  var byProtos = (protos) => (m) => m.prototype && protos.every((p) => m.prototype[p] !== void 0);
-  var byDisplayName = (name, defaultExp = true) => (m) => (defaultExp ? m.displayName : m.default?.displayName) === name;
-  var byKeyword = (strs) => (m) => strs.every(
-    (s) => Object.keys(m).some((k) => k.toLowerCase().includes(s.toLowerCase()))
-  );
-  var byDispNameDeep = (name) => (m) => {
-    const regex = new RegExp(`(${name}$)|((\\w+\\()+${name}\\))`);
-    if (regex.test(m.displayName))
-      return true;
-    if (typeof m.$$typeof !== "symbol")
-      return;
-    if (m.Consumer !== void 0)
-      return;
-    if (m.type || m.render) {
-      while (typeof m.type === "object" || typeof m.render === "object")
-        m = m.type ?? m.render;
-      if (regex.test(m.type?.displayName))
-        return true;
-      if (regex.test(m.render?.displayName))
-        return true;
+  // plugins/lastfm/assets.ts
+  var { post } = shelter.http;
+  var cache = /* @__PURE__ */ new Map();
+  async function getAsset(url) {
+    if (cache.has(url)) {
+      return cache.get(url);
     }
-  };
-  var isKeyable = (m) => typeof m === "object" || typeof m === "function";
-  var byNestedProps = (props) => (m) => isKeyable(m) && Object.values(m).some(
-    (v) => isKeyable(v) && props.some((p) => v?.[p] !== void 0)
-  );
-  var allByCode = (modules2, loaders) => (code2) => Object.entries(loaders).filter(([, m]) => m.toString().match(code2)).map(([id]) => modules2[id]?.exports).filter((m) => m);
-
-  // node_modules/.pnpm/@cumjar+websmack@1.2.0/node_modules/@cumjar/websmack/src/api/batch.js
-  var batchFilter = (modules2, filterList) => {
-    const found = [];
-    const checkModule = (mod2) => filterList.forEach(([filter2, multi], i) => {
-      if (multi && !found[i])
-        found[i] = [];
-      if (filter2(mod2)) {
-        if (multi)
-          found[i].push(mod2);
-        else if (!found[i])
-          found[i] = mod2;
+    const res = await post({
+      url: `/applications/${DISCORD_APP_ID}/external-assets`,
+      body: JSON.stringify({ urls: [url] }),
+      oldFormErrors: false,
+      headers: {
+        "Content-Type": "application/json"
       }
     });
-    for (const mid in modules2) {
-      const module = modules2[mid].exports;
-      if (!module || module === window)
-        continue;
-      if (module.default && module.__esModule)
-        checkModule(module.default);
-      checkModule(module);
+    if (res.ok) {
+      const path = JSON.parse(res.body)[0].external_asset_path;
+      cache.set(url, path);
+      return path;
     }
-    return found;
-  };
-  var makeFakeWp = (filterList) => ({
-    find: (f) => filterList.push([f, false]),
-    findAll: (f) => filterList.push([f, true]),
-    findByProps: (...p) => filterList.push([byProps(p), false]),
-    findByPropsAll: (...p) => filterList.push([byProps(p), true]),
-    findByPrototypes: (...p) => filterList.push([byProtos(p), false]),
-    findByPrototypesAll: (...p) => filterList.push([byProtos(p), true]),
-    findByNestedProps: (...p) => filterList.push([byNestedProps(p), false]),
-    findByNestedPropsAll: (...p) => filterList.push([byNestedProps(p), true]),
-    findByDisplayName: (n, d) => filterList.push([byDisplayName(n, d), false]),
-    findByDisplayNameAll: (n, d) => filterList.push([byDisplayName(n, d), true]),
-    findByDispNameDeep: (n) => filterList.push([byDispNameDeep(n), false]),
-    findByDispNameDeepAll: (n) => filterList.push([byDispNameDeep(n), true]),
-    findByKeyword: (...s) => filterList.push([byKeyword(s), false]),
-    findByKeywordAll: (...s) => filterList.push([byKeyword(s), true])
-  });
-  var batch_default = (mods) => (cb) => {
-    const fList = [];
-    const fakeWp = makeFakeWp(fList);
-    cb(fakeWp);
-    return batchFilter(mods, fList);
-  };
-
-  // node_modules/.pnpm/@cumjar+websmack@1.2.0/node_modules/@cumjar/websmack/src/api/index.js
-  var filter = (modules2, single = true) => (filterFunc) => {
-    const found = [];
-    for (const mid in modules2) {
-      const module = modules2[mid].exports;
-      if (!module || module === window)
-        continue;
-      if (module.default && module.__esModule && filterFunc(module.default)) {
-        if (single)
-          return module.default;
-        found.push(module.default);
-      }
-      if (filterFunc(module)) {
-        if (single)
-          return module;
-        found.push(module);
-      }
-    }
-    if (!single)
-      return found;
-  };
-  var api_default = ([, modules2, wpR]) => {
-    const find = filter(modules2);
-    const findAll = filter(modules2, false);
-    const findByCodeAll = wpR ? allByCode(modules2, wpR.m) : () => {
-      throw new Error("findByCode does not work with this bundler");
-    };
-    return {
-      batchFind: batch_default(modules2),
-      find,
-      findAll,
-      findByProps: (...p) => find(byProps(p)),
-      findByPropsAll: (...p) => findAll(byProps(p)),
-      findByPrototypes: (...p) => find(byProtos(p)),
-      findByPrototypesAll: (...p) => findAll(byProtos(p)),
-      findByNestedProps: (...p) => find(byNestedProps(p)),
-      findByNestedPropsAll: (...p) => findAll(byNestedProps(p)),
-      findByDisplayName: (d, p) => find(byDisplayName(d, p)),
-      findByDisplayNameAll: (d, p) => findAll(byDisplayName(d, p)),
-      findByDispNameDeep: (d) => find(byDispNameDeep(d)),
-      findByDispNameDeepAll: (d) => findAll(byDispNameDeep(d)),
-      findByKeyword: (...k) => find(byKeyword(k)),
-      findByKeywordAll: (...k) => findAll(byKeyword(k)),
-      findByCodeAll,
-      findByCode: (c) => findByCodeAll(c)[0]
-    };
-  };
-
-  // plugins/lastfm/assets.ts
-  var modules = webpackChunk_default();
-  var api = modules && api_default([void 0, ...modules]);
-  var mod = api && api.findByProps("getAssetImage");
-  var getAsset = (url) => !mod.fetchAssetIds ? void 0 : mod.fetchAssetIds(DISCORD_APP_ID, [url, void 0]).then((v) => v[0]);
+    cache.set(url, void 0);
+  }
 
   // plugins/lastfm/Settings.tsx
-  var import_web = __toESM(require_web());
-  var import_web2 = __toESM(require_web());
-  var import_web3 = __toESM(require_web());
-  var import_web4 = __toESM(require_web());
+  var import_web = __toESM(require_web(), 1);
+  var import_web2 = __toESM(require_web(), 1);
+  var import_web3 = __toESM(require_web(), 1);
+  var import_web4 = __toESM(require_web(), 1);
   var _tmpl$ = /* @__PURE__ */ (0, import_web.template)(`<div style="display: flex"></div>`, 2);
   var {
     store
