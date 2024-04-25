@@ -33,15 +33,12 @@ export async function getAsset(url: string) {
 
 	const res = await post({
 		url: `/applications/${DISCORD_APP_ID}/external-assets`,
-		body: JSON.stringify({ urls: [url] }),
+		body: { urls: [url] },
 		oldFormErrors: false,
-		headers: {
-			"Content-Type": "application/json",
-		},
 	});
 
 	if (res.ok) {
-		const path = JSON.parse(res.body)[0].external_asset_path;
+		const path = "mp:" + res.body[0].external_asset_path;
 		cache.set(url, path);
 		return path;
 	}
