@@ -2,7 +2,7 @@ const {
 	plugin: { store },
 	flux: {
 		dispatcher,
-		stores: { ChannelStore, SelectedChannelStore, MessageStore },
+		stores: { UserStore, ChannelStore, SelectedChannelStore, MessageStore },
 	},
 } = shelter;
 
@@ -48,7 +48,10 @@ function createPendingReply(
 		type: "CREATE_PENDING_REPLY",
 		channel,
 		message,
-		shouldMention: shouldMention && !store.noPing,
+		shouldMention:
+			shouldMention &&
+			!store.noPing &&
+			message.author.id !== UserStore.getCurrentUser().id,
 		showMentionToggle,
 	});
 
