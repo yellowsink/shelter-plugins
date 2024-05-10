@@ -83,7 +83,7 @@
     plugin: { store: store2 },
     flux: {
       dispatcher,
-      stores: { ChannelStore, SelectedChannelStore, MessageStore }
+      stores: { UserStore, ChannelStore, SelectedChannelStore, MessageStore }
     }
   } = shelter;
   var { getChannel } = ChannelStore;
@@ -116,7 +116,7 @@
       type: "CREATE_PENDING_REPLY",
       channel,
       message,
-      shouldMention: shouldMention && !store2.noPing,
+      shouldMention: shouldMention && !store2.noPing && message.author.id !== UserStore.getCurrentUser().id,
       showMentionToggle
     });
     setTimeout(scrollToReplyingMsg, 100);
