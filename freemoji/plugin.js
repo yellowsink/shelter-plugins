@@ -81,7 +81,7 @@
           const emoji = EmojiStore.getCustomEmojiById(lineItem.emoji.emojiId);
           if (emoji.guildId !== SelectedGuildStore.getLastSelectedGuildId() || emoji.animated || isInDms()) {
             extractedEmojis.push(
-              `${emoji.url.split("?")[0]}?size=${getEmoteSize()}`
+              `https://cdn.discordapp.com/emojis/${emoji.id}?size=${getEmoteSize()}`
             );
             continue;
           }
