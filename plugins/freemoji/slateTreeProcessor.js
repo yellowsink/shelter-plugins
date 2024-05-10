@@ -38,7 +38,7 @@ export default (slateTree) => {
 				) {
 					// add to emotes to send
 					extractedEmojis.push(
-						`${emoji.url.split("?")[0]}?size=${getEmoteSize()}`,
+						`https://cdn.discordapp.com/emojis/${emoji.id}?size=${getEmoteSize()}`,
 					);
 					// don't add to the line
 					continue;
