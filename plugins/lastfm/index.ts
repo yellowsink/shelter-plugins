@@ -18,6 +18,7 @@ store.stamp ??= true;
 store.ignoreSpotify ??= true;
 store.service ??= "lfm";
 store.lbLookup ??= true;
+store.alwaysShare ??= false;
 
 const UserStore = storesFlat.UserStore as FluxStore<{
 	getCurrentUser(): { id: string };
@@ -208,7 +209,29 @@ const restartLoop = () => (
 	(interval = setInterval(updateStatus, store.interval || DEFAULT_INTERVAL))
 );
 
+const unpatch = shelter.patcher.after(
+	"getActivities",
+	shelter.flux.stores.LocalActivityStore,
+	(_, res) => {
+		if (!store.alwaysShare) return;
+		res.filter = function (predicate) {
+			if (!predicate.toString().includes("shouldShowActivity")) {
+				return Array.prototype.filter.call(this, predicate);
+			}
+			return Array.prototype.filter.call(this, (event) => {
+				if (event?.type === 2 && event.application_id === DISCORD_APP_ID) {
+					return true;
+				}
+				return predicate(event);
+			});
+		};
+		return res;
+	},
+);
+
 restartLoop();
-export const onUnload = () => (clearInterval(interval), setPresence());
+export const onUnload = () => (
+	clearInterval(interval), setPresence(), unpatch()
+);
 
 export * from "./Settings";
