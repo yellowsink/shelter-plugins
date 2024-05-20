@@ -1,7 +1,6 @@
 import { DEFAULT_INTERVAL, DEFAULT_NAME } from "./cfg";
 import { Component } from "solid-js";
 
-// @ts-expect-error
 const { store } = shelter.plugin;
 const {
 	TextBox,
@@ -96,6 +95,14 @@ export const settings = () => (
 			note="Hide the status if Spotify is playing"
 		>
 			Hide when using Spotify
+		</SwitchItem>
+
+		<SwitchItem
+			value={store.alwaysShare}
+			onChange={(v) => (store.alwaysShare = v)}
+			note="Share activity even if you have activities disabled"
+		>
+			Always show activity
 		</SwitchItem>
 
 		<Text>
