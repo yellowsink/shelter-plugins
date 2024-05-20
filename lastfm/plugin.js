@@ -198,6 +198,13 @@
     onChange: (v) => store.ignoreSpotify = v,
     note: "Hide the status if Spotify is playing",
     children: "Hide when using Spotify"
+  }), (0, import_web3.createComponent)(SwitchItem, {
+    get value() {
+      return store.alwaysShare;
+    },
+    onChange: (v) => store.alwaysShare = v,
+    note: "Share activity even if you have activities disabled",
+    children: "Always show activity"
   }), (0, import_web3.createComponent)(Text, {
     get children() {
       return ["Thanks to", (0, import_web3.createComponent)(LinkButton, {
@@ -218,6 +225,7 @@
   store2.ignoreSpotify ??= true;
   store2.service ??= "lfm";
   store2.lbLookup ??= true;
+  store2.alwaysShare ??= false;
   var UserStore = storesFlat.UserStore;
   var PresenceStore = storesFlat.PresenceStore;
   var setPresence = async (name = "", activity) => dispatcher.dispatch({
@@ -350,7 +358,27 @@
   };
   var interval;
   var restartLoop = () => (interval && clearInterval(interval), interval = setInterval(updateStatus, store2.interval || DEFAULT_INTERVAL));
+  var unpatch = shelter.patcher.after(
+    "getActivities",
+    shelter.flux.stores.LocalActivityStore,
+    (_2, res) => {
+      if (!store2.alwaysShare)
+        return;
+      res.filter = function(predicate) {
+        if (!predicate.toString().includes("shouldShowActivity")) {
+          return Array.prototype.filter.call(this, predicate);
+        }
+        return Array.prototype.filter.call(this, (event) => {
+          if (event?.type === 2 && event.application_id === DISCORD_APP_ID) {
+            return true;
+          }
+          return predicate(event);
+        });
+      };
+      return res;
+    }
+  );
   restartLoop();
-  var onUnload = () => (clearInterval(interval), setPresence());
+  var onUnload = () => (clearInterval(interval), setPresence(), unpatch());
   return __toCommonJS(lastfm_exports);
 })();
