@@ -275,9 +275,10 @@
     delete toPush.CSS;
     toPush.enabled = true;
     if (themeCacheIndex === -1)
-      store3.themes = [...store3.themes, toPush];
+      store3.themes.push(toPush);
     else
       store3.themes[themeCacheIndex] = toPush;
+    store3.themes = store3.themes;
   }
   function unloadTheme(theme) {
     if (!theme?.url)
@@ -289,9 +290,10 @@
     let toPush = { ...theme };
     toPush.enabled = false;
     if (themeCacheIndex === -1)
-      store3.themes = [...store3.themes, toPush];
+      store3.themes.push(toPush);
     else
       store3.themes[themeCacheIndex] = toPush;
+    store3.themes = store3.themes;
   }
   function removeTheme(theme) {
     try {
