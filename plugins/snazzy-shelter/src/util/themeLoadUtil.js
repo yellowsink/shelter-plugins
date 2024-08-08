@@ -20,11 +20,11 @@ export async function loadTheme(theme) {
 	delete toPush.CSS;
 	toPush.enabled = true;
 
-	if (themeCacheIndex === -1) store.themes = [...store.themes, toPush];
+	if (themeCacheIndex === -1) store.themes.push(toPush);
 	else store.themes[themeCacheIndex] = toPush;
 
 	// trigger set event
-	//store.themes = store.themes;
+	store.themes = store.themes;
 }
 
 export function unloadTheme(theme) {
@@ -38,11 +38,11 @@ export function unloadTheme(theme) {
 	const themeCacheIndex = store.themes.findIndex((t) => t.url === theme.url);
 	let toPush = { ...theme };
 	toPush.enabled = false;
-	if (themeCacheIndex === -1) store.themes = [...store.themes, toPush];
+	if (themeCacheIndex === -1) store.themes.push(toPush);
 	else store.themes[themeCacheIndex] = toPush;
 
 	// trigger set event
-	// store.themes = store.themes;
+	store.themes = store.themes;
 }
 
 export function removeTheme(theme) {
