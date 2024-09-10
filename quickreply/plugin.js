@@ -102,7 +102,7 @@
       '[data-list-id="chat-messages"]'
     );
     const replyingMsg = Array.from(messageContainer.children).find(
-      (elem) => elem.firstChild?.class?.includes("replying-")
+      (elem) => elem.firstElementChild?.className?.includes("replying_")
     );
     replyingMsg?.scrollIntoView({
       behavior: store2.scrollSmooth ? "smooth" : void 0,
