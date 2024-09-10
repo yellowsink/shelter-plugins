@@ -68,7 +68,7 @@
     get value() {
       return store.scrollSmooth;
     },
-    onChange: (v) => store.scroll = v,
+    onChange: (v) => store.scrollSmooth = v,
     children: "Scroll smoothly"
   }), (0, import_web.createComponent)(SwitchItem, {
     get value() {
