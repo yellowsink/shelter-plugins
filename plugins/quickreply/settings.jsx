@@ -11,7 +11,7 @@ export default () => (
 		<SwitchItem
 			disabled={!store.scroll}
 			value={store.scrollSmooth}
-			onChange={(v) => (store.scroll = v)}
+			onChange={(v) => (store.scrollSmooth = v)}
 		>
 			Scroll smoothly
 		</SwitchItem>
