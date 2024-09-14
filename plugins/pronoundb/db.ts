@@ -6,20 +6,8 @@ const UserProfileStore = shelter.flux.stores.UserProfileStore as FluxStore<{
 
 const pronouns = {
 	he: "he/him",
-	hi: "he/it",
-	hs: "he/she",
-	ht: "he/they",
-	ih: "it/him",
 	it: "it/its",
-	is: "it/she",
-	ith: "it/they",
-	shh: "she/he",
 	she: "she/her",
-	si: "she/it",
-	st: "she/they",
-	th: "they/he",
-	ti: "they/it",
-	ts: "they/she",
 	they: "they/them",
 	any: "Any pronouns",
 	other: "Other pronouns",
@@ -27,7 +15,23 @@ const pronouns = {
 	avoid: "Avoid pronouns, use my name",
 };
 
+const additionalPronouns = [
+	"he/it",
+	"he/she",
+	"he/they",
+	"it/him",
+	"it/she",
+	"it/they",
+	"she/he",
+	"she/it",
+	"she/they",
+	"they/he",
+	"they/it",
+	"they/she",
+];
+
 const pronounsToSearch = Object.values(pronouns)
+	.concat(additionalPronouns)
 	.filter((p) => p.includes("/"))
 	.sort((a, b) => b.length - a.length);
 
