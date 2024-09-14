@@ -1,27 +1,26 @@
 import type { FluxStore } from "@uwu/shelter-defs";
 
 const UserProfileStore = shelter.flux.stores.UserProfileStore as FluxStore<{
-	getUserProfile(id: string): { bio?: string };
+	getUserProfile(id: string): { bio: string, pronouns: string } | undefined;
 }>;
 
 const pronouns = {
-	unspecified: "Unspecified",
-	hh: "he/him",
+	he: "he/him",
 	hi: "he/it",
 	hs: "he/she",
 	ht: "he/they",
 	ih: "it/him",
-	ii: "it/its",
+	it: "it/its",
 	is: "it/she",
-	it: "it/they",
+	ith: "it/they",
 	shh: "she/he",
-	sh: "she/her",
+	she: "she/her",
 	si: "she/it",
 	st: "she/they",
 	th: "they/he",
 	ti: "they/it",
 	ts: "they/she",
-	tt: "they/them",
+	they: "they/them",
 	any: "Any pronouns",
 	other: "Other pronouns",
 	ask: "Ask me my pronouns",
@@ -34,13 +33,19 @@ const pronounsToSearch = Object.values(pronouns)
 
 export const fromStore = (id) => {
 	const profile = UserProfileStore.getUserProfile(id);
-	if (typeof profile?.bio !== "string") return;
-	const lowerBio = profile.bio.toLowerCase();
-	return pronounsToSearch.find((p) => lowerBio.includes(p));
+	if (!profile) return;
+	const pronounSource = (profile.pronouns + profile.bio).toLowerCase();
+	return pronounsToSearch.find((p) => pronounSource.includes(p));
 };
 
 const endpoint =
-	"https://pronoundb.org/api/v1/lookup-bulk?platform=discord&ids=";
+	"https://pronoundb.org/api/v2/lookup?platform=discord&ids=";
+
+const options = {
+	headers: {
+		"X-PronounDB-Source": "yellowsink/shelter-plugins"
+	}
+};
 
 let batch = new Map<string, (v: string) => void>();
 let currentlyQueued = false;
@@ -55,11 +60,20 @@ const fetchBatch = async () => {
 	const ids = [...currentBatch.keys()].join();
 
 	try {
-		const res = await fetch(endpoint + ids).then((r) => r.json());
+		const res = await fetch(endpoint + ids, options).then((r) => r.json());
 
 		for (const uid in res)
-			if (currentBatch.has(uid) && res[uid] && res[uid] !== "unspecified") {
-				const prettyPronouns = pronouns[res[uid]];
+			if (currentBatch.has(uid) && res[uid]) {
+				const pronounSet = res[uid]["sets"]?.["en"];
+				if (!pronounSet || pronounSet.length === 0) continue;
+
+				let prettyPronouns: string;
+				if (pronounSet.length === 1) {
+					prettyPronouns = pronouns[pronounSet[0]];
+				} else {
+					prettyPronouns = pronounSet.join("/");
+				}
+
 				currentBatch.get(uid)?.(prettyPronouns);
 				cache.set(uid, prettyPronouns);
 			}
