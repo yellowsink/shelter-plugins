@@ -68,37 +68,43 @@
   // plugins/pronoundb/db.ts
   var UserProfileStore = shelter.flux.stores.UserProfileStore;
   var pronouns = {
-    unspecified: "Unspecified",
-    hh: "he/him",
-    hi: "he/it",
-    hs: "he/she",
-    ht: "he/they",
-    ih: "it/him",
-    ii: "it/its",
-    is: "it/she",
-    it: "it/they",
-    shh: "she/he",
-    sh: "she/her",
-    si: "she/it",
-    st: "she/they",
-    th: "they/he",
-    ti: "they/it",
-    ts: "they/she",
-    tt: "they/them",
+    he: "he/him",
+    it: "it/its",
+    she: "she/her",
+    they: "they/them",
     any: "Any pronouns",
     other: "Other pronouns",
     ask: "Ask me my pronouns",
     avoid: "Avoid pronouns, use my name"
   };
-  var pronounsToSearch = Object.values(pronouns).filter((p) => p.includes("/")).sort((a, b) => b.length - a.length);
+  var additionalPronouns = [
+    "he/it",
+    "he/she",
+    "he/they",
+    "it/him",
+    "it/she",
+    "it/they",
+    "she/he",
+    "she/it",
+    "she/they",
+    "they/he",
+    "they/it",
+    "they/she"
+  ];
+  var pronounsToSearch = Object.values(pronouns).concat(additionalPronouns).filter((p) => p.includes("/")).sort((a, b) => b.length - a.length);
   var fromStore = (id) => {
     const profile = UserProfileStore.getUserProfile(id);
-    if (typeof profile?.bio !== "string")
+    if (!profile)
       return;
-    const lowerBio = profile.bio.toLowerCase();
-    return pronounsToSearch.find((p) => lowerBio.includes(p));
+    const pronounSource = (profile.pronouns + profile.bio).toLowerCase();
+    return pronounsToSearch.find((p) => pronounSource.includes(p));
   };
-  var endpoint = "https://pronoundb.org/api/v1/lookup-bulk?platform=discord&ids=";
+  var endpoint = "https://pronoundb.org/api/v2/lookup?platform=discord&ids=";
+  var options = {
+    headers: {
+      "X-PronounDB-Source": "yellowsink/shelter-plugins"
+    }
+  };
   var batch = /* @__PURE__ */ new Map();
   var currentlyQueued = false;
   var cache = /* @__PURE__ */ new Map();
@@ -108,10 +114,18 @@
     batch = /* @__PURE__ */ new Map();
     const ids = [...currentBatch.keys()].join();
     try {
-      const res = await fetch(endpoint + ids).then((r) => r.json());
+      const res = await fetch(endpoint + ids, options).then((r) => r.json());
       for (const uid in res)
-        if (currentBatch.has(uid) && res[uid] && res[uid] !== "unspecified") {
-          const prettyPronouns = pronouns[res[uid]];
+        if (currentBatch.has(uid) && res[uid]) {
+          const pronounSet = res[uid]["sets"]?.["en"];
+          if (!pronounSet || pronounSet.length === 0)
+            continue;
+          let prettyPronouns;
+          if (pronounSet.length === 1) {
+            prettyPronouns = pronouns[pronounSet[0]];
+          } else {
+            prettyPronouns = pronounSet.join("/");
+          }
           currentBatch.get(uid)?.(prettyPronouns);
           cache.set(uid, prettyPronouns);
         }
@@ -162,7 +176,7 @@
       pronouns2 = fromStore(authorId);
     }
     if (!pronouns2)
-      return;
+      pronouns2 = "Unspecified";
     el.insertAdjacentElement("beforebegin", (() => {
       const _el$ = _tmpl$.cloneNode(true), _el$2 = _el$.firstChild;
       (0, import_web2.insert)(_el$, (0, import_web3.createComponent)(Space, {}), _el$2);
