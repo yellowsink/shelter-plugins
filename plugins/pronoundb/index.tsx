@@ -31,7 +31,7 @@ async function inject(el) {
 		pronouns = fromStore(authorId);
 	}
 
-	if (!pronouns) return;
+	if (!pronouns) pronouns = "Unspecified";
 
 	el.insertAdjacentElement(
 		"beforebegin",
