@@ -237,7 +237,7 @@
       details: activity.name,
       state: activity.artist,
       application_id: DISCORD_APP_ID,
-      timestamps: store2.stamp ? { start: ~~(Date.now() / 1e3) } : void 0,
+      timestamps: store2.stamp ? { start: Date.now() } : void 0,
       assets: {
         large_image: activity.albumArt && await getAsset(activity.albumArt),
         large_text: activity.album
