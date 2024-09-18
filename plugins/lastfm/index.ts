@@ -53,7 +53,7 @@ const setPresence = async (name = "", activity?: Track) =>
 					state: activity.artist,
 					application_id: DISCORD_APP_ID,
 					timestamps: store.stamp
-						? { start: ~~(Date.now() / 1000) }
+						? { start: Date.now() }
 						: undefined,
 					assets: {
 						large_image:
