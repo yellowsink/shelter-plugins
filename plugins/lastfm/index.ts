@@ -3,7 +3,6 @@ import {
 	DEFAULT_INTERVAL,
 	DEFAULT_NAME,
 	DISCORD_APP_ID,
-	IGNORED_COVERS,
 	LFM_API_KEY,
 } from "./cfg";
 import { getAsset } from "./assets";
@@ -41,7 +40,7 @@ interface Track {
 	nowPlaying: boolean;
 }
 
-const setPresence = async (name = "", activity?: Track) =>
+const setPresence = async (name = "", activity?: Track, start?: number) =>
 	dispatcher.dispatch({
 		type: "LOCAL_ACTIVITY_UPDATE",
 		activity: activity
@@ -53,7 +52,7 @@ const setPresence = async (name = "", activity?: Track) =>
 					state: activity.artist,
 					application_id: DISCORD_APP_ID,
 					timestamps: store.stamp
-						? { start: Date.now() }
+						? { start }
 						: undefined,
 					assets: {
 						large_image:
@@ -81,13 +80,11 @@ const getScrobbleLastfm = async () => {
 	const lastTrack = (await res.json())?.recenttracks?.track?.[0];
 	if (!lastTrack) return;
 
-	const aart = lastTrack.image[3]["#text"];
-
 	return {
 		name: lastTrack.name,
 		artist: lastTrack.artist.name,
 		album: lastTrack.album["#text"],
-		albumArt: IGNORED_COVERS.includes(aart) ? undefined : aart,
+		albumArt: lastTrack.image[3]["#text"],
 		url: lastTrack.url,
 		//date: lastTrack.date?.["#text"] ?? "now",
 		nowPlaying: !!lastTrack["@attr"]?.nowplaying,
@@ -170,6 +167,7 @@ const getScrobbleListenbrainz = async () => {
 };
 
 let lastUrl: string;
+let startTimestamp: number;
 
 const updateStatus = async () => {
 	if (!store.user) return setPresence();
@@ -188,9 +186,15 @@ const updateStatus = async () => {
 		store.service === "lbz" ? getScrobbleListenbrainz : getScrobbleLastfm;
 
 	const lastTrack = await getFn();
-	if (!lastTrack?.nowPlaying) return setPresence();
+	if (!lastTrack?.nowPlaying) {
+		startTimestamp = null;
+		return setPresence();
+	}
 
-	if (lastTrack.url === lastUrl) return;
+	if (lastTrack.url !== lastUrl || !startTimestamp) {
+		startTimestamp = Date.now();
+	};
+
 	lastUrl = lastTrack.url;
 
 	let appName = store.appName || DEFAULT_NAME;
@@ -200,7 +204,7 @@ const updateStatus = async () => {
 		eval(`(c)=>{with(c){try{return ${code}}catch(e){return e}}}`)(lastTrack),
 	);
 
-	await setPresence(appName, lastTrack);
+	await setPresence(appName, lastTrack, startTimestamp);
 };
 
 let interval;
