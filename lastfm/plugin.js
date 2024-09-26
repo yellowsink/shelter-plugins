@@ -50,10 +50,6 @@
   var DISCORD_APP_ID = "1107251687984472144";
   var LFM_API_KEY = "311958e99f6ee58518756f83720db787";
   var ACTIVITY_TYPE_LISTENING = 2;
-  var IGNORED_COVERS = [
-    "2a96cbd8b46e442fc41c2b86b821562f",
-    "c6f59c1e5e7240a4c0d427abd71f3dbb"
-  ];
 
   // plugins/lastfm/assets.ts
   var { post } = shelter.http;
@@ -228,7 +224,7 @@
   store2.alwaysShare ??= false;
   var UserStore = storesFlat.UserStore;
   var PresenceStore = storesFlat.PresenceStore;
-  var setPresence = async (name = "", activity) => dispatcher.dispatch({
+  var setPresence = async (name = "", activity, start) => dispatcher.dispatch({
     type: "LOCAL_ACTIVITY_UPDATE",
     activity: activity ? {
       name,
@@ -237,7 +233,7 @@
       details: activity.name,
       state: activity.artist,
       application_id: DISCORD_APP_ID,
-      timestamps: store2.stamp ? { start: Date.now() } : void 0,
+      timestamps: store2.stamp ? { start } : void 0,
       assets: {
         large_image: activity.albumArt && await getAsset(activity.albumArt),
         large_text: activity.album
@@ -260,12 +256,11 @@
     const lastTrack2 = (await res.json())?.recenttracks?.track?.[0];
     if (!lastTrack2)
       return;
-    const aart = lastTrack2.image[3]["#text"];
     return {
       name: lastTrack2.name,
       artist: lastTrack2.artist.name,
       album: lastTrack2.album["#text"],
-      albumArt: IGNORED_COVERS.includes(aart) ? void 0 : aart,
+      albumArt: lastTrack2.image[3]["#text"],
       url: lastTrack2.url,
       //date: lastTrack.date?.["#text"] ?? "now",
       nowPlaying: !!lastTrack2["@attr"]?.nowplaying
@@ -332,6 +327,7 @@
     };
   };
   var lastUrl;
+  var startTimestamp;
   var updateStatus = async () => {
     if (!store2.user)
       return setPresence();
@@ -344,17 +340,21 @@
     }
     const getFn = store2.service === "lbz" ? getScrobbleListenbrainz : getScrobbleLastfm;
     const lastTrack = await getFn();
-    if (!lastTrack?.nowPlaying)
+    if (!lastTrack?.nowPlaying) {
+      startTimestamp = null;
       return setPresence();
-    if (lastTrack.url === lastUrl)
-      return;
+    }
+    if (lastTrack.url !== lastUrl || !startTimestamp) {
+      startTimestamp = Date.now();
+    }
+    ;
     lastUrl = lastTrack.url;
     let appName = store2.appName || DEFAULT_NAME;
     appName = appName.replaceAll(
       /{{(.+)}}/g,
       (_, code) => eval(`(c)=>{with(c){try{return ${code}}catch(e){return e}}}`)(lastTrack)
     );
-    await setPresence(appName, lastTrack);
+    await setPresence(appName, lastTrack, startTimestamp);
   };
   var interval;
   var restartLoop = () => (interval && clearInterval(interval), interval = setInterval(updateStatus, store2.interval || DEFAULT_INTERVAL));
