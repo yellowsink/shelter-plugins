@@ -69,11 +69,15 @@
       TextBox
     }
   } = shelter;
-  if (store.instance === "invidious.slipfox.xyz" && !store.sfmigrate) {
+  if (!(store.sfmigrate >= 1) && store.instance === "invidious.slipfox.xyz") {
     store.sfmigrate = 1;
     store.instance = null;
   }
-  store.instance ??= "inv.n8pjl.ca";
+  if (!(store.sfmigrate >= 2) && store.instance === "inv.n8pjl.ca") {
+    store.sfmigrate = 2;
+    store.instance = null;
+  }
+  store.instance ??= "inv.nadeko.net";
   var TRIGGERS = ["MESSAGE_CREATE", "MESSAGE_UPDATE", "UPDATE_CHANNEL_DIMENSIONS"];
   function handleDispatch(payload) {
     if (!store.instance)

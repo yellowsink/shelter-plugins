@@ -347,7 +347,6 @@
     if (lastTrack.url !== lastUrl || !startTimestamp) {
       startTimestamp = Date.now();
     }
-    ;
     lastUrl = lastTrack.url;
     let appName = store2.appName || DEFAULT_NAME;
     appName = appName.replaceAll(

@@ -116,7 +116,7 @@
   }
   var clock;
   async function onLoad() {
-    const sel = 'nav > ul > [class*="scroller-"] > [class*="tutorialContainer-"]:first-child';
+    const sel = 'nav > ul > [class*="scroller"] > [class*="tutorialContainer"]:first-child';
     let homeBtn;
     while (!(homeBtn = document.querySelector(sel)))
       await new Promise((res) => setTimeout(res, 250));

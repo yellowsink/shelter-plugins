@@ -9708,9 +9708,10 @@
     if (!timezone2)
       return;
     const origFmt = formatAsIs(date, "%H:%M");
-    const tzFmt = formatInTimeZone(date, timezone2, "%H:%M");
-    if (origFmt === tzFmt)
+    const tzFmtNormal = formatInTimeZone(date, timezone2, "%H:%M");
+    if (origFmt === tzFmtNormal)
       return;
+    const tzFmt = !store.rfmt ? tzFmtNormal : formatInTimeZone(date, timezone2, store.rfmt);
     el.parentElement.append((() => {
       const _el$ = _tmpl$.cloneNode(true), _el$2 = _el$.firstChild, _el$4 = _el$2.nextSibling, _el$3 = _el$4.nextSibling;
       (0, import_web2.insert)(_el$, tzFmt, _el$4);
@@ -9718,22 +9719,23 @@
     })());
   }
 
-  // plugins/timezones/absInjection.js
+  // plugins/timezones/stockFormatInjection.js
   var {
     plugin: { store: store2 }
   } = shelter;
-  var preflightAbsoluteTime = (el) => el.dataset.abstime !== el.childNodes[1].textContent;
-  function injectAbsoluteTime(el, date) {
-    if (store2.absUtc) {
+  var preflightStockFormat = (el) => el.dataset.fmttime !== el.childNodes[1].textContent;
+  function injectStockFormat(el, date) {
+    if (store2.sutc) {
       date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
     }
-    const abstime = formatAsIs(date, "%Y-%m-%d %H:%M:%S");
-    el.dataset.abstime = abstime;
-    el.childNodes[1].textContent = abstime;
+    const fmttime = formatAsIs(date, store2.sfmt);
+    el.dataset.fmttime = fmttime;
+    el.childNodes[1].textContent = fmttime;
   }
 
   // plugins/timezones/ui/index.jsx
   var import_web16 = __toESM(require_web());
+  var import_web17 = __toESM(require_web());
 
   // plugins/timezones/ui/UserMan.jsx
   var import_web12 = __toESM(require_web());
@@ -13832,6 +13834,10 @@
   };
 
   // plugins/timezones/ui/index.jsx
+  var _tmpl$6 = /* @__PURE__ */ (0, import_web16.template)(`<code>%Y-%m-%d %H:%M:%S</code>`, 2);
+  var _tmpl$24 = /* @__PURE__ */ (0, import_web16.template)(`<div style="margin-bottom: .5rem"></div>`, 2);
+  var _tmpl$33 = /* @__PURE__ */ (0, import_web16.template)(`<span style="font-style: italic">your</span>`, 2);
+  var _tmpl$42 = /* @__PURE__ */ (0, import_web16.template)(`<div style="margin-bottom: 1rem"></div>`, 2);
   var {
     plugin: {
       store: store4
@@ -13840,16 +13846,25 @@
       SwitchItem,
       Button: Button2,
       LinkButton,
+      TextBox: TextBox2,
+      Header: Header3,
+      HeaderTags: HeaderTags3,
+      Divider,
+      Text: Text2,
       openModal: openModal2
+    },
+    solid: {
+      Show
     }
   } = shelter;
-  var ui_default = () => [(0, import_web16.createComponent)(SwitchItem, {
+  var ui_default = () => [(0, import_web17.createComponent)(SwitchItem, {
     get value() {
       return store4.tz;
     },
     onChange: (v) => store4.tz = v,
+    hideBorder: true,
     children: "Show users' local time (parses timezones from bios)"
-  }), (0, import_web16.createComponent)(SwitchItem, {
+  }), (0, import_web17.createComponent)(SwitchItem, {
     get disabled() {
       return !store4.tz;
     },
@@ -13857,28 +13872,72 @@
       return store4.tzdb;
     },
     onChange: (v) => store4.tzdb = v,
+    hideBorder: true,
     get children() {
-      return ["Prefer to query", " ", (0, import_web16.createComponent)(LinkButton, {
+      return ["Prefer to query", " ", (0, import_web17.createComponent)(LinkButton, {
         href: "https://timezonedb.catvibers.me/?client_mod=shelter",
         children: "TZDB"
       })];
     }
-  }), (0, import_web16.createComponent)(SwitchItem, {
+  }), (0, import_web17.createComponent)(Header3, {
+    get tag() {
+      return HeaderTags3.H5;
+    },
+    get children() {
+      return ["Override the ", (0, import_web17.createComponent)(LinkButton, {
+        href: "//strftime.org",
+        children: "format"
+      }), " of all message timestamps"];
+    }
+  }), (0, import_web17.createComponent)(TextBox2, {
     get value() {
-      return store4.abs;
+      return store4.sfmt;
     },
-    onChange: (v) => store4.abs = v,
-    children: "Show times in absolute ISO form (YYYY-MM-DD HH:MM:SS) every time, instead of relative times"
-  }), (0, import_web16.createComponent)(SwitchItem, {
-    get disabled() {
-      return !store4.abs;
+    onInput: (v) => store4.sfmt = v,
+    placeholder: "(no override)"
+  }), (0, import_web17.createComponent)(Text2, {
+    style: {
+      color: "var(--header-secondary)",
+      "font-size": "14px"
     },
+    get children() {
+      return ["Use ", _tmpl$6.cloneNode(true), " for ISO-ish."];
+    }
+  }), (0, import_web17.createComponent)(Show, {
+    keyed: true,
+    get when() {
+      return store4.sfmt;
+    },
+    get fallback() {
+      return _tmpl$42.cloneNode(true);
+    },
+    get children() {
+      return [_tmpl$24.cloneNode(true), (0, import_web17.createComponent)(SwitchItem, {
+        get value() {
+          return store4.sutc;
+        },
+        onChange: (v) => store4.sutc = v,
+        hideBorder: true,
+        get children() {
+          return ["Show timestamps in UTC, not ", _tmpl$33.cloneNode(true), " ", "timezone"];
+        }
+      })];
+    }
+  }), (0, import_web17.createComponent)(Header3, {
+    get tag() {
+      return HeaderTags3.H5;
+    },
+    children: "Custom format for relative timestamps"
+  }), (0, import_web17.createComponent)(TextBox2, {
     get value() {
-      return store4.absUtc;
+      return store4.rfmt;
     },
-    onChange: (v) => store4.absUtc = v,
-    children: "Show absolute times in UTC, not local timezone"
-  }), (0, import_web16.createComponent)(Button2, {
+    onInput: (v) => store4.rfmt = v,
+    placeholder: "%H:%M"
+  }), (0, import_web17.createComponent)(Divider, {
+    mt: true,
+    mb: true
+  }), (0, import_web17.createComponent)(Button2, {
     onClick: () => openModal2(UserMan_default),
     grow: true,
     children: "Manage manual user TZs"
@@ -13893,20 +13952,27 @@
   } = shelter;
   store5.tz ??= true;
   store5.tzdb ??= true;
-  store5.abs ??= false;
-  store5.absUtc ??= false;
+  store5.sfmt ??= "";
+  store5.sutc ??= false;
+  store5.rfmt ??= "";
   store5.savedTzs ??= {};
+  if (store5.abs)
+    store5.sfmt = "%Y-%m-%d %H:%M:%S";
+  if (store5.absUtc)
+    store5.sutc = true;
+  delete store5.abs;
+  delete store5.absUtc;
   async function injectTimestamp(el) {
     const shouldInjectTz = store5.tz && preflightInjection(el);
-    const shouldInjectAbs = store5.abs && preflightAbsoluteTime(el);
-    if (!shouldInjectTz && !shouldInjectAbs)
+    const shouldInjectSFmt = store5.sfmt && preflightStockFormat(el);
+    if (!shouldInjectTz && !shouldInjectSFmt)
       return;
     const msg = reactFiberWalker2(getFiber2(el), "message", true)?.memoizedProps?.message;
     const date = msg?.timestamp;
     if (!date)
       return;
-    if (shouldInjectAbs)
-      injectAbsoluteTime(el, new Date(date));
+    if (shouldInjectSFmt)
+      injectStockFormat(el, new Date(date));
     if (shouldInjectTz)
       await injectLocalTime(msg, el, new Date(date));
   }
