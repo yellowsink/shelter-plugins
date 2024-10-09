@@ -56,7 +56,7 @@ let clock;
 
 export async function onLoad() {
 	const sel =
-		'nav > ul > [class*="scroller-"] > [class*="tutorialContainer-"]:first-child';
+		'nav > ul > [class*="scroller"] > [class*="tutorialContainer"]:first-child';
 
 	let homeBtn;
 
