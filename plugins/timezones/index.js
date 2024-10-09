@@ -1,5 +1,8 @@
 import { injectLocalTime, preflightInjection } from "./tzInjection";
-import { injectAbsoluteTime, preflightAbsoluteTime } from "./absInjection";
+import {
+	injectStockFormat,
+	preflightStockFormat,
+} from "./stockFormatInjection";
 
 const {
 	plugin: { store },
@@ -10,15 +13,22 @@ const {
 
 store.tz ??= true;
 store.tzdb ??= true;
-store.abs ??= false;
-store.absUtc ??= false;
+store.sfmt ??= ""; // stock format override
+store.sutc ??= false; // show stock format in UTC
+store.rfmt ??= ""; // relative format override
 store.savedTzs ??= {};
+
+// migrations:
+if (store.abs) store.sfmt = "%Y-%m-%d %H:%M:%S";
+if (store.absUtc) store.sutc = true;
+delete store.abs;
+delete store.absUtc;
 
 async function injectTimestamp(el) {
 	const shouldInjectTz = store.tz && preflightInjection(el);
-	const shouldInjectAbs = store.abs && preflightAbsoluteTime(el);
+	const shouldInjectSFmt = store.sfmt && preflightStockFormat(el);
 
-	if (!shouldInjectTz && !shouldInjectAbs) return;
+	if (!shouldInjectTz && !shouldInjectSFmt) return;
 
 	const msg = reactFiberWalker(getFiber(el), "message", true)?.memoizedProps
 		?.message;
@@ -26,7 +36,7 @@ async function injectTimestamp(el) {
 	const date = msg?.timestamp;
 	if (!date) return;
 
-	if (shouldInjectAbs) injectAbsoluteTime(el, new Date(date));
+	if (shouldInjectSFmt) injectStockFormat(el, new Date(date));
 	if (shouldInjectTz) await injectLocalTime(msg, el, new Date(date));
 }
 

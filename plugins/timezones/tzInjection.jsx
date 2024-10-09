@@ -67,10 +67,15 @@ export async function injectLocalTime(msg, el, date) {
 	if (!timezone) return;
 
 	const origFmt = formatAsIs(date, "%H:%M");
-	const tzFmt = formatInTimeZone(date, timezone, "%H:%M");
+	const tzFmtNormal = formatInTimeZone(date, timezone, "%H:%M");
 
 	// don't show local time for those in your own TZ
-	if (origFmt === tzFmt) return;
+	if (origFmt === tzFmtNormal) return;
+
+	// show in the user's preferred format
+	const tzFmt = !store.rfmt
+		? tzFmtNormal
+		: formatInTimeZone(date, timezone, store.rfmt);
 
 	el.parentElement.append(<time class="ys_tz"> (Theirs: {tzFmt})</time>);
 }
