@@ -1,19 +1,21 @@
 const {
 	plugin: { store },
 	observeDom,
-	flux: {
-		dispatcher,
-		storesFlat: { SelectedChannelStore },
-	},
+	flux: { dispatcher, storesFlat: { SelectedChannelStore } },
 	util: { reactFiberWalker, getFiber },
 	ui: { Header, HeaderTags, TextBox },
 } = shelter;
 
-if (store.instance === "invidious.slipfox.xyz" && !store.sfmigrate) {
+if (!(store.sfmigrate >= 1) && store.instance === "invidious.slipfox.xyz") {
 	store.sfmigrate = 1;
 	store.instance = null;
 }
-store.instance ??= "inv.n8pjl.ca";
+if (!(store.sfmigrate >= 2) && store.instance === "inv.n8pjl.ca") {
+	store.sfmigrate = 2;
+	store.instance = null;
+}
+// suitable instances must allow embeds, but not autoplay them.
+store.instance ??= "inv.nadeko.net";
 
 // taken and improved from more-embeds
 
