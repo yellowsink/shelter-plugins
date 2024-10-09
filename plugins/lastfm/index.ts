@@ -51,9 +51,7 @@ const setPresence = async (name = "", activity?: Track, start?: number) =>
 					details: activity.name,
 					state: activity.artist,
 					application_id: DISCORD_APP_ID,
-					timestamps: store.stamp
-						? { start }
-						: undefined,
+					timestamps: store.stamp ? { start } : undefined,
 					assets: {
 						large_image:
 							activity.albumArt && (await getAsset(activity.albumArt)),
@@ -193,7 +191,7 @@ const updateStatus = async () => {
 
 	if (lastTrack.url !== lastUrl || !startTimestamp) {
 		startTimestamp = Date.now();
-	};
+	}
 
 	lastUrl = lastTrack.url;
 

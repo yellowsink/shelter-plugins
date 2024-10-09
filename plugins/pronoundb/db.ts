@@ -1,7 +1,7 @@
 import type { FluxStore } from "@uwu/shelter-defs";
 
 const UserProfileStore = shelter.flux.stores.UserProfileStore as FluxStore<{
-	getUserProfile(id: string): { bio: string, pronouns: string } | undefined;
+	getUserProfile(id: string): { bio: string; pronouns: string } | undefined;
 }>;
 
 const pronouns = {
@@ -42,13 +42,12 @@ export const fromStore = (id) => {
 	return pronounsToSearch.find((p) => pronounSource.includes(p));
 };
 
-const endpoint =
-	"https://pronoundb.org/api/v2/lookup?platform=discord&ids=";
+const endpoint = "https://pronoundb.org/api/v2/lookup?platform=discord&ids=";
 
 const options = {
 	headers: {
-		"X-PronounDB-Source": "yellowsink/shelter-plugins"
-	}
+		"X-PronounDB-Source": "yellowsink/shelter-plugins",
+	},
 };
 
 let batch = new Map<string, (v: string) => void>();
