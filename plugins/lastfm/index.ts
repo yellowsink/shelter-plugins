@@ -147,8 +147,8 @@ const getScrobbleListenbrainz = async () => {
 		: `https://aart.yellows.ink/release/${track.additional_info.release_mbid}.webp`;
 	if (albumArtUrl) {
 		// test
-		const testRes = await fetch(albumArtUrl);
-		if (!testRes.redirected) albumArtUrl = undefined;
+		const testRes = await fetch(albumArtUrl, { method: "HEAD" });
+		if (!testRes.ok) albumArtUrl = undefined;
 	}
 
 	return {
