@@ -312,8 +312,8 @@
     await listenBrainzLookupAdditional(track);
     let albumArtUrl = !track.additional_info?.release_mbid ? void 0 : `https://aart.yellows.ink/release/${track.additional_info.release_mbid}.webp`;
     if (albumArtUrl) {
-      const testRes = await fetch(albumArtUrl);
-      if (!testRes.redirected)
+      const testRes = await fetch(albumArtUrl, { method: "HEAD" });
+      if (!testRes.ok)
         albumArtUrl = void 0;
     }
     return {
