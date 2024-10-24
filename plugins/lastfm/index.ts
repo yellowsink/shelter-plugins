@@ -144,7 +144,7 @@ const getScrobbleListenbrainz = async () => {
 
 	let albumArtUrl = !track.additional_info?.release_mbid
 		? undefined
-		: `https://coverartarchive.org/release/${track.additional_info.release_mbid}/front`;
+		: `https://aart.yellows.ink/release/${track.additional_info.release_mbid}.webp`;
 	if (albumArtUrl) {
 		// test
 		const testRes = await fetch(albumArtUrl);
