@@ -310,7 +310,7 @@
       return;
     const track = nowPlayingRes.payload.listens[0].track_metadata;
     await listenBrainzLookupAdditional(track);
-    let albumArtUrl = !track.additional_info?.release_mbid ? void 0 : `https://coverartarchive.org/release/${track.additional_info.release_mbid}/front`;
+    let albumArtUrl = !track.additional_info?.release_mbid ? void 0 : `https://aart.yellows.ink/release/${track.additional_info.release_mbid}.webp`;
     if (albumArtUrl) {
       const testRes = await fetch(albumArtUrl);
       if (!testRes.redirected)
