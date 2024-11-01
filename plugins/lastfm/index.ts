@@ -30,6 +30,11 @@ const PresenceStore = storesFlat.PresenceStore as FluxStore<{
 	}[];
 }>;
 
+const FETCH_SHPROX_UA_HEADER = {
+	"X-Shprox-UA":
+		"ShelterLastFm/0.0.0 ( https://github.com/yellowsink/shelter-plugins )",
+};
+
 interface Track {
 	name: string;
 	artist: string;
@@ -105,12 +110,7 @@ const listenBrainzLookupAdditional = async (basicTrack) => {
 					inc: "artist tag release",
 				},
 			)}`,
-			{
-				headers: {
-					"X-Shprox-UA":
-						"ShelterLastFm/0.0.0 ( https://github.com/yellowsink/shelter-plugins )",
-				},
-			},
+			{ headers: FETCH_SHPROX_UA_HEADER },
 		).then((r) => r.json());
 
 		basicTrack.additional_info = { ...basicTrack?.additional_info, ...metaRes };
@@ -128,12 +128,7 @@ const getScrobbleListenbrainz = async () => {
 	// use the shelter proxy to set the user agent as required by musicbrainz
 	const nowPlayingRes = await fetch(
 		`https://shcors.uwu.network/https://api.listenbrainz.org/1/user/${store.user}/playing-now`,
-		{
-			headers: {
-				"X-Shprox-UA":
-					"ShelterLastFm/0.0.0 ( https://github.com/yellowsink/shelter-plugins )",
-			},
-		},
+		{ headers: FETCH_SHPROX_UA_HEADER },
 	).then((r) => r.json());
 
 	if (!nowPlayingRes.payload.count) return;
@@ -142,9 +137,31 @@ const getScrobbleListenbrainz = async () => {
 
 	await listenBrainzLookupAdditional(track);
 
-	let albumArtUrl = !track.additional_info?.release_mbid
-		? undefined
-		: `https://aart.yellows.ink/release/${track.additional_info.release_mbid}.webp`;
+	let albumArtUrl: string;
+
+	if (track.additional_info?.release_mbid) {
+		// first check for release art and then for release group art
+		const relArtCheck = await fetch(
+			`https://coverartarchive.org/release/${track.additional_info?.release_mbid}/front`,
+			{ method: "HEAD", redirect: "manual" },
+		);
+		if (relArtCheck.status !== 404) {
+			// ok fine we have album art for this release
+			albumArtUrl = `https://aart.yellows.ink/release/${track.additional_info.release_mbid}.webp`;
+		} else {
+			// okay, get the release group
+			const rgLookup = await fetch(
+				`https://shcors.uwu.network/https://musicbrainz.org/ws/2/release/${track.additional_info.release_mbid}?fmt=json&inc=release-groups`,
+				{ headers: FETCH_SHPROX_UA_HEADER },
+			);
+			if (rgLookup.ok) {
+				const releaseJson = await rgLookup.json();
+
+				albumArtUrl = `https://aart.yellows.ink/release-group/${releaseJson["release-group"].id}.webp`;
+			}
+		}
+	}
+
 	if (albumArtUrl) {
 		// test
 		const testRes = await fetch(albumArtUrl, { method: "HEAD" });
