@@ -40,6 +40,30 @@ const iframeFromDeezerUrl = (path: string) =>
 		/>
 	) as HTMLIFrameElement;
 
+const iframeFromYandexMusicUrl = (path: string) =>
+	(
+		<iframe
+			allow="clipboard-write"
+			style={`border: none; width: 100%; max-width: 600px; height: ${
+				path.includes("album") || path.includes("artist") ? 450 : 210
+			}px;`}
+			width="100%"
+			height="210"
+			src={path.replace(
+				path.includes("/album")
+					? "/album/"
+					: path.includes("/artist")
+					  ? "/artist/"
+					  : "/track/",
+				path.includes("/album")
+					? "/iframe/album/"
+					: path.includes("/artist")
+					  ? "/iframe/artist/"
+					  : "/iframe/track/",
+			)}
+		/>
+	) as HTMLIFrameElement;
+
 const iframeFromBandcampInfo = (
 	type: "a" | "t",
 	trackId?: string,
@@ -103,6 +127,11 @@ const matchers: [
 	[
 		/https?:\/\/(?:www\.)?deezer\.com\/[a-z]+\/(?:track|album|playlist)\/\d+/,
 		iframeFromDeezerUrl,
+	],
+
+	[
+		/https?:\/\/(?:www\.)?music\.yandex\.(?:ru|com|kz|by|uz)\/(?:artist|album)\/\d+(?:\/track\/\d+)?/,
+		iframeFromYandexMusicUrl,
 	],
 
 	[/https?:\/\/.+\.bandcamp\.com\/(?:album|track)\/.+/, iframeFromBandcampUrl],
