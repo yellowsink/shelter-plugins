@@ -66,16 +66,17 @@
   }
 
   // plugins/pronoundb/db.ts
-  var UserProfileStore = shelter.flux.stores.UserProfileStore;
+  var UserProfileStore = shelter.flux.storesFlat.UserProfileStore;
+  var SelectedGuildStore = shelter.flux.storesFlat.SelectedGuildStore;
   var pronouns = {
     he: "he/him",
     it: "it/its",
     she: "she/her",
     they: "they/them",
-    any: "Any pronouns",
-    other: "Other pronouns",
-    ask: "Ask me my pronouns",
-    avoid: "Avoid pronouns, use my name"
+    any: "Any",
+    other: "Other",
+    ask: "Ask me",
+    avoid: "Use name"
   };
   var additionalPronouns = [
     "he/it",
@@ -94,10 +95,14 @@
   var pronounsToSearch = Object.values(pronouns).concat(additionalPronouns).filter((p) => p.includes("/")).sort((a, b) => b.length - a.length);
   var fromStore = (id) => {
     const profile = UserProfileStore.getUserProfile(id);
+    const scoped = UserProfileStore.getGuildMemberProfile(
+      id,
+      SelectedGuildStore.getGuildId()
+    );
     if (!profile)
       return;
-    const pronounSource = (profile.pronouns + profile.bio).toLowerCase();
-    return pronounsToSearch.find((p) => pronounSource.includes(p));
+    const search = (s) => s && pronounsToSearch.find((p) => s.includes(p));
+    return search(scoped?.pronouns) ?? search(scoped?.bio) ?? search(profile.pronouns) ?? search(profile.bio);
   };
   var endpoint = "https://pronoundb.org/api/v2/lookup?platform=discord&ids=";
   var options = {
@@ -147,6 +152,9 @@
     }
   });
 
+  // plugins/pronoundb/compactMode.scss
+  shelter.plugin.scoped.ui.injectCss(`[class*=latin12CompactTimeStamp]{width:6.25rem !important;--timestamp-width: 6.25rem !important}[class*=latin12CompactTimeStamp]::before{--avatar-size: 2.25rem !important}:root{--custom-message-margin-compact-indent: 9rem}`);
+
   // plugins/pronoundb/index.tsx
   var _tmpl$ = /* @__PURE__ */ (0, import_web.template)(`<span> \u2022</span>`, 2);
   var {
@@ -160,6 +168,9 @@
     },
     ui: {
       Space
+    },
+    solid: {
+      Show
     }
   } = shelter;
   var patchedEls = /* @__PURE__ */ new WeakSet();
@@ -175,15 +186,14 @@
       await forceBioFetch(el.parentElement.parentElement.querySelector("[id^=message-username]").firstElementChild, authorId);
       pronouns2 = fromStore(authorId);
     }
-    if (!pronouns2)
-      pronouns2 = "Unspecified";
-    el.insertAdjacentElement("beforebegin", (() => {
-      const _el$ = _tmpl$.cloneNode(true), _el$2 = _el$.firstChild;
-      (0, import_web2.insert)(_el$, (0, import_web3.createComponent)(Space, {}), _el$2);
-      (0, import_web2.insert)(_el$, pronouns2, _el$2);
-      (0, import_web2.insert)(_el$, (0, import_web3.createComponent)(Space, {}), null);
-      return _el$;
-    })());
+    if (pronouns2)
+      el.insertAdjacentElement("beforebegin", (() => {
+        const _el$ = _tmpl$.cloneNode(true), _el$2 = _el$.firstChild;
+        (0, import_web2.insert)(_el$, (0, import_web3.createComponent)(Space, {}), _el$2);
+        (0, import_web2.insert)(_el$, pronouns2, _el$2);
+        (0, import_web2.insert)(_el$, (0, import_web3.createComponent)(Space, {}), null);
+        return _el$;
+      })());
   }
   function onDispatch() {
     const unObserve = observeDom("h3 time[id^=message-timestamp]", (el) => {
