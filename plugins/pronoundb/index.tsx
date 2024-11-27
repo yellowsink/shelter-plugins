@@ -5,9 +5,12 @@ const {
 	observeDom,
 	util: { getFiber, reactFiberWalker },
 	ui: { Space },
+	solid: { Show },
 } = shelter;
 
 import { fetchPronouns, fromStore } from "./db.js";
+
+import "./compactMode.scss"; // css modules brrr
 
 // I love async!
 const patchedEls = new WeakSet<Element>();
@@ -31,18 +34,17 @@ async function inject(el) {
 		pronouns = fromStore(authorId);
 	}
 
-	if (!pronouns) pronouns = "Unspecified";
-
-	el.insertAdjacentElement(
-		"beforebegin",
-		(
-			<span>
-				<Space />
-				{pronouns} •
-				<Space />
-			</span>
-		) as HTMLSpanElement,
-	);
+	if (pronouns)
+		el.insertAdjacentElement(
+			"beforebegin",
+			(
+				<span>
+					<Space />
+					{pronouns} •
+					<Space />
+				</span>
+			) as HTMLSpanElement,
+		);
 }
 
 function onDispatch() {

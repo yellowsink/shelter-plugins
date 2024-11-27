@@ -1,0 +1,16 @@
+$increase: 4rem;
+
+[class*="latin12CompactTimeStamp"] {
+	/* originally 2.25rem */
+	width: #{2.25rem + $increase} !important;
+	--timestamp-width: #{2.25rem + $increase} !important;
+}
+[class*="latin12CompactTimeStamp"]::before {
+	/* originally --timestamp-width */
+	--avatar-size: 2.25rem !important;
+}
+
+:root {
+	/* originally 5rem, increase by the same amount. */
+	--custom-message-margin-compact-indent: #{5rem + $increase};
+}

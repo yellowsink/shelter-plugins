@@ -1,7 +1,16 @@
 import type { FluxStore } from "@uwu/shelter-defs";
 
-const UserProfileStore = shelter.flux.stores.UserProfileStore as FluxStore<{
+const UserProfileStore = shelter.flux.storesFlat.UserProfileStore as FluxStore<{
 	getUserProfile(id: string): { bio: string; pronouns: string } | undefined;
+	getGuildMemberProfile(
+		u: string,
+		g: string,
+	): { bio: string; pronouns: string } | null;
+}>;
+
+const SelectedGuildStore = shelter.flux.storesFlat
+	.SelectedGuildStore as FluxStore<{
+	getGuildId(): string;
 }>;
 
 const pronouns = {
@@ -9,10 +18,10 @@ const pronouns = {
 	it: "it/its",
 	she: "she/her",
 	they: "they/them",
-	any: "Any pronouns",
-	other: "Other pronouns",
-	ask: "Ask me my pronouns",
-	avoid: "Avoid pronouns, use my name",
+	any: "Any",
+	other: "Other",
+	ask: "Ask me",
+	avoid: "Use name",
 };
 
 const additionalPronouns = [
@@ -35,11 +44,23 @@ const pronounsToSearch = Object.values(pronouns)
 	.filter((p) => p.includes("/"))
 	.sort((a, b) => b.length - a.length);
 
-export const fromStore = (id) => {
+export const fromStore = (id: string) => {
 	const profile = UserProfileStore.getUserProfile(id);
+	const scoped = UserProfileStore.getGuildMemberProfile(
+		id,
+		SelectedGuildStore.getGuildId(),
+	);
 	if (!profile) return;
-	const pronounSource = (profile.pronouns + profile.bio).toLowerCase();
-	return pronounsToSearch.find((p) => pronounSource.includes(p));
+
+	const search = (s: string) =>
+		s && pronounsToSearch.find((p) => s.includes(p));
+
+	return (
+		search(scoped?.pronouns) ??
+		search(scoped?.bio) ??
+		search(profile.pronouns) ??
+		search(profile.bio)
+	);
 };
 
 const endpoint = "https://pronoundb.org/api/v2/lookup?platform=discord&ids=";
