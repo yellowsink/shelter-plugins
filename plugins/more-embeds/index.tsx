@@ -44,23 +44,43 @@ const iframeFromYandexMusicUrl = (path: string) =>
 	(
 		<iframe
 			allow="clipboard-write"
-			style={`border: none; width: 100%; max-width: 600px; height: ${
-				path.includes("album") || path.includes("artist") ? 450 : 210
+			style={`border: none; width: ${
+				(path.includes("album") && !path.includes("track")) ||
+				path.includes("artist")
+					? 100
+					: 33
+			}%; max-width: 600px; height: ${
+				(path.includes("album") && !path.includes("track")) ||
+				path.includes("artist")
+					? 450
+					: 180
 			}px;`}
-			width="100%"
-			height="210"
-			src={path.replace(
-				path.includes("/album")
-					? "/album/"
-					: path.includes("/artist")
-					  ? "/artist/"
-					  : "/track/",
-				path.includes("/album")
-					? "/iframe/album/"
-					: path.includes("/artist")
-					  ? "/iframe/artist/"
-					  : "/iframe/track/",
-			)}
+			width={`"${
+				(path.includes("album") && !path.includes("track")) ||
+				path.includes("artist")
+					? 100
+					: 33
+			}%"`}
+			height={`"${
+				(path.includes("album") && !path.includes("track")) ||
+				path.includes("artist")
+					? 450
+					: 180
+			}"`}
+			src={
+				path.replace(
+					path.includes("/album")
+						? "/album/"
+						: path.includes("/artist")
+						  ? "/artist/"
+						  : "/track/",
+					path.includes("/album")
+						? "/iframe/album/"
+						: path.includes("/artist")
+						  ? "/iframe/artist/"
+						  : "/iframe/track/",
+				) + "?lang=en"
+			}
 		/>
 	) as HTMLIFrameElement;
 
