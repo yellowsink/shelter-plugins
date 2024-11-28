@@ -48,7 +48,8 @@
   var import_web4 = __toESM(require_web(), 1);
   var _tmpl$ = /* @__PURE__ */ (0, import_web.template)(`<iframe allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" style="width:100%;max-width:660px;overflow:hidden;border-radius:10px; border:none;" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"></iframe>`, 2);
   var _tmpl$2 = /* @__PURE__ */ (0, import_web.template)(`<iframe title="deezer-widget" width="100%" style="border:none;max-width:660px" allow="encrypted-media; clipboard-write"></iframe>`, 2);
-  var _tmpl$3 = /* @__PURE__ */ (0, import_web.template)(`<iframe></iframe>`, 2);
+  var _tmpl$3 = /* @__PURE__ */ (0, import_web.template)(`<iframe allow="clipboard-write"></iframe>`, 2);
+  var _tmpl$4 = /* @__PURE__ */ (0, import_web.template)(`<iframe></iframe>`, 2);
   var {
     flux: {
       storesFlat: {
@@ -97,18 +98,35 @@
     });
     return _el$2;
   })();
-  var iframeFromBandcampInfo = (type, trackId, albumId) => (() => {
+  var iframeFromYandexMusicUrl = (path) => (() => {
     const _el$3 = _tmpl$3.cloneNode(true);
     (0, import_web4.effect)((_p$) => {
-      const _v$5 = `border: 0; width: 100%; max-width: 600px; height: ${type === "a" ? 250 : 42}px;`, _v$6 = `https://bandcamp.com/EmbeddedPlayer/album=${albumId}/size=${type === "a" ? "large" : "small"}/bgcol=${ThemeStore.getState().theme === "dark" ? "000000" : "ffffff"}/linkcol=0687f5/${type === "a" ? "artwork=small" : "track=" + trackId}/transparent=true/`;
+      const _v$5 = `border: none; width: ${path.includes("album") && !path.includes("track") || path.includes("artist") ? 100 : 33}%; max-width: 600px; height: ${path.includes("album") && !path.includes("track") || path.includes("artist") ? 450 : 180}px;`, _v$6 = `"${path.includes("album") && !path.includes("track") || path.includes("artist") ? 100 : 33}%"`, _v$7 = `"${path.includes("album") && !path.includes("track") || path.includes("artist") ? 450 : 180}"`, _v$8 = path.replace(path.includes("/album") ? "/album/" : path.includes("/artist") ? "/artist/" : "/track/", path.includes("/album") ? "/iframe/album/" : path.includes("/artist") ? "/iframe/artist/" : "/iframe/track/") + "?lang=en";
       _p$._v$5 = (0, import_web2.style)(_el$3, _v$5, _p$._v$5);
-      _v$6 !== _p$._v$6 && (0, import_web3.setAttribute)(_el$3, "src", _p$._v$6 = _v$6);
+      _v$6 !== _p$._v$6 && (0, import_web3.setAttribute)(_el$3, "width", _p$._v$6 = _v$6);
+      _v$7 !== _p$._v$7 && (0, import_web3.setAttribute)(_el$3, "height", _p$._v$7 = _v$7);
+      _v$8 !== _p$._v$8 && (0, import_web3.setAttribute)(_el$3, "src", _p$._v$8 = _v$8);
       return _p$;
     }, {
       _v$5: void 0,
-      _v$6: void 0
+      _v$6: void 0,
+      _v$7: void 0,
+      _v$8: void 0
     });
     return _el$3;
+  })();
+  var iframeFromBandcampInfo = (type, trackId, albumId) => (() => {
+    const _el$4 = _tmpl$4.cloneNode(true);
+    (0, import_web4.effect)((_p$) => {
+      const _v$9 = `border: 0; width: 100%; max-width: 600px; height: ${type === "a" ? 250 : 42}px;`, _v$10 = `https://bandcamp.com/EmbeddedPlayer/album=${albumId}/size=${type === "a" ? "large" : "small"}/bgcol=${ThemeStore.getState().theme === "dark" ? "000000" : "ffffff"}/linkcol=0687f5/${type === "a" ? "artwork=small" : "track=" + trackId}/transparent=true/`;
+      _p$._v$9 = (0, import_web2.style)(_el$4, _v$9, _p$._v$9);
+      _v$10 !== _p$._v$10 && (0, import_web3.setAttribute)(_el$4, "src", _p$._v$10 = _v$10);
+      return _p$;
+    }, {
+      _v$9: void 0,
+      _v$10: void 0
+    });
+    return _el$4;
   })();
   async function scrapeBandcamp(url) {
     const docu = await fetch(CORS_PROXY_PREFIX + url).then((r) => r.text()).then((t) => new DOMParser().parseFromString(t, "text/html"));
@@ -131,6 +149,7 @@
   var matchers = [
     [/https?:\/\/(?:geo\.)?music\.apple\.com\/[a-z]+\/(?:album|playlist)\/.*/, iframeFromAmUrl],
     [/https?:\/\/(?:www\.)?deezer\.com\/[a-z]+\/(?:track|album|playlist)\/\d+/, iframeFromDeezerUrl],
+    [/https?:\/\/(?:www\.)?music\.yandex\.(?:ru|com|kz|by|uz)\/(?:artist|album)\/\d+(?:\/track\/\d+)?/, iframeFromYandexMusicUrl],
     [/https?:\/\/.+\.bandcamp\.com\/(?:album|track)\/.+/, iframeFromBandcampUrl],
     // song.link
     [/https?:\/\/(?:song|album)\.link\/.+/, async (full) => {
