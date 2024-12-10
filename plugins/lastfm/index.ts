@@ -6,6 +6,7 @@ import {
 	LFM_API_KEY,
 } from "./cfg";
 import { getAsset } from "./assets";
+import { LbWebsocket } from "./listenbrainz";
 import { FluxStore } from "@uwu/shelter-defs";
 
 const {
@@ -30,12 +31,7 @@ const PresenceStore = storesFlat.PresenceStore as FluxStore<{
 	}[];
 }>;
 
-const FETCH_SHPROX_UA_HEADER = {
-	"X-Shprox-UA":
-		"ShelterLastFm/0.0.0 ( https://github.com/yellowsink/shelter-plugins )",
-};
-
-interface Track {
+export interface Track {
 	name: string;
 	artist: string;
 	album: string;
@@ -94,138 +90,68 @@ const getScrobbleLastfm = async () => {
 	} as Track;
 };
 
-// finds a MBID and adds it to a track if it doesnt exist
-const listenBrainzLookupAdditional = async (basicTrack) => {
-	// following the behaviour of the webapp, if theres not an MBID, do a search.
-	if (!store.lbLookup) return;
-	if (basicTrack.additional_info?.release_mbid) return;
-
-	try {
-		const metaRes = await fetch(
-			`https://shcors.uwu.network/https://api.listenbrainz.org/1/metadata/lookup/?${new URLSearchParams(
-				{
-					recording_name: basicTrack.track_name,
-					artist_name: basicTrack.artist_name,
-					metadata: "true",
-					inc: "artist tag release",
-				},
-			)}`,
-			{ headers: FETCH_SHPROX_UA_HEADER },
-		).then((r) => r.json());
-
-		basicTrack.additional_info = { ...basicTrack?.additional_info, ...metaRes };
-	} catch (e) {
-		console.error(
-			"SHELTER LASTFM: finding listenbrainz MBID for track",
-			basicTrack,
-			"failed, ",
-			e,
-		);
-	}
-};
-
-const getScrobbleListenbrainz = async () => {
-	// use the shelter proxy to set the user agent as required by musicbrainz
-	const nowPlayingRes = await fetch(
-		`https://shcors.uwu.network/https://api.listenbrainz.org/1/user/${store.user}/playing-now`,
-		{ headers: FETCH_SHPROX_UA_HEADER },
-	).then((r) => r.json());
-
-	if (!nowPlayingRes.payload.count) return;
-
-	const track = nowPlayingRes.payload.listens[0].track_metadata;
-
-	await listenBrainzLookupAdditional(track);
-
-	let albumArtUrl: string;
-
-	if (track.additional_info?.release_mbid) {
-		// first check for release art and then for release group art
-		const relArtCheck = await fetch(
-			`https://coverartarchive.org/release/${track.additional_info?.release_mbid}/front`,
-			{ method: "HEAD", redirect: "manual" },
-		);
-		if (relArtCheck.status !== 404) {
-			// ok fine we have album art for this release
-			albumArtUrl = `https://aart.yellows.ink/release/${track.additional_info.release_mbid}.webp`;
-		} else {
-			// okay, get the release group
-			const rgLookup = await fetch(
-				`https://shcors.uwu.network/https://musicbrainz.org/ws/2/release/${track.additional_info.release_mbid}?fmt=json&inc=release-groups`,
-				{ headers: FETCH_SHPROX_UA_HEADER },
-			);
-			if (rgLookup.ok) {
-				const releaseJson = await rgLookup.json();
-
-				albumArtUrl = `https://aart.yellows.ink/release-group/${releaseJson["release-group"].id}.webp`;
-			}
-		}
-	}
-
-	if (albumArtUrl) {
-		// test
-		const testRes = await fetch(albumArtUrl, { method: "HEAD" });
-		if (!testRes.ok) albumArtUrl = undefined;
-	}
-
-	return {
-		name: track.track_name,
-		artist: track.artist_name,
-		album: track.release_name,
-		albumArt: albumArtUrl,
-		url: track.additional_info?.recording_mbid
-			? `https://musicbrainz.org/recording/${track.additional_info.recording_mbid}`
-			: `NOURL_${track.track_name}:${track.artist_name}:${track.release_name}`,
-		//date: "now", // not returned by api
-		nowPlaying: nowPlayingRes.payload.listens[0].playing_now,
-	} as Track;
+const isSpotifyPlaying = () => {
+	for (const activity of PresenceStore.getActivities(
+		UserStore.getCurrentUser().id,
+	))
+		if (
+			activity?.type === ACTIVITY_TYPE_LISTENING &&
+			activity.application_id !== DISCORD_APP_ID
+		)
+			return true;
+	return false;
 };
 
 let lastUrl: string;
 let startTimestamp: number;
 
-const updateStatus = async () => {
+const handleNewStatus = (track: Track) => {
 	if (!store.user) return setPresence();
 
-	if (store.ignoreSpotify)
-		for (const activity of PresenceStore.getActivities(
-			UserStore.getCurrentUser().id,
-		))
-			if (
-				activity?.type === ACTIVITY_TYPE_LISTENING &&
-				activity.application_id !== DISCORD_APP_ID
-			)
-				return setPresence();
+	if (store.ignoreSpotify && isSpotifyPlaying()) return setPresence();
 
-	const getFn =
-		store.service === "lbz" ? getScrobbleListenbrainz : getScrobbleLastfm;
-
-	const lastTrack = await getFn();
-	if (!lastTrack?.nowPlaying) {
+	if (!track?.nowPlaying) {
 		startTimestamp = null;
 		return setPresence();
 	}
 
-	if (lastTrack.url !== lastUrl || !startTimestamp) {
+	if (track.url !== lastUrl || !startTimestamp) {
 		startTimestamp = Date.now();
 	}
 
-	lastUrl = lastTrack.url;
+	lastUrl = track.url;
 
 	let appName = store.appName || DEFAULT_NAME;
 	// screw it theres nothing wrong with eval okay???
 	// obviously im not serious on that but really this is fine -- sink
 	appName = appName.replaceAll(/{{(.+)}}/g, (_, code) =>
-		eval(`(c)=>{with(c){try{return ${code}}catch(e){return e}}}`)(lastTrack),
+		eval(`(c)=>{with(c){try{return ${code}}catch(e){return e}}}`)(track),
 	);
 
-	await setPresence(appName, lastTrack, startTimestamp);
+	return setPresence(appName, track, startTimestamp);
 };
 
-let interval;
+const updateStatusInterval = async () => {
+	if (!store.user) return setPresence();
+
+	if (store.ignoreSpotify && isSpotifyPlaying()) return setPresence();
+
+	/*const getFn =
+		store.service === "lbz" ? getScrobbleListenbrainz : getScrobbleLastfm;
+
+	await handleNewStatus(await getFn());*/
+
+	// listenbrainz is handled by the websocket
+	if (store.service !== "lbz") await handleNewStatus(await getScrobbleLastfm());
+};
+
+let interval: number;
 const restartLoop = () => (
 	interval && clearInterval(interval),
-	(interval = setInterval(updateStatus, store.interval || DEFAULT_INTERVAL))
+	(interval = setInterval(
+		updateStatusInterval,
+		store.interval || DEFAULT_INTERVAL,
+	))
 );
 
 const unpatch = shelter.patcher.after(
@@ -248,9 +174,14 @@ const unpatch = shelter.patcher.after(
 	},
 );
 
+// start polling for last.fm
 restartLoop();
+
+// start listenbrainz websocket, which will handle lifecycle all on its own.
+const lbSocket = new LbWebsocket(handleNewStatus);
+
 export const onUnload = () => (
-	clearInterval(interval), setPresence(), unpatch()
+	clearInterval(interval), setPresence(), unpatch(), lbSocket.tearDownSocket()
 );
 
 export * from "./Settings";
