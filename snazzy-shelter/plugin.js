@@ -3559,7 +3559,7 @@
   var import_web47 = __toESM(require_web());
   var import_web48 = __toESM(require_web());
 
-  // node_modules/.pnpm/@uwu+monaco-solid@1.1.0_solid-js@1.6.16/node_modules/@uwu/monaco-solid/dist/index.jsx
+  // node_modules/.pnpm/@uwu+monaco-solid@1.1.0_solid-js@1.8.15/node_modules/@uwu/monaco-solid/dist/index.jsx
   var import_web42 = __toESM(require_web());
   var import_web43 = __toESM(require_web());
   var import_web44 = __toESM(require_web());
@@ -4091,7 +4091,7 @@
   };
   var loader_default = loader;
 
-  // node_modules/.pnpm/@uwu+monaco-solid@1.1.0_solid-js@1.6.16/node_modules/@uwu/monaco-solid/dist/monaco.js
+  // node_modules/.pnpm/@uwu+monaco-solid@1.1.0_solid-js@1.8.15/node_modules/@uwu/monaco-solid/dist/monaco.js
   var monaco;
   var monacoLoaded;
   var loadedThemes = /* @__PURE__ */ new Set();
@@ -4115,7 +4115,7 @@
     await monacoLoaded;
   }
 
-  // node_modules/.pnpm/@uwu+monaco-solid@1.1.0_solid-js@1.6.16/node_modules/@uwu/monaco-solid/dist/index.jsx
+  // node_modules/.pnpm/@uwu+monaco-solid@1.1.0_solid-js@1.8.15/node_modules/@uwu/monaco-solid/dist/index.jsx
   var _tmpl$12 = /* @__PURE__ */ (0, import_web42.template)(`<div></div>`, 2);
   var dist_default = (props) => {
     let dispose;
