@@ -92,7 +92,7 @@ const getScrobbleLastfm = async () => {
 
 const isSpotifyPlaying = () => {
 	for (const activity of PresenceStore.getActivities(
-		UserStore.getCurrentUser().id,
+		UserStore.getCurrentUser()?.id,
 	))
 		if (
 			activity?.type === ACTIVITY_TYPE_LISTENING &&
