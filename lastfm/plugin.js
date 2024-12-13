@@ -4166,7 +4166,7 @@
   };
   var isSpotifyPlaying = () => {
     for (const activity of PresenceStore.getActivities(
-      UserStore.getCurrentUser().id
+      UserStore.getCurrentUser()?.id
     ))
       if (activity?.type === ACTIVITY_TYPE_LISTENING && activity.application_id !== DISCORD_APP_ID)
         return true;
