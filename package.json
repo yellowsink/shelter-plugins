@@ -4,8 +4,8 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.5.3",
-		"@uwu/lune": "^1.4.1",
-		"@uwu/shelter-defs": "^1.4.0",
+		"@uwu/lune": "^1.5.0",
+		"@uwu/shelter-defs": "^1.4.1",
 		"husky": "^9.0.11",
 		"solid-js": "1.6.16"
 	},
