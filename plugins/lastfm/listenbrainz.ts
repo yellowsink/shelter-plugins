@@ -165,8 +165,22 @@ export class LbWebsocket {
 			path: "/https://listenbrainz.org/socket.io",
 			transports: ["websocket"],
 		});
-		this.#pendingSocket.on("connect", () => this.#onConnect(nextUser));
+		this.#pendingSocket.once("connect", () => this.#onConnect(nextUser));
 		this.#pendingSocket.on("playing_now", (pn) => this.#playingNowHandler(pn));
+
+		const s = this.#pendingSocket;
+
+		// screw it, maybe this will fix connection issues
+		const intCode = setInterval(() => {
+			if (s !== this.#pendingSocket && s !== this.#socket)
+				return clearInterval(intCode);
+
+			//console.log("connected: ", s.connected, "active: ", s.active);
+			if (!s.connected) {
+				s.connect();
+				s.once("connect", () => s.emit("json", { user: nextUser }));
+			}
+		}, 10_000);
 	}
 
 	#onConnect(nextUser: string) {
