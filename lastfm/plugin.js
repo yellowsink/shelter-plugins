@@ -4068,8 +4068,16 @@ else if (this.#lastUsername !== nextUser || !this.#socket && !this.#pendingSocke
 			path: "/https://listenbrainz.org/socket.io",
 			transports: ["websocket"]
 		});
-		this.#pendingSocket.on("connect", () => this.#onConnect(nextUser));
+		this.#pendingSocket.once("connect", () => this.#onConnect(nextUser));
 		this.#pendingSocket.on("playing_now", (pn) => this.#playingNowHandler(pn));
+		const s = this.#pendingSocket;
+		const intCode = setInterval(() => {
+			if (s !== this.#pendingSocket && s !== this.#socket) return clearInterval(intCode);
+			if (!s.connected) {
+				s.connect();
+				s.once("connect", () => s.emit("json", { user: nextUser }));
+			}
+		}, 1e4);
 	}
 	#onConnect(nextUser) {
 		this.#socket?.close();
