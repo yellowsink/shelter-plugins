@@ -62,12 +62,17 @@ function handleDispatch(payload) {
 
 			const embPath = tsMatch?.[0] ? match[1] + "?" + tsMatch[0] : match[1];
 
+			const newSrc = new URL(`https://${store.instance}/embed/${embPath}`);
+
+			// see https://docs.invidious.io/url-parameters/
+			newSrc.searchParams.set("autoplay", 0);
+
 			e.style.display = "none";
 			e.insertAdjacentElement(
 				"afterend",
 				<iframe
 					style="border: 0; width: 100%; max-width: 600px; aspect-ratio: 16/9"
-					src={`https://${store.instance}/embed/${embPath}`}
+					src={newSrc.toString()}
 					allow="fullscreen"
 				/>,
 			);
