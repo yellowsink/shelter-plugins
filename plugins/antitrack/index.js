@@ -1,16 +1,52 @@
-const { scoped } = shelter.plugin;
+const {
+	plugin: { scoped },
+	util: { log },
+} = shelter;
 
-// apply openasar's sentry removers
-// https://github.com/GooseMod/OpenAsar/blob/7a04cb57dff43f328de78addc234e9d21ff079a8/src/mainWindow.js#L3
+// Disable Sentry as soon as possible
 try {
-	window.__SENTRY__.hub.getClient().getOptions().enabled = false;
-	Object.keys(console).forEach(
-		(x) => (console[x] = console[x].__sentry_original__ ?? console[x]),
-	);
-} catch {}
+	if (DiscordSentry) {
+		DiscordSentry.close();
+	} else {
+		Object.defineProperty(window, "DiscordSentry", {
+			set(v) {
+				delete window.DiscordSentry;
+				window.DiscordSentry = v;
+				setTimeout(v.close);
+			},
+			enumerable: false,
+			configurable: true,
+		});
+	}
+} catch (e) {
+	log(`[Antitrack] Error while disabling Sentry ${e}`);
+}
 
-// stop TRACK dispatches from causing science etc requests
-// this is not done via flux.intercept() so that plugins can still listen for these dispatches
+// Unpatch console functions
+try {
+	Object.keys(console).forEach((func) => {
+		const original = console[func]?.__sentry_original__;
+		if (!original) return;
+		console[func] = original;
+	});
+} catch (e) {
+	log(`[Antitrack] Error while unpatching console functions ${e}`);
+}
+
+// Stop TRACK dispatches from causing science requests
+// This is not done via flux.intercept() so that plugins can still listen for these dispatches
 // as TRACK dispatches are *insanely useful*
+scoped.http.intercept("POST", /^\/science/, () => {});
 
-scoped.http.intercept("POST", /^\/science|^\/error-reporting-proxy/, () => {});
+// Block metrics requests separately, as they're not sent via the http module
+// Just in case we also account for subdomains/release channels
+const metricsRe =
+	/^https?:\/\/([a-z0-9\-]+\.)?discord\.com\/api\/v\d+\/metrics/;
+const getSentryProp = (obj) =>
+	obj[Object.keys(obj).find((k) => k.startsWith("__sentry_xhr"))];
+
+scoped.patcher.instead("send", XMLHttpRequest.prototype, function (args, orig) {
+	const url = getSentryProp(this)?.url;
+	if (typeof url === "string" && metricsRe.test(url)) return;
+	return orig.apply(this, args);
+});
