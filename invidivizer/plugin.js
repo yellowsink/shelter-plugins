@@ -68,10 +68,12 @@ function handleDispatch(payload) {
 		if (!match?.[1]) return;
 		const tsMatch = found.match(/t=(?:\d+|(?:\d+m)?\d+s|\d+m)/);
 		const embPath = tsMatch?.[0] ? match[1] + "?" + tsMatch[0] : match[1];
+		const newSrc = new URL(`https://${store.instance}/embed/${embPath}`);
+		newSrc.searchParams.set("autoplay", 0);
 		e.style.display = "none";
 		e.insertAdjacentElement("afterend", (() => {
 			const _el$ = (0, import_web$4.getNextElement)(_tmpl$);
-			(0, import_web$3.effect)(() => (0, import_web$2.setAttribute)(_el$, "src", `https://${store.instance}/embed/${embPath}`));
+			(0, import_web$3.effect)(() => (0, import_web$2.setAttribute)(_el$, "src", newSrc.toString()));
 			return _el$;
 		})());
 	});
