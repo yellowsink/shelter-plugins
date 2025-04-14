@@ -6,7 +6,7 @@ import {
 	LFM_API_KEY,
 } from "./cfg";
 import { getAsset } from "./assets";
-import { LbWebsocket } from "./listenbrainz";
+import { /*LbWebsocket,*/ getScrobbleListenbrainz } from "./listenbrainz";
 import { FluxStore } from "@uwu/shelter-defs";
 
 const {
@@ -136,13 +136,13 @@ const updateStatusInterval = async () => {
 
 	if (store.ignoreSpotify && isSpotifyPlaying()) return setPresence();
 
-	/*const getFn =
+	const getFn =
 		store.service === "lbz" ? getScrobbleListenbrainz : getScrobbleLastfm;
 
-	await handleNewStatus(await getFn());*/
+	await handleNewStatus(await getFn());
 
-	// listenbrainz is handled by the websocket
-	if (store.service !== "lbz") await handleNewStatus(await getScrobbleLastfm());
+	/*// listenbrainz is handled by the websocket
+	if (store.service !== "lbz") await handleNewStatus(await getScrobbleLastfm());*/
 };
 
 let interval: number;
@@ -178,10 +178,13 @@ const unpatch = shelter.patcher.after(
 restartLoop();
 
 // start listenbrainz websocket, which will handle lifecycle all on its own.
-const lbSocket = new LbWebsocket(handleNewStatus);
+//const lbSocket = new LbWebsocket(handleNewStatus);
 
-export const onUnload = () => (
-	clearInterval(interval), setPresence(), unpatch(), lbSocket.tearDownSocket()
-);
+export const onUnload = () =>
+	(
+		clearInterval(interval),
+		setPresence(),
+		unpatch() /*, lbSocket.tearDownSocket()*/
+	);
 
 export * from "./Settings";

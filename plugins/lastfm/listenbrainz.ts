@@ -1,6 +1,6 @@
 import type { Track } from "./index";
 import memoize from "lodash-es/memoize";
-import { io, Socket } from "socket.io-client";
+//import { io, Socket } from "socket.io-client";
 
 const { store } = shelter.plugin;
 
@@ -99,7 +99,7 @@ const lbResToTrack = (res, aart: string, playNow) =>
 		nowPlaying: playNow,
 	}) as Track;
 
-const getScrobbleListenbrainz = async () => {
+export const getScrobbleListenbrainz = async () => {
 	// use the shelter proxy to set the user agent as required by musicbrainz
 	const nowPlayingRes = await fetch(
 		`https://shcors.uwu.network/https://api.listenbrainz.org/1/user/${store.user}/playing-now`,
@@ -120,6 +120,7 @@ const getScrobbleListenbrainz = async () => {
 		nowPlayingRes.payload.listens[0].playing_now,
 	);
 };
+/*
 
 export class LbWebsocket {
 	#socket: Socket;
@@ -217,3 +218,4 @@ export class LbWebsocket {
 		if (dispose) this.#dispose?.();
 	}
 }
+*/
