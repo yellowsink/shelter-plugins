@@ -48,3 +48,6 @@ No Devtools Detection: https://yellowsink.github.io/shelter-plugins/no-devtools-
    or if you use a browser with vertical tabs, being logged out every single session!
 
 usrbg: https://yellowsink.github.io/shelter-plugins/usrbg
+
+Fast GIF Picker: https://yellowsink.github.io/shelter-plugins/fast-gif-picker
+ * Original better-gif-picker by Nexpid, ported to shelter by me
