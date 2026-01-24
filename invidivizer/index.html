@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Invidivizer | Hazel's plugins</title>
+    <link rel="stylesheet" href="../styles.css">
+  </head>
+  <body>
+    <nav>
+      <div class="autosize">
+        <h1>Hazel's plugins: Invidivizer</h1>
+      </div>
+    </nav>
+    <main>
+      <div class="autosize plugin-main">
+        
+      
+        <div class="plugin-desc">Replaces Youtube embeds with invidious embeds in Discord
+      </div>
+      
+        <div class="plugin-link" onclick="navigator.clipboard.writeText(this.innerText)">
+          <span class="plugin-link-placeholder" data-name="">https://example.com/</span>
+       <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+      </svg>
+      
+        </div>
+      
+        <div class="plugin-page-after">
+        (To install this plugin, copy the URL above into shelter. Clicking the URL will copy it to your clipboard.)
+      </div>
+       <div class="footer">
+        Site built with
+        <a href="https://shelter.uwu.network/guides/lune-ssg">Lune 1.6.1</a>
+        at 2026-01-24 22:21:10  on commit 649aaf6. 
+      </div>
+      <!-- Hello, friend! You found an easter egg! -- Hazel -->
+      
+      </div>
+    </main>
+
+    <script>
+    {
+      const placeholders = document.getElementsByClassName("plugin-link-placeholder");
+    
+      let href = window.location.href;
+      if (href.endsWith("/")) href = href.slice(0, -1);
+    
+      for (const placeholder of placeholders) {
+        const pluginName = placeholder.dataset.name;
+    
+        if (!pluginName) placeholder.innerText = href;
+        else {
+          let href2 = href;
+          if (href2.endsWith("/" + pluginName)) href2 = href2.slice(0, -pluginName.length);
+    
+          placeholder.innerText = href2 + "/" + pluginName;
+        }
+      }
+    }
+    </script>
+  </body>
+</html>
