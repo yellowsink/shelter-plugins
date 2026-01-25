@@ -8,24 +8,41 @@
   </head>
   <body>
     <nav>
-      <div class="autosize">
+      <div class="autosize header">
         <h1>Hazel's plugins: QuickReply Reloaded</h1>
+        <a class="a-reset" href="https://shelter.uwu.network">
+          <img alt="shelter logo" src="https://github.com/uwu/shelter/raw/main/packages/shelter-assets/svg/banner.svg">
+        </a>
       </div>
     </nav>
     <main>
       <div class="autosize plugin-main">
-        
+        <p><a href=".."><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="10.6" height="16" viewBox="4 0 16 24">
+        <path
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="m15 18l-6-6l6-6"
+        />
+      </svg>
+       Back to index</a></p>
+         
       
-        <div class="plugin-desc">Quickly and easily reply to messages with ctrl+up/down
+      
+        <div class="plugin-desc"><p>Quickly and easily reply to messages with ctrl+up/down</p>
       </div>
       
         <div class="plugin-link" onclick="navigator.clipboard.writeText(this.innerText)">
-          <span class="plugin-link-placeholder" data-name="">https://example.com/</span>
-       <svg
+          <p>
+             https://yellowsink.github.io/shelter-plugins/  <svg
         xmlns="http://www.w3.org/2000/svg"
         class="icon"
         viewBox="0 0 24 24"
         fill="none"
+        width="16"
+        height="16"
         stroke="currentColor"
         stroke-width="2"
         stroke-linecap="round"
@@ -35,6 +52,7 @@
         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
       </svg>
       
+          </p>
         </div>
       
         <div class="plugin-page-after">
@@ -42,33 +60,13 @@
       </div>
        <div class="footer">
         Site built with
-        <a href="https://shelter.uwu.network/guides/lune-ssg">Lune 1.6.1</a>
-        at 2026-01-24 22:21:10  on commit 649aaf6. 
+        <a href="https://shelter.uwu.network/guides/lune-ssg">Lune 1.6.2</a>
+        at 2026-01-25 15:27:13  on commit cc78db3. 
       </div>
       <!-- Hello, friend! You found an easter egg! -- Hazel -->
       
       </div>
     </main>
 
-    <script>
-    {
-      const placeholders = document.getElementsByClassName("plugin-link-placeholder");
-    
-      let href = window.location.href;
-      if (href.endsWith("/")) href = href.slice(0, -1);
-    
-      for (const placeholder of placeholders) {
-        const pluginName = placeholder.dataset.name;
-    
-        if (!pluginName) placeholder.innerText = href;
-        else {
-          let href2 = href;
-          if (href2.endsWith("/" + pluginName)) href2 = href2.slice(0, -pluginName.length);
-    
-          placeholder.innerText = href2 + "/" + pluginName;
-        }
-      }
-    }
-    </script>
-  </body>
+       </body>
 </html>
